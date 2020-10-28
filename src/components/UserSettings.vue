@@ -242,14 +242,14 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface';
         padding-left: 20px;
         font-size: 14px;
         font-weight: 400;
-        color: #424056;
-        background: #FFFFFF;
+        color: $black-02;
+        background: $light-white;
         border-radius: 18px;
 
         &:focus {
           box-shadow: 0px 4px 15px rgba(22, 20, 44, 0.06);
           border-radius: 18px;
-          border: 1px solid #E9E8FF;
+          border: 1px solid $light-stroke;
         }
       }
 
@@ -270,7 +270,7 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface';
 
       &--empty {
         input {
-          border: 1px solid #E9E8FF;
+          border: 1px solid $light-stroke;
           background-color: transparent;
           border-radius: 18px;
         }
@@ -278,15 +278,15 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface';
     }
 
     &__description {
-      color: #C9C9D0;
+      color: $black-04;
       font-size: 14px;
     }
 
     &__password-btn {
       &.q-btn {
-        color: #7C74E9;
-        border: 1px solid #E9E8FF;
+        border: 1px solid $light-stroke;
         border-radius: 12px;
+        color: $accent-color;
         text-transform: none;
         font-weight: 500;
         font-size: 12px;
@@ -294,9 +294,9 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface';
 
       &--flooded {
         &.q-btn {
-          color: #fff;
           border: none;
-          background: #7C74E9;
+          background-color: $accent-color;
+          color: $light-white;
         }
       }
     }
@@ -308,7 +308,7 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface';
         right: 10px;
         top: 50%;
         transform: translate(0, -50%);
-        color: #7C74E9;
+        color: $accent-color;
         font-size: 20px;
       }
 
@@ -331,7 +331,7 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface';
         margin-top: 20px;
 
         span {
-          background: #C9C9D0;
+          background: $black-04;
           border-radius: 100px;
           height: 2px;
           width: 50px;
@@ -345,23 +345,23 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface';
 
         &.risky {
           span:nth-child(1) {
-            background: #63C58A;
+            background:  $status-green;
           }
         }
 
         &.guessable {
           span:nth-child(1) {
-            background: #63C58A;
+            background:  $status-green;
           }
 
           span:nth-child(2) {
-            background: #63C58A;
+            background:  $status-green;
           }
         }
 
         &.secure {
           span {
-            background: #63C58A;
+            background: $status-green;
           }
         }
       }

@@ -1,4 +1,3 @@
-@import "icons";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import "vars";
 
@@ -8,10 +7,21 @@ body {
 }
 
 .button1 {
+  .q-btn {
 
+  }
 }
 
 
+.button1--accent {
+  &.q-btn {
+    color: $accent-color;
+    background-color: $light-background;
+  }
+}
+
 .button1--border {
-  border: 1px solid #E9E8FF;
+  &.q-btn {
+    border: 1px solid $light-stroke;
+  }
 }

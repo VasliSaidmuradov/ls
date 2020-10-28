@@ -41,7 +41,7 @@ export default class Tabs extends Vue {
 .tabs {
   &__header {
     width: fit-content;
-    border: 1px solid #E9E8FF;
+    border: 1px solid $light-stroke;
     box-sizing: border-box;
     border-radius: 22px;
     padding: 8px;

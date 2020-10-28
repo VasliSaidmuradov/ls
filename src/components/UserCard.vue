@@ -1,6 +1,9 @@
 <template>
   <div class="user-card">
     <div class="user-card__header">
+      <q-btn v-if="isPopup" @click="popupClose" class="user-card-close" text-color="accent" color="light-white" unelevated>
+        <icon name="close-icon"></icon>
+      </q-btn>
       <div class="user-card__info">
         <q-avatar square size="98px" rounded>
           <img src="https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg" alt="avatar">
@@ -13,8 +16,8 @@
       </div>
 
       <div class="user-card__header-controls">
-        <q-btn unelevated padding="13px 20px">Настройки пользователя</q-btn>
-        <q-btn unelevated padding="13px 20px">Мед.карта</q-btn>
+        <q-btn unelevated padding="13px 20px" class="button1--accent">Настройки пользователя</q-btn>
+        <q-btn unelevated padding="13px 20px" class="button1--accent">Мед.карта</q-btn>
       </div>
     </div>
     <div class="user-card__body">
@@ -25,22 +28,40 @@
         </li>
       </ul>
 
-      <vc-donut
-          :sections="sections"
-          :total="sectionsTotal"
-          :size="76">
-        {{sectionsTotal}}
-      </vc-donut>
+      <div class="user-card__body-chart">
+        <vc-donut
+            :sections="sections"
+            :total="sectionsTotal"
+            :size="76">
+          {{sectionsTotal}}
+        </vc-donut>
+
+        <div class="chart-info">
+          <ul class="chart-info__list">
+            <li class="chart-info__item" v-for="(item, index) in sections" :key="index">
+              <span class="chart-info__item-value" :style="{'color': item.color}">{{item.value}}</span>
+              {{item.label}}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="user-card__footer"></div>
+    <div class="user-card__footer">
+      <q-btn unelevated class="button1--accent">
+        Выйти из кабинета
+      </q-btn>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component({})
 export default class UserCard extends Vue {
+  @Prop() onCLose: any;
+  @Prop({default: false, type: Boolean}) isPopup: boolean | undefined;
+
   sections = [
     { label: 'В норме', value: 19, color: '#63C58A' },
     { label: 'Пограничные зоны', value: 5, color: '#FFDE79' },
@@ -50,31 +71,53 @@ export default class UserCard extends Vue {
   get sectionsTotal(): number {
     return this.sections.map(item => item.value).reduce((acc, val) => acc + val);
   }
+
+  popupClose() {
+    this.onCLose();
+  }
 }
 </script>
 
 
 <style lang="scss">
+@import "../styles/vars";
+
 .user-card {
   padding: 18px;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 4px 15px rgba(22, 20, 44, 0.06);
   border-radius: 26px;
-  background-color: #fff;
+  background-color: $light-white;
+
+  &__header {
+    position: relative;
+
+    .user-card-close {
+      &.q-btn {
+        position: absolute;
+        right: -15px;
+        top: -20px;
+      }
+    }
+  }
 
   &__header-controls {
     display: flex;
     justify-content: space-between;
     margin-top: 10px;
 
+    .button1--accent {
+      &.q-btn {
+        color: $black-02;
+      }
+    }
+
     .q-btn {
       font-weight: 500;
       font-size: 12px;
       line-height: 130%;
       text-align: center;
-      color: #424056;
-      background: #F9F9FC;
       border-radius: 12px;
       text-transform: none;
       min-width: 191px;
@@ -87,7 +130,7 @@ export default class UserCard extends Vue {
     display: flex;
     align-items: center;
     padding: 14px 18px;
-    background: #F9F9FC;
+    background: $light-background;
     border-radius: 26px;
   }
 
@@ -98,7 +141,7 @@ export default class UserCard extends Vue {
       font-weight: 600;
       font-size: 14px;
       line-height: 130%;
-      color: #16142C;
+      color: $black-01;
       margin-top: 0;
       margin-bottom: 6px;
     }
@@ -106,7 +149,7 @@ export default class UserCard extends Vue {
     p {
       font-size: 14px;
       line-height: 130%;
-      color: #16142C;
+      color: $black-01;
       margin-bottom: 0;
       margin-top: 0;
     }
@@ -126,18 +169,61 @@ export default class UserCard extends Vue {
       margin-bottom: 10px;
       display: flex;
       align-items: center;
-      color: #D4D1FD;
+      color: $light;
 
       span {
         margin-left: 12px;
         font-size: 14px;
         line-height: 130%;
-        color: #626272;
+        color: $black-03;
       }
 
       &:last-child {
         margin-bottom: 0;
       }
+    }
+  }
+
+  &__body-chart {
+    display: flex;
+    margin-top: 25px;
+    margin-bottom: 45px;
+
+    .chart-info {
+      &__list {
+        padding: 0;
+        margin: 0 0 0 27px;
+        list-style-type: none;
+      }
+
+      &__item {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        line-height: 130%;
+        color: $black-03;
+      }
+
+      &__item-value {
+        font-weight: 600;
+        width: 40px;
+        display: flex;
+      }
+    }
+
+    .cdc-text {
+      font-size: 12px !important;
+      line-height: 15px;
+      color: $black-02;
+    }
+  }
+
+  &__footer {
+    padding: 0 18px;
+
+    .q-btn {
+      border-radius: 12px;
+      width: 100%;
     }
   }
 }

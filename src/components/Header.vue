@@ -1,7 +1,9 @@
 <template>
     <div class="header__content">
       <div class="header__content-back">
-        <q-btn class="button1--border" outline padding="8px 10px" @click="back()">1</q-btn>
+        <q-btn unelevated class="button1--border" padding="8px 10px" @click="back()" text-color="accent">
+          <icon name="next-icon"></icon>
+        </q-btn>
         <span class="header__content-back-text">Назад</span>
       </div>
 
@@ -17,18 +19,38 @@
             <img src="https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg" alt="avatar">
           </q-avatar>
         </div>
+
+        <q-popup-proxy ref="userCardPopup" :target="userCardPopupIsActive">
+          <UserCard isPopup :onCLose="userCardClose"></UserCard>
+        </q-popup-proxy>
       </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import UserCard from '@/components/UserCard.vue';
+import {ROUTE_NAME} from '@/router';
 
-@Component({})
+
+
+@Component({
+  components: {
+    UserCard
+  }
+})
 export default class Header extends Vue {
 
   back() {
     window.history.back();
+  }
+
+  userCardClose() {
+    (this.$refs.userCardPopup as any).hide();
+  }
+
+  get userCardPopupIsActive(): boolean {
+    return this.$route.name !== ROUTE_NAME.PAGE_PERSONAL_AREA;
   }
 }
 </script>
@@ -86,7 +108,7 @@ export default class Header extends Vue {
       width: 60px;
 
       .q-badge {
-        background-color: #E9E8FF;
+        background-color: $light-stroke;
         color: #333;
         font-size: 10px;
         line-height: 12px;
