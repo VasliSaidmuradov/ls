@@ -53,7 +53,7 @@
       "ecmaVersion": 2020
     },
     "rules": {
-      "plugin:@typescript-eslint/no-namespace": "off",
+      "@typescript-eslint/no-namespace": "off",
       "@typescript-eslint/no-inferrable-types": "off"
     }
   },

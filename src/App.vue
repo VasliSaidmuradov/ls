@@ -40,6 +40,8 @@ import Aside from '@/components/Aside.vue';
 </script>
 
 <style lang="scss">
+@import "styles/vars";
+
 .main-layout {
   height: 100vh;
 
@@ -48,7 +50,7 @@ import Aside from '@/components/Aside.vue';
   }
 
   .q-drawer--left {
-    box-shadow: 0px 4px 15px rgba(22, 20, 44, 0.06);
+    box-shadow: 0px 4px 15px $shadow-color;
     border-radius: 0px 35px 35px 0px;
     top: 0 !important;
   }

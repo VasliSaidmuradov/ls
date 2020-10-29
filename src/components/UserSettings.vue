@@ -247,7 +247,7 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface';
         border-radius: 18px;
 
         &:focus {
-          box-shadow: 0px 4px 15px rgba(22, 20, 44, 0.06);
+          box-shadow: 0px 4px 15px $shadow-color;
           border-radius: 18px;
           border: 1px solid $light-stroke;
         }

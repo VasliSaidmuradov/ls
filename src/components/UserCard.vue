@@ -59,7 +59,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 
 @Component({})
 export default class UserCard extends Vue {
-  @Prop() onCLose: any;
+  @Prop() onCLose: Function | undefined;
   @Prop({default: false, type: Boolean}) isPopup: boolean | undefined;
 
   sections = [
@@ -73,7 +73,7 @@ export default class UserCard extends Vue {
   }
 
   popupClose() {
-    this.onCLose();
+    if(this.onCLose) this.onCLose();
   }
 }
 </script>
@@ -86,7 +86,7 @@ export default class UserCard extends Vue {
   padding: 18px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 4px 15px rgba(22, 20, 44, 0.06);
+  box-shadow: 0px 4px 15px $shadow-color;
   border-radius: 26px;
   background-color: $light-white;
 

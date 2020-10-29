@@ -30,9 +30,9 @@
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import UserCard from '@/components/UserCard.vue';
-import {ROUTE_NAME} from '@/router';
-
-
+import {QPopupProxy} from 'quasar';
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
 
 @Component({
   components: {
@@ -46,7 +46,7 @@ export default class Header extends Vue {
   }
 
   userCardClose() {
-    (this.$refs.userCardPopup as any).hide();
+    (this.$refs.userCardPopup as QPopupProxy).hide();
   }
 
   get userCardPopupIsActive(): boolean {

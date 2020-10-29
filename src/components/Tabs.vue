@@ -21,16 +21,17 @@
 
 <script lang="ts">
 import { Component, Vue, Prop} from 'vue-property-decorator';
+import {ITabs} from '@/interfaces/tabs.interface';
 
 @Component({})
 export default class Tabs extends Vue {
-  @Prop() data: any;
-  @Prop() onTabChange: any;
+  @Prop() data: ITabs.ITabItem[];
+  @Prop() onTabChange: Function | undefined;
   tabActive = this.data[0].name;
 
 
   tabsChange(activeTab: string) {
-    this.onTabChange(activeTab)
+    if(this.onTabChange) this.onTabChange(activeTab)
   }
 }
 </script>
