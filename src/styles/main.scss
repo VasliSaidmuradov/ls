@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import "vars";
+
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.button1 {
+  .q-btn {
+
+  }
+}
+
+
+.button1--accent {
+  &.q-btn {
+    color: $accent-color;
+    background-color: $light-background;
+  }
+}
+
+.button1--border {
+  &.q-btn {
+    border: 1px solid $light-stroke;
+  }
+}
