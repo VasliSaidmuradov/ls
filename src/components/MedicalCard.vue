@@ -1,0 +1,181 @@
+<template>
+  <div class="medical-card">
+    <div class="medical-card__expansion-info">
+      <q-expansion-item
+          style="border-radius: 30px"
+          header-class="medical-card__expansion-header"
+          label="Друзья! Помогите нам создать удобный сервис."
+          expand-icon-class="text-white"
+      >
+        <q-card>
+          <q-card-section class="expansion-info">
+            <p>Друзья, помогите нам стать лучше и создать удобный сервис для управления вашим здоровьем! Сейчас мы находимся на этапе разработки второй версии продукта, который станет вашей личной медицинской картой. У вас появится возможность хранить все свое здоровье в одном месте и предоставлять врачам первичную информацию в 2 клика!</p>
+            <p>Пока что некоторые данные никак не будут учитываться в приложении, но в ближайшее время все изменится.</p>
+            <p>Такие факторы, как пол, раса, национальность, возраст, беременность и менструальные циклы напрямую влияют на анализы и их референсные зоны. В будущем мы будем их учитывать.</p>
+          </q-card-section>
+        </q-card>
+      </q-expansion-item>
+    </div>
+
+    <div class="medical-card__form">
+      <q-form>
+        <Race />
+        <Nationality />
+        <RegionOfResidence />
+        <Height />
+        <Weight />
+        <Birthday />
+        <BloodType />
+        <BiologicalSex />
+        <Pregnancy />
+        <MenstrualCycles />
+        <ComponentWithAddReaction :value.sync="hormonalDrugs" :data="hormonalDrugsData"/>
+        <ComponentWithAddReaction :value.sync="allergicReactions" :data.sync="allergicReaction"/>
+      </q-form>
+    </div>
+  </div>
+</template>
+
+
+<script lang="ts">
+import {Component, Vue} from 'vue-property-decorator';
+import Pregnancy from '@/components/Pregnancy.vue';
+import MenstrualCycles from '@/components/MenstrualCycles.vue';
+import ComponentWithAddReaction from '@/components/ComponentWithAddReaction.vue';
+import BiologicalSex from '@/components/BiologicalSex.vue';
+import Race from '@/components/Race.vue';
+import Nationality from '@/components/Nationality.vue';
+import RegionOfResidence from '@/components/RegionOfResidence.vue';
+import Height from '@/components/Height.vue';
+import BloodType from '@/components/BloodType.vue';
+import Weight from '@/components/Weight.vue';
+import Birthday from '@/components/Birthday.vue';
+import {IMedicalCard} from '@/interfaces/medical-card.interface';
+import IAddReactionsFiledData = IMedicalCard.IAddReactionsFiledData;
+import IReaction = IMedicalCard.IReaction;
+
+  @Component({
+    components: {
+      Pregnancy,
+      MenstrualCycles,
+      ComponentWithAddReaction,
+      BiologicalSex,
+      Race,
+      Nationality,
+      RegionOfResidence,
+      Height,
+      BloodType,
+      Weight,
+      Birthday,
+    }
+  })
+  export default class MedicalCard extends Vue {
+    hormonalDrugsData: IAddReactionsFiledData = {
+      title: 'Прием гормональных препаратов',
+      inputPlaceholder: 'Какой препарат принимаете?',
+      areaPlaceholder: 'Какой препарат принимаете?',
+      property: 'hormonalDrugs',
+      addFilesBtnText: 'Добавить препарат',
+      addReactionBtnText: 'Добавить реакцию',
+    };
+
+    allergicReaction: IAddReactionsFiledData = {
+      title: 'Аллергические реакции',
+      inputPlaceholder: 'Какой препарат принимаете?',
+      areaPlaceholder: 'Какой препарат принимаете?',
+      property: 'allergicReactions',
+      addFilesBtnText: 'Добавить аллергию',
+      addReactionBtnText: 'Добавить реакцию',
+    }
+
+    get hormonalDrugs(): IReaction[] {
+      return this.$store.state.medicalCard.hormonalDrugs
+    }
+
+    get allergicReactions(): IReaction[] {
+      return this.$store.state.medicalCard.allergicReactions
+    }
+  }
+
+</script>
+
+<style lang="scss">
+@import "../styles/vars";
+
+.medical-card {
+  &__expansion-info {
+    margin-bottom: 40px;
+
+    .q-expansion-item--expanded {
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.03);
+
+      .medical-card__expansion-header {
+        border-radius: 15px 15px 0px 0px;
+      }
+
+      .q-card {
+        border-radius: 0px 0px 15px 15px;
+
+        &.expansion-info {
+          font-size: 14px;
+          line-height: 130%;
+          color: #333333;
+        }
+      }
+    }
+
+  }
+
+  &__expansion-header {
+    font-size: 13px;
+    line-height: 130%;
+    font-weight: 500;
+    color: $text-color;
+    background-color: $light-white;
+    border-radius: 15px;
+
+    .q-expansion-item__toggle-icon {
+      color: $light-stroke;
+      width: 24px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      border: 1px solid $light-stroke;
+    }
+
+    q.focus-helper {
+      display: none;
+    }
+  }
+
+  &__toggle-btn {
+    .q-btn {
+      text-transform: none;
+      font-weight: 500;
+      font-size: 13px;
+      color: #424056;
+      border: 1px solid $light-stroke;
+      margin: 0 5px;
+
+      &.bg-primary {
+        border-radius: 18px !important;
+        background-color: $accent-color !important;
+        border-color: transparent;
+      }
+    }
+
+    .q-btn-group {
+      box-shadow: unset;
+    }
+  }
+
+  &__title {
+    margin-top: 0;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 120%;
+    color: $gray-01;
+  }
+}
+</style>

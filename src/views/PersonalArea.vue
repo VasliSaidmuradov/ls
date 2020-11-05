@@ -26,12 +26,14 @@ import {IPersonalArea} from '@/interfaces/personal-area.interface.ts';
 import UserSettings from '@/components/UserSettings.vue';
 import Tabs from '@/components/Tabs.vue';
 import UserCard from '@/components/UserCard.vue';
+import MedicalCart from '@/components/MedicalCard.vue';
 
 @Component({
   components: {
     UserSettings,
     Tabs,
     UserCard,
+    MedicalCart,
   }
 })
 export default class PersonalArea extends Vue {
@@ -42,9 +44,9 @@ export default class PersonalArea extends Vue {
       componentName: UserSettings,
     },
     {
-      name: IPersonalArea.TabsName.MEDICAL_CART,
+      name: IPersonalArea.TabsName.MEDICAL_CARD,
       label: 'Медицинская карта',
-      componentName: UserSettings,
+      componentName: MedicalCart,
     },
   ]
 
@@ -76,6 +78,15 @@ export default class PersonalArea extends Vue {
 
     &__user-card {
       width: 35%;
+    }
+
+    &__title {
+      font-weight: 500;
+      font-size: 36px;
+      line-height: 130%;
+      color: #333333;
+      margin-bottom: 40px;
+      margin-top: 0;
     }
   }
 

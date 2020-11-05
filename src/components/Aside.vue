@@ -10,15 +10,19 @@
     <div class="aside__content-menu">
       <ul class="aside__content-list">
         <li class="aside__content-item active">
+          <icon name="home-icon"></icon>
           <span>Главная</span>
         </li>
         <li class="aside__content-item">
+          <icon name="analyzes-icon"></icon>
           <span>Анализы</span>
         </li>
         <li class="aside__content-item">
+          <icon name="manual-icon"></icon>
           <span>Приемы</span>
         </li>
         <li class="aside__content-item">
+          <icon name="storage-icon"></icon>
           <span>Хранилище</span>
         </li>
       </ul>
@@ -27,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class Aside extends Vue {
@@ -43,6 +47,7 @@ export default class Aside extends Vue {
     width: 100%;
     height: 100%;
     flex-direction: column;
+    background-color: $accent-color;
   }
 
   &__content-logo {
@@ -71,10 +76,24 @@ export default class Aside extends Vue {
     font-weight: 500;
     font-size: 11px;
     line-height: 13px;
-    color: #16142C;
+    color: $light-white;
+    cursor: pointer;
+
+    span {
+      margin-top: 5px;
+      display: block;
+    }
 
     &.active {
       color: $accent-color;
+      background-color: $light-white;
+      box-shadow: 0px 4px 15px $shadow-color;
+      border-radius: 15px;
+      padding: 25px;
+
+      span {
+        display: none;
+      }
     }
 
     &:first-child {
