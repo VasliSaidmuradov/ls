@@ -26,9 +26,8 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
   components: {
     SaveFieldBtn
   },
-  mixins: [BaseFormMixins]
 })
-export default class Mail extends Vue {
+export default class Mail extends BaseFormMixins {
 
   rules: Function[] = [(val: string) => this.isValidEmail(val) || 'Please type something']
 

@@ -28,13 +28,12 @@ import SaveFieldBtn from '@/components/SaveField.vue';
 
 
 @Component({
-  mixins: [BaseFormMixins],
   components: {
     InputSuffix,
     SaveFieldBtn
   }
 })
-export default class Weight extends Vue {
+export default class Weight extends BaseFormMixins {
 
   rules: Function[] = []
 

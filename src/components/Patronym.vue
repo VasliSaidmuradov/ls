@@ -20,12 +20,11 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
 import SaveFieldBtn from '@/components/SaveField.vue';
 
 @Component({
-  mixins: [BaseFormMixins],
   components: {
     SaveFieldBtn
   }
 })
-export default class Patronym extends Vue {
+export default class Patronym extends BaseFormMixins {
 
   rules: Function[] = []
 

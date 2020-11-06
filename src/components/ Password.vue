@@ -135,7 +135,7 @@ export default class Password extends Vue {
     if (Object.keys(this.passwordStrengthText).includes(strength)) this.passwordStrength = strength;
   }
 
-  changePwd(pwd: string) {
+  changePwd(pwd: keyof {oldPassword: boolean; newPassword: boolean; repeatPassword: boolean}) {
     this.pwdObject[pwd] = !this.pwdObject[pwd];
   }
 

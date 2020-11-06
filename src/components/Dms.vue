@@ -26,9 +26,8 @@ import SaveFieldBtn from '@/components/SaveField.vue';
   components: {
     SaveFieldBtn
   },
-  mixins: [BaseFormMixins]
 })
-export default class Dms extends Vue {
+export default class Dms extends BaseFormMixins {
 
   rules: Function[] = [];
 

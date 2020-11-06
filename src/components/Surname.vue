@@ -24,16 +24,15 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
   components: {
     SaveFieldBtn
   },
-  mixins: [BaseFormMixins]
 })
-export default class Name extends Vue {
+export default class Name extends BaseFormMixins {
 
   rules: Function[] = []
 
   oldValue = '';
 
   mounted() {
-    this.rules.push(this.rules.push(this.inputRules.maxMinlength));
+    this.rules.push(this.inputRules.maxMinlength);
     this.oldValue = this.surname;
   }
 

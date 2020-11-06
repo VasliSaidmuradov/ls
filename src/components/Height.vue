@@ -29,9 +29,8 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
   components: {
     InputSuffix
   },
-  mixins: [BaseFormMixins]
 })
-export default class Height extends Vue {
+export default class Height extends BaseFormMixins {
 
   rules: Function[] = []
 
