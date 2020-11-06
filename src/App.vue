@@ -46,7 +46,7 @@ import Aside from '@/components/Aside.vue';
   height: 100vh;
 
   .aside-left {
-    border-radius: 0px 35px 35px 0px;
+    position: relative;
   }
 
   .q-drawer--left {

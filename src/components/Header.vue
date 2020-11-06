@@ -1,18 +1,30 @@
 <template>
     <div class="header__content">
       <div class="header__content-back">
-        <q-btn unelevated class="button1--border" padding="8px 10px" @click="back()" text-color="accent">
+        <q-btn unelevated class="button1--border" padding="8px 10px" @click="back()">
           <icon name="next-icon"></icon>
         </q-btn>
         <span class="header__content-back-text">Назад</span>
       </div>
 
       <div class="header__content-user">
+        <div class="header__content-user-research">
+          <q-btn class="header__content-user-research-btn">
+            <div class="header__content-user-append-icon">
+              <icon name="add-icon"></icon>
+            </div>
+          </q-btn>
+          <span class="header__content-user-research-text">Загрузить исследование</span>
+        </div>
         <div class="header__content-user-notice">
-          <q-badge floating>4</q-badge>
-          <div class="icon">
-            <icon name="notice"></icon>
+          <div class="header__content-user-notice-badge">
+            +12
           </div>
+          <q-btn class="header__content-user-notice-btn">
+            <div class="icon">
+              <icon name="notice"></icon>
+            </div>
+          </q-btn>
         </div>
         <div class="header__content-user-picture">
           <q-avatar square size="34px" rounded>
@@ -72,6 +84,21 @@ export default class Header extends Vue {
       padding-left: 45px;
       display: flex;
       align-items: center;
+      color: $accent-color;
+
+      .q-btn {
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+
+        .q-btn__wrapper {
+          padding: 0 !important;
+
+          svg {
+            width: 4px;
+          }
+        }
+      }
     }
 
     &__content-back-text {
@@ -90,6 +117,44 @@ export default class Header extends Vue {
       justify-content: center;
     }
 
+    &__content-user-research {
+      display: flex;
+      align-items: center;
+      margin-right: 70px;
+    }
+
+    &__content-user-research-btn {
+      &.q-btn {
+        .q-btn__wrapper {
+          padding: 0 !important;
+
+          &:before {
+            display: none;
+          }
+        }
+      }
+    }
+
+    &__content-user-append-icon {
+      width: 42px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $accent-color;
+      color: $light-white;
+      border-radius: 16px;
+    }
+
+    &__content-user-research-text {
+      font-size: 12px;
+      line-height: 150%;
+      color: $black-02;
+      display: block;
+      white-space: nowrap;
+      margin-left: 12px;
+    }
+
     &__content-user-picture {
       width: 100%;
       height: 100%;
@@ -102,24 +167,50 @@ export default class Header extends Vue {
     &__content-user-notice {
       position: relative;
       color: $accent-color;
-      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      height: auto;
+      margin-right: 25px;
+    }
+
+    &__content-user-notice-btn {
+      &.q-btn {
+        width: 34px;
+        height: 34px;
+        background: #FFFFFF;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+
+        .q-btn__wrapper {
+          padding: 0 !important;
+
+          &:before {
+            display: none;
+          }
+        }
+      }
+    }
+
+    &__content-user-notice-badge {
+      font-size: 9px;
+      line-height: 11px;
+      font-weight: 700;
+      color: $accent-color;
       display: flex;
       align-items: center;
-      width: 60px;
+      position: relative;
+      margin-right: 5px;
 
-      .q-badge {
-        background-color: $light-stroke;
-        color: #333;
-        font-size: 10px;
-        line-height: 12px;
-        font-weight: 700;
+      &:after {
+        content: '';
+        display: block;
+        width: 4px;
+        height: 4px;
+        background-color: $accent-color;
         border-radius: 100%;
-        margin-top: 10px;
-        width: 22px;
-        height: 22px;
-        align-items: center;
-        justify-content: center;
-        padding: 0;
+        position: absolute;
+        right: -10px;
+        z-index: 999;
       }
     }
   }

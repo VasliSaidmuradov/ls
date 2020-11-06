@@ -48,19 +48,23 @@ export default class Tabs extends Vue {
     padding: 8px;
     margin-bottom: 40px;
 
+    .q-tab {
+      padding: 10px 25px;
+      font-weight: 500;
+      font-size: 13px;
+      color: #424056;
+
+      .q-tab__label {
+        text-transform: none;
+      }
+    }
+
     .q-tab--active {
       color: #fff;
       background-color: $accent-color;
 
       .q-tab__indicator {
         display: none !important;
-      }
-
-      .q-tab {
-        padding: 25px 13px;
-        font-weight: 500;
-        font-size: 13px;
-        color: #424056;
       }
     }
   }

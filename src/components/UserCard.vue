@@ -5,9 +5,14 @@
         <icon name="close-icon"></icon>
       </q-btn>
       <div class="user-card__info">
-        <q-avatar square size="98px" rounded>
-          <img src="https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg" alt="avatar">
-        </q-avatar>
+        <div class="user-card__avatar">
+          <q-btn class="user-card__edit">
+            <icon name="edit-icon"></icon>
+          </q-btn>
+          <q-avatar square size="98px" rounded>
+            <img src="https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg" alt="avatar">
+          </q-avatar>
+        </div>
 
         <div class="user-card__info-name">
           <h6>Роман Филь</h6>
@@ -224,7 +229,35 @@ export default class UserCard extends Vue {
     .q-btn {
       border-radius: 12px;
       width: 100%;
+      text-transform: none;
     }
+  }
+
+  &__edit {
+    &.q-btn {
+      position: absolute;
+      color: $accent-color;
+      z-index: 99;
+      background-color: $light-white;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      width: 34px;
+      height: 34px;
+      bottom: 5px;
+      right: 5px;
+
+      .q-btn__wrapper {
+        padding: 0;
+
+        &:before {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &__avatar {
+    position: relative;
   }
 }
 </style>
