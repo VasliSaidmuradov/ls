@@ -30,7 +30,7 @@
             <q-icon
                 :name="pwdObject.oldPassword ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer pwd-icon"
-                @click="pwdObject.oldPassword = !pwdObject.oldPassword" />
+                @click="changePwd('oldPassword')" />
           </q-input>
         </div>
 
@@ -47,7 +47,7 @@
             <q-icon
                 :name="pwdObject.newPassword ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer pwd-icon"
-                @click="pwdObject.newPassword = !pwdObject.newPassword" />
+                @click="changePwd('newPassword')" />
           </q-input>
 
             <div class="password__meter">
@@ -75,7 +75,7 @@
             <q-icon
                 :name="pwdObject.repeatPassword ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer pwd-icon"
-                @click="pwdObject.repeatPassword = !pwdObject.repeatPassword" />
+                @click="changePwd('repeatPassword')" />
           </q-input>
         </div>
 
@@ -133,6 +133,10 @@ export default class Password extends Vue {
 
   onScore({ score, strength }: {score: number; strength: string}) {
     if (Object.keys(this.passwordStrengthText).includes(strength)) this.passwordStrength = strength;
+  }
+
+  changePwd(pwd: string) {
+    this.pwdObject[pwd] = !this.pwdObject[pwd];
   }
 
 }

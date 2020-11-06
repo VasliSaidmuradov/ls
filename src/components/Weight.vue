@@ -36,13 +36,12 @@ import SaveFieldBtn from '@/components/SaveField.vue';
 })
 export default class Weight extends Vue {
 
-  rules: Function[] = [
-    (val: number) => val.toString().length || 'обязательно к заполнению',
-  ]
+  rules: Function[] = []
 
   oldValue = 0;
 
   mounted() {
+    this.rules.push(this.inputRules.required)
     this.oldValue = this.weight;
   }
 

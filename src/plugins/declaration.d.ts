@@ -3,3 +3,4 @@ declare module 'vue-simple-password-meter';
 declare module 'quasar/lang/ru.js';
 declare module 'vue-phone-number-input';
 declare module 'vue-moment';
+declare module 'vue-date-fns';

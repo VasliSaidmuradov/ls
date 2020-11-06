@@ -23,20 +23,21 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import InputSuffix from '@/components/InputSuffix.vue';
+import BaseFormMixins from '@/mixins/base-form-mixins';
 
 @Component({
   components: {
     InputSuffix
-  }
+  },
+  mixins: [BaseFormMixins]
 })
 export default class Height extends Vue {
 
-  rules: Function[] = [
-    (val: number) => val.toString().length || 'обязательно к заполнению',
-  ]
+  rules: Function[] = []
 
 
   get height() {
+    this.rules.push(this.inputRules.required)
     return this.$store.state.medicalCard.height;
   }
 

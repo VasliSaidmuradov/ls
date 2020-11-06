@@ -27,11 +27,12 @@ import SaveFieldBtn from '@/components/SaveField.vue';
 })
 export default class Patronym extends Vue {
 
-  rules: Function[] = [(val: string) => val.length > 2 && val.length <= 20 || 'Please type something']
+  rules: Function[] = []
 
   oldValue = '';
 
   mounted() {
+    this.rules.push(this.inputRules.maxMinlength)
     this.oldValue = this.patronym;
   }
 

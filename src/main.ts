@@ -5,7 +5,7 @@ import store from './store'
 import './plugins/quasar'
 import './plugins/vue-awesome'
 import './plugins/vueDonutChart'
-import './plugins/moment'
+import './plugins/date-fns'
 import './styles/main.scss'
 
 Vue.config.productionTip = false

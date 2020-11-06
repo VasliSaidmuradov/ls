@@ -63,7 +63,7 @@
               <q-input class="form-input"
                        @click="showPopup = !showPopup"
                        :class="{'form-input--empty': !lastMenstruation}"
-                       :value="lastMenstruation | moment('DD MMMM YYYY')"/>
+                       :value="lastMenstruation ? $date(new Date(lastMenstruation),'dd MMMM yyyy'): ''"/>
                 <q-dialog
                     @keydown.enter="birthdayPopup = false"
                     @hide="onClose"

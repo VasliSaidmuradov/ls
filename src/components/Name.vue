@@ -16,23 +16,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import {Component, Mixins, Vue} from 'vue-property-decorator';
 import BaseFormMixins from '@/mixins/base-form-mixins';
 import SaveFieldBtn from '@/components/SaveField.vue';
 
 @Component({
-  mixins: [BaseFormMixins],
   components: {
     SaveFieldBtn
-  }
+  },
+  mixins: [BaseFormMixins],
 })
 export default class Name extends Vue {
 
-  rules: Function[] = [(val: string) => val.length > 2 && val.length <= 20 || 'Please type something']
-
   oldValue = '';
+  rules: Function[] = [];
 
   mounted() {
+    this.rules.push(this.inputRules.maxMinlength)
     this.oldValue = this.name;
   }
 
