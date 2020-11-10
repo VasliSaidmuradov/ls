@@ -185,6 +185,10 @@ export default class Pregnancy extends Vue {
 
   &__header {
     display: flex;
+
+    @media (max-width: $breakpoint-sm) {
+      flex-direction: column;
+    }
   }
 
   &__was-pregnant {
@@ -196,11 +200,13 @@ export default class Pregnancy extends Vue {
     display: flex;
     flex-direction: column;
     margin-left: 25px;
+
+    @media (max-width: $breakpoint-sm) {
+      margin-left: 0;
+      margin-top: 30px;
+    }
   }
 
-  .pregnancy__title {
-
-  }
 
   .childbirth {
     margin-bottom: 30px;
@@ -212,6 +218,10 @@ export default class Pregnancy extends Vue {
     &__toggles {
       display: flex;
       margin-top: 30px;
+
+      @media (max-width: $breakpoint-xs) {
+        flex-direction: column;
+      }
     }
 
     &__toggles-item {
@@ -219,6 +229,15 @@ export default class Pregnancy extends Vue {
 
       &:last-child {
         margin-right: 0;
+      }
+
+      @media (max-width: $breakpoint-xs) {
+        margin-right: 0;
+        margin-bottom: 18px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }

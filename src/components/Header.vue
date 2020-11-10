@@ -1,10 +1,7 @@
 <template>
     <div class="header__content">
       <div class="header__content-back">
-        <q-btn unelevated class="button1--border" padding="8px 10px" @click="back()">
-          <icon name="next-icon"></icon>
-        </q-btn>
-        <span class="header__content-back-text">Назад</span>
+        <BackBtn />
       </div>
 
       <div class="header__content-user">
@@ -26,13 +23,13 @@
             </div>
           </q-btn>
         </div>
-        <div class="header__content-user-picture">
+        <div class="header__content-user-picture" @click="togglePopup">
           <q-avatar square size="34px" rounded>
             <img src="https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg" alt="avatar">
           </q-avatar>
         </div>
 
-        <q-popup-proxy ref="userCardPopup" :target="userCardPopupIsActive">
+        <q-popup-proxy no-parent-event ref="userCardPopup" :value="showPopup" :target="userCardPopupIsActive">
           <UserCard isPopup :onCLose="userCardClose"></UserCard>
         </q-popup-proxy>
       </div>
@@ -45,20 +42,24 @@ import UserCard from '@/components/UserCard.vue';
 import {QPopupProxy} from 'quasar';
 import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
+import BackBtn from '@/components/BackBtn.vue';
 
 @Component({
   components: {
-    UserCard
+    UserCard,
+    BackBtn
   }
 })
 export default class Header extends Vue {
 
-  back() {
-    window.history.back();
-  }
+  showPopup = false;
 
   userCardClose() {
-    (this.$refs.userCardPopup as QPopupProxy).hide();
+    this.showPopup = false;
+  }
+
+  togglePopup() {
+    this.showPopup = !this.showPopup;
   }
 
   get userCardPopupIsActive(): boolean {
@@ -73,7 +74,6 @@ export default class Header extends Vue {
   .header {
     &__content {
       height: 66px;
-      padding-left: 100px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -82,23 +82,7 @@ export default class Header extends Vue {
 
     &__content-back {
       padding-left: 45px;
-      display: flex;
-      align-items: center;
       color: $accent-color;
-
-      .q-btn {
-        width: 24px;
-        height: 24px;
-        border-radius: 8px;
-
-        .q-btn__wrapper {
-          padding: 0 !important;
-
-          svg {
-            width: 4px;
-          }
-        }
-      }
     }
 
     &__content-back-text {

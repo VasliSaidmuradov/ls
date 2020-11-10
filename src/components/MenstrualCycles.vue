@@ -82,6 +82,10 @@ export default class MenstrualCycles extends Vue {
       display: flex;
       flex-wrap: wrap;
       align-items: flex-end;
+
+      @media (max-width: $breakpoint-xs) {
+        flex-direction: column;
+      }
     }
 
     &__item {
@@ -89,8 +93,22 @@ export default class MenstrualCycles extends Vue {
       margin-right: 30px;
       box-sizing: content-box;
 
+      .q-field__control-container {
+        input {
+          padding: 0px 0px 0px 20px;
+          max-height: 56px;
+        }
+      }
+
       &:last-child {
         margin-right: 0;
+      }
+
+
+      @media (max-width: $breakpoint-xs) {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 33px;
       }
     }
   }

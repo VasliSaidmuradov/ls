@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import "vars";
+@import "layout";
 
 
 body {
@@ -7,9 +8,7 @@ body {
 }
 
 .button1 {
-  .q-btn {
 
-  }
 }
 
 
@@ -26,11 +25,23 @@ body {
   }
 }
 
+.button1--flooded {
+  &.q-btn {
+    border-radius: 12px;
+    text-transform: none;
+    font-weight: 500;
+    font-size: 12px;
+    border: none;
+    background-color: $accent-color;
+    color: $light-white;
+  }
+}
+
 
 .form-input {
   input, textarea {
-    height: 58px;
-    padding-left: 20px;
+    height: 56px;
+    padding: 0px 0px 0px 20px;
     font-size: 14px;
     font-weight: 400;
     color: $black-01;
@@ -132,11 +143,15 @@ body {
     color: #424056;
     border: 1px solid $light-stroke;
     margin: 0 5px;
+    border-radius: 18px !important;
 
     &.bg-primary {
-      border-radius: 18px !important;
       background-color: $accent-color !important;
       border-color: transparent;
+    }
+
+    .q-btn__wrapper {
+      padding: 12px 20px !important;
     }
   }
 
