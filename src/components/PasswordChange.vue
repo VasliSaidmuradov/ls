@@ -86,9 +86,9 @@ import passwordMeter from "vue-simple-password-meter";
 })
 export default class PasswordChange extends Vue {
   pwdObject = {
-    oldPassword: false,
-    newPassword: false,
-    repeatPassword: false,
+    oldPassword: true,
+    newPassword: true,
+    repeatPassword: true,
   };
 
   newPassword = '';

@@ -49,7 +49,7 @@ export default class Weight extends BaseFormMixins {
   }
 
   set weight (value: any) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'weight', value: value.match(/[0-9]*/)});
+    this.$store.commit('medicalCard/setPropertyInStore', {name: 'weight', value: this.checkInputValueByRegExp(this.onlyNumber, value)});
   }
 
 

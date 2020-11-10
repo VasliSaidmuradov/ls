@@ -7,6 +7,7 @@
 
     <div class="medical-card__expansion-info">
       <q-expansion-item
+          default-opened
           style="border-radius: 30px"
           header-class="medical-card__expansion-header"
           expand-icon-class="text-white"
@@ -103,7 +104,7 @@ import BasePageHeader from '@/components/BasePageHeader.vue';
       areaPlaceholder: 'Какой препарат принимаете?',
       property: 'allergicReactions',
       addFilesBtnText: 'Добавить аллергию',
-      addReactionBtnText: 'Добавить реакцию',
+      addReactionBtnText: 'Опишите реакцию',
     }
 
     get hormonalDrugs(): IReaction[] {

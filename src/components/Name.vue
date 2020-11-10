@@ -4,6 +4,7 @@
       :class="{'form-input--empty': !name}">
     <q-input
         rounded
+        placeholder="Имя"
         v-model="name"
         :rules="rules"
         :borderless="false"
@@ -41,7 +42,7 @@ export default class Name extends BaseFormMixins {
   }
 
   set name(value: string) {
-    this.$store.commit('userCard/setPropertyInStore', {name: 'name', value});
+    this.$store.commit('userCard/setPropertyInStore', {name: 'name', value: this.checkInputValueByRegExp(this.onlyLetters, value)});
   }
 
 }

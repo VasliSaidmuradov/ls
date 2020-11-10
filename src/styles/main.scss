@@ -40,7 +40,7 @@ body {
 
 .form-input {
   input, textarea {
-    height: 56px;
+    height: 54px;
     padding: 0px 0px 0px 20px;
     font-size: 14px;
     font-weight: 400;
@@ -85,7 +85,7 @@ body {
 
 
   &--empty {
-    input {
+    input, textarea {
       border: 1px solid $light-stroke;
       background-color: transparent;
       border-radius: 18px;
@@ -109,6 +109,7 @@ body {
       justify-content: center;
       color: $accent-color;
       margin-right: 10px;
+      margin-bottom: -6px;
     }
   }
 
@@ -127,7 +128,7 @@ body {
     border-radius: 18px;
 
     .q-field__native {
-      padding-left: 25px;
+      padding: 0px 0px 0px 25px;
       font-size: 14px;
       line-height: 130%;
       color: $black-01;
@@ -151,7 +152,7 @@ body {
     }
 
     .q-btn__wrapper {
-      padding: 12px 20px !important;
+      padding: 10px 20px !important;
     }
   }
 

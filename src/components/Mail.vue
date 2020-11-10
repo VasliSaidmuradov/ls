@@ -5,6 +5,7 @@
     <q-input
         rounded
         v-model="mail"
+        placeholder="Email"
         :rules="rules"
         :borderless="false"
         ref="mail"

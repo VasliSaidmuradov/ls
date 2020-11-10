@@ -34,17 +34,18 @@
           </template>
         </VuePhoneNumberInput>
       </div>
-      <div class="user-settings__insurance">
-        <h4 class="user-settings__insurance-title">Страховые полисы</h4>
-        <div class="user-settings__insurance-content">
-          <div class="user-settings__base-field-item">
-            <Oms />
-          </div>
-          <div class="user-settings__base-field-item">
-            <Dms />
-          </div>
-        </div>
-      </div>
+<!--      в первом релизе этого быть не должно -->
+<!--      <div class="user-settings__insurance">-->
+<!--        <h4 class="user-settings__insurance-title">Страховые полисы</h4>-->
+<!--        <div class="user-settings__insurance-content">-->
+<!--          <div class="user-settings__base-field-item">-->
+<!--            <Oms />-->
+<!--          </div>-->
+<!--          <div class="user-settings__base-field-item">-->
+<!--            <Dms />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
     </q-form>
   </div>
 </template>

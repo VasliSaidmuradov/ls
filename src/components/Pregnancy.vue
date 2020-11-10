@@ -37,7 +37,7 @@
                 v-model="childbirthIsSuccess" />
           </div>
 
-          <div class="childbirth__toggles" v-if="childbirthIsSuccess">
+          <div class="childbirth__toggles" v-if="!childbirthIsSuccess">
             <div class="childbirth__toggles-item form-toggle form-toggle--with-label">
               <q-toggle v-model="abortiont" label="Аборты"/>
             </div>
@@ -185,8 +185,9 @@ export default class Pregnancy extends Vue {
 
   &__header {
     display: flex;
+    justify-content: flex-start;
 
-    @media (max-width: $breakpoint-sm) {
+    @media (max-width: 1110px) {
       flex-direction: column;
     }
   }
@@ -194,14 +195,17 @@ export default class Pregnancy extends Vue {
   &__was-pregnant {
     display: flex;
     flex-direction: column;
+    width: auto;
+    min-width: 260px;
   }
 
   &__pregnant-count {
     display: flex;
     flex-direction: column;
     margin-left: 25px;
+    min-width: 180px;
 
-    @media (max-width: $breakpoint-sm) {
+    @media (max-width: 1110px) {
       margin-left: 0;
       margin-top: 30px;
     }

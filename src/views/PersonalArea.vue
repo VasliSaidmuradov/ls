@@ -128,8 +128,8 @@ export default class PersonalArea extends Vue {
     }
 
     &__tabs {
-      margin-right: 240px;
-      width: calc(100% - (240px + 35%));
+      margin-right: 200px;
+      width: calc(100% - (200px + 35%));
 
       @media (max-width: $breakpoint-lg) {
         margin-right: 100px;

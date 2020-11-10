@@ -4,15 +4,15 @@
     <div class="" v-for="item in value" :key="item.id">
       <div class="reaction__item">
         <div class="form-input reaction__item-input">
-          <q-input v-model="item.name" :placeholder="data.inputPlaceholder">
-            <q-btn class="reaction__item-delete" @click="deleteField(item.id)" v-if="value.length !== 1">
+          <q-input v-model="item.name" :class="{'form-input--empty': !item.name}" :placeholder="data.inputPlaceholder">
+            <q-btn class="reaction__item-delete" @click="deleteField(item.id)">
               <icon v-slot:prepend name="delete-icon"></icon>
             </q-btn>
           </q-input>
         </div>
         <template v-if="item.reaction.length">
           <div class="reaction__item-area form-input form-input--area" v-for="(reaction, index) in item.reaction" :key="index">
-            <q-input type="textarea" v-model="reaction.value" :placeholder="data.areaPlaceholder">
+            <q-input type="textarea" v-model="reaction.value" :class="{'form-input--empty': !reaction.value}" :placeholder="data.areaPlaceholder">
               <q-btn class="reaction__item-delete" @click="deleteReactions(item.id, index)">
                 <icon name="delete-icon" v-slot:prepend></icon>
               </q-btn>
@@ -130,6 +130,7 @@ export default class ComponentWithAddReaction extends Vue {
 
         .q-btn__wrapper {
           padding: 0;
+
           &:before {
             display: none;
           }
@@ -140,7 +141,8 @@ export default class ComponentWithAddReaction extends Vue {
         }
       }
 
-      &--reaction {
+
+      &--drug {
         margin-left: -10px;
 
         .reaction__add-icon {
@@ -157,6 +159,16 @@ export default class ComponentWithAddReaction extends Vue {
 
       &:hover {
         opacity: .8;
+      }
+    }
+
+    &__add-icon {
+      display: flex;
+      align-items: center;
+
+      svg {
+        width: 10px;
+        height: 10px;
       }
     }
 

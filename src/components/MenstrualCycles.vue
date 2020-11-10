@@ -83,7 +83,7 @@ export default class MenstrualCycles extends Vue {
       flex-wrap: wrap;
       align-items: flex-end;
 
-      @media (max-width: $breakpoint-xs) {
+      @media (max-width: 1110px) {
         flex-direction: column;
       }
     }
@@ -105,7 +105,7 @@ export default class MenstrualCycles extends Vue {
       }
 
 
-      @media (max-width: $breakpoint-xs) {
+      @media (max-width: 1110px) {
         width: 100%;
         margin-right: 0;
         margin-bottom: 33px;
