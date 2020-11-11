@@ -15,10 +15,6 @@
 
         <template v-slot:header>
           <div class="medical-card__expansion-info-header">
-            <span class="medical-card__expansion-info-icon">
-              <icon name="document-icon"></icon>
-              <span class="medical-card__expansion-info-count">+2</span>
-            </span>
             <span class="medical-card__expansion-info-header-text">Недавно добавленные документы</span>
           </div>
         </template>
@@ -54,17 +50,17 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import Pregnancy from '@/components/Pregnancy.vue';
-import MenstrualCycles from '@/components/MenstrualCycles.vue';
+import Pregnancy from '@/components/medicalCard/Pregnancy.vue';
+import MenstrualCycles from '@/components/medicalCard/MenstrualCycles.vue';
 import ComponentWithAddReaction from '@/components/ComponentWithAddReaction.vue';
-import BiologicalSex from '@/components/BiologicalSex.vue';
-import Race from '@/components/Race.vue';
-import Nationality from '@/components/Nationality.vue';
-import RegionOfResidence from '@/components/RegionOfResidence.vue';
-import Height from '@/components/Height.vue';
-import BloodType from '@/components/BloodType.vue';
-import Weight from '@/components/Weight.vue';
-import Birthday from '@/components/Birthday.vue';
+import BiologicalSex from '@/components/medicalCard/BiologicalSex.vue';
+import Race from '@/components/medicalCard/Race.vue';
+import Nationality from '@/components/medicalCard/Nationality.vue';
+import RegionOfResidence from '@/components/medicalCard/RegionOfResidence.vue';
+import Height from '@/components/medicalCard/Height.vue';
+import BloodType from '@/components/medicalCard/BloodType.vue';
+import Weight from '@/components/medicalCard/Weight.vue';
+import Birthday from '@/components/userSetting/Birthday.vue';
 import {IMedicalCard} from '@/interfaces/medical-card.interface';
 import IAddReactionsFiledData = IMedicalCard.IAddReactionsFiledData;
 import IReaction = IMedicalCard.IReaction;
@@ -123,7 +119,7 @@ import BasePageHeader from '@/components/BasePageHeader.vue';
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
+@import "../../styles/vars";
 
 .medical-card {
   &__expansion-info {
@@ -153,23 +149,16 @@ import BasePageHeader from '@/components/BasePageHeader.vue';
     display: flex;
     align-items: center;
     margin-right: auto;
-  }
-
-  &__expansion-info-count {
-    margin-left: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 140%;
+    color: $black-01;
   }
 
   &__expansion-info-header-text {
     font-size: 14px;
     line-height: 130%;
     color: #333333;
-  }
-
-  &__expansion-info-icon {
-    color: $status-green;
-    display: flex;
-    align-items: center;
-    margin-right: 12px;
   }
 
   &__expansion-header {

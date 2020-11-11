@@ -8,9 +8,9 @@ export namespace IMedicalCardStore {
     abortiont: boolean;
     miscarriages: boolean;
     nonDeveloping: boolean;
-    firstMenstruation: number;
-    durationMenstruation: number;
-    cycleDuration: number;
+    firstMenstruation: IMedicalCard.FirstMenstruation;
+    durationMenstruation: IMedicalCard.DurationMenstruation;
+    cycleDuration: IMedicalCard.CycleDuration;
     hormonalDrugs: IMedicalCard.IReaction[];
     allergicReactions: IMedicalCard.IReaction[];
     biologicalSex: IMedicalCard.BiologicalSex;
@@ -65,6 +65,21 @@ export namespace IMedicalCard {
   export enum Nationality {
     BELARUS = 'Беларусь',
     UKRAINE = 'Украина'
+  }
+
+  export enum FirstMenstruation {
+    TEN = '10 лет',
+    ELEVEN = '11 лет'
+  }
+
+  export enum DurationMenstruation {
+    TEN = '10',
+    ELEVEN = '11'
+  }
+
+  export enum CycleDuration {
+    TEN = '10',
+    ELEVEN = '11'
   }
 
   export interface IBaseFormOptions<T> {

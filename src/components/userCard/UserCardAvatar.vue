@@ -29,9 +29,10 @@ export default class UserCardAvatar extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
+@import "../../styles/vars";
 .avatar {
   position: relative;
+
   &__edit {
     &.q-btn {
       position: absolute;
@@ -52,6 +53,12 @@ export default class UserCardAvatar extends Vue {
           display: none;
         }
       }
+    }
+  }
+
+  .q-avatar {
+    img {
+      object-fit: cover;
     }
   }
 }

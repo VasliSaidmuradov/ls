@@ -1,5 +1,5 @@
 <template>
-  <div class="user-card">
+  <div class="user-card" :class="{'user-card--popup': isPopup}">
     <div class="user-card__header">
       <q-btn v-if="isPopup" @click="popupClose" class="user-card__close" unelevated>
         <icon name="close-icon"></icon>
@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import UserCardAvatar from '@/components/UserCardAvatar.vue';
+import UserCardAvatar from '@/components/userCard/UserCardAvatar.vue';
 import {IPersonalArea} from '@/interfaces/personal-area.interface';
 import TabsName = IPersonalArea.TabsName;
 import {IRouter} from '@/interfaces/router.interface';
@@ -91,8 +91,8 @@ export default class UserCard extends Vue {
 
 
 <style lang="scss">
-@import "../styles/vars";
-@import "../styles/mixins";
+@import "../../styles/vars";
+@import "../../styles/mixins";
 
 .user-card {
   padding: 18px;
@@ -241,8 +241,8 @@ export default class UserCard extends Vue {
     }
   }
 
-  @include media-breakpoint-up($breakpoint-lg) {
-    min-width: 350px;
+  &--popup {
+    min-width: 420px;
   }
 }
 </style>

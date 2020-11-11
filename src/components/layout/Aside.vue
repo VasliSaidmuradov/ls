@@ -3,7 +3,7 @@
 
     <div class="aside__content-logo">
       <a href="/">
-        <img src="../assets/logo.svg" alt="logo">
+        <img src="../../assets/logo.svg" alt="logo">
       </a>
     </div>
 
@@ -44,7 +44,7 @@ export default class Aside extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
+@import "../../styles/vars";
 
 .aside {
   &__content {
