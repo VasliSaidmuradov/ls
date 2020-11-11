@@ -92,6 +92,7 @@ export default class UserCard extends Vue {
 
 <style lang="scss">
 @import "../styles/vars";
+@import "../styles/mixins";
 
 .user-card {
   padding: 18px;
@@ -240,7 +241,7 @@ export default class UserCard extends Vue {
     }
   }
 
-  @media (max-width: $breakpoint-lg) {
+  @include media-breakpoint-up($breakpoint-lg) {
     min-width: 350px;
   }
 }

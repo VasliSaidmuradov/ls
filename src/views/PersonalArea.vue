@@ -114,6 +114,7 @@ export default class PersonalArea extends Vue {
 
 <style lang="scss">
 @import '../styles/vars';
+@import '../styles/mixins';
 
   .personal-area {
     width: 100%;
@@ -122,7 +123,7 @@ export default class PersonalArea extends Vue {
     &__content {
       display: flex;
 
-      @media (max-width: $breakpoint-md) {
+      @include media-breakpoint-up($breakpoint-md) {
         flex-direction: column-reverse;
       }
     }
@@ -131,17 +132,17 @@ export default class PersonalArea extends Vue {
       margin-right: 200px;
       width: calc(100% - (200px + 35%));
 
-      @media (max-width: $breakpoint-lg) {
+      @include media-breakpoint-up($breakpoint-lg) {
         margin-right: 100px;
         width: calc(100% - (100px + 350px));
       }
 
-      @media (max-width: $breakpoint-md) {
+      @include media-breakpoint-up($breakpoint-md) {
         margin-right: 0;
         width: 100%;
       }
 
-      @media (max-width: $breakpoint-sm) {
+      @include media-breakpoint-up($breakpoint-sm) {
         display: none;
       }
     }
@@ -149,12 +150,12 @@ export default class PersonalArea extends Vue {
     &__user-card {
       width: 35%;
 
-      @media (max-width: $breakpoint-md) {
+      @include media-breakpoint-up($breakpoint-md) {
         width: 100%;
         margin-bottom: 40px;
       }
 
-      @media (max-width: $breakpoint-sm) {
+      @include media-breakpoint-up($breakpoint-sm) {
         display: none;
       }
     }
@@ -171,7 +172,7 @@ export default class PersonalArea extends Vue {
     &__mobile-menu {
       display: none;
 
-      @media (max-width: $breakpoint-sm) {
+      @include media-breakpoint-up($breakpoint-sm) {
         display: flex;
         flex-direction: column;
       }

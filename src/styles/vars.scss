@@ -16,7 +16,7 @@ $light-background: #F9F9FC;
 $light-orange: #FCD5C5;
 $light-white: #FFFFFF;
 $text-color: #271C57;
-
+$scroll-hover-color: rgba($light-stroke, 0.8);
 //SHADOW
 $shadow-color: rgba(22, 20, 44, 0.06);
 
@@ -25,6 +25,7 @@ $shadow-color: rgba(22, 20, 44, 0.06);
 
 $breakpoint-xl: 1599px;
 $breakpoint-lg: 1367px;
+$breakpoint-pre-md: 1110px;
 $breakpoint-md: 1023px;
 $breakpoint-sm: 767px;
 $breakpoint-xs: 575px;

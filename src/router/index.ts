@@ -22,7 +22,7 @@ export default new Router({
     path: ROUTE_PATH[ROUTE_NAME.PAGE_PERSONAL_AREA],
     name: ROUTE_NAME.PAGE_PERSONAL_AREA,
     component: () => import('@/views/PersonalArea.vue'),
-    props: (route) => ({ query: route.query.activeTab })
+    props: (route: Route) => ({ query: route.query.activeTab })
     }, {
       path: ROUTE_PATH[ROUTE_NAME.MEDICAL_CARD_PAGE],
       name: ROUTE_NAME.MEDICAL_CARD_PAGE,

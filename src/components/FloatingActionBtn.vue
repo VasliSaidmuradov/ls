@@ -68,7 +68,7 @@ export default class FloatingActionBtn extends Vue {
 
   &__fab-btn {
     &.q-fab {
-      box-shadow: 0px 4px 15px rgba(22, 20, 44, 0.06);
+      box-shadow: 0px 4px 15px $shadow-color;
       border-radius: 10px;
       background-color: $accent-orange;
       color: $light-white;

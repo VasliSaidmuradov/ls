@@ -75,6 +75,7 @@ import Breakpoint = ILayout.Breakpoint;
 
 <style lang="scss">
 @import "styles/vars";
+@import "styles/mixins";
 
 .main-layout {
   height: 100vh;
@@ -104,7 +105,7 @@ import Breakpoint = ILayout.Breakpoint;
     border-radius: 10px 10px 0px 0px;
     background-color: $light-white;
 
-    @media (max-width: $breakpoint-sm) {
+    @include media-breakpoint-up($breakpoint-sm) {
       display: flex;
     }
   }
@@ -112,7 +113,7 @@ import Breakpoint = ILayout.Breakpoint;
   .q-header {
     display: block;
 
-    @media (max-width: $breakpoint-sm) {
+     @include media-breakpoint-up($breakpoint-sm) {
       display: none;
     }
   }

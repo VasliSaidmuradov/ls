@@ -176,6 +176,7 @@ export default class Pregnancy extends Vue {
 
 <style lang="scss">
 @import "../styles/vars";
+@import "../styles/mixins";
 
 .pregnancy {
 
@@ -187,7 +188,7 @@ export default class Pregnancy extends Vue {
     display: flex;
     justify-content: flex-start;
 
-    @media (max-width: 1110px) {
+    @include media-breakpoint-up($breakpoint-pre-md) {
       flex-direction: column;
     }
   }
@@ -205,7 +206,7 @@ export default class Pregnancy extends Vue {
     margin-left: 25px;
     min-width: 180px;
 
-    @media (max-width: 1110px) {
+    @include media-breakpoint-up($breakpoint-pre-md) {
       margin-left: 0;
       margin-top: 30px;
     }
@@ -223,7 +224,7 @@ export default class Pregnancy extends Vue {
       display: flex;
       margin-top: 30px;
 
-      @media (max-width: $breakpoint-xs) {
+      @include media-breakpoint-up($breakpoint-xs) {
         flex-direction: column;
       }
     }
@@ -235,7 +236,7 @@ export default class Pregnancy extends Vue {
         margin-right: 0;
       }
 
-      @media (max-width: $breakpoint-xs) {
+      @include media-breakpoint-up($breakpoint-xs) {
         margin-right: 0;
         margin-bottom: 18px;
 

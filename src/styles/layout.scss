@@ -1,11 +1,11 @@
 .layout {
   padding: 80px 95px;
   
-  @media (max-width: $breakpoint-lg) {
+  @include media-breakpoint-up($breakpoint-lg) {
     padding: 48px 30px;
   }
-  
-  @media (max-width: $breakpoint-sm) {
+
+  @include media-breakpoint-up($breakpoint-sm) {
     padding: 38px 20px;
   }
 }
@@ -21,7 +21,7 @@
     border: 1px $light-stroke solid;
 
     &:hover {
-      background-color: rgba($light-stroke, 0.8);
+      background-color: $scroll-hover-color;
     }
   }
 }
