@@ -37,7 +37,7 @@
                 v-model="childbirthIsSuccess" />
           </div>
 
-          <div class="childbirth__toggles" v-if="childbirthIsSuccess">
+          <div class="childbirth__toggles" v-if="!childbirthIsSuccess">
             <div class="childbirth__toggles-item form-toggle form-toggle--with-label">
               <q-toggle v-model="abortiont" label="Аборты"/>
             </div>
@@ -176,6 +176,7 @@ export default class Pregnancy extends Vue {
 
 <style lang="scss">
 @import "../styles/vars";
+@import "../styles/mixins";
 
 .pregnancy {
 
@@ -185,22 +186,32 @@ export default class Pregnancy extends Vue {
 
   &__header {
     display: flex;
+    justify-content: flex-start;
+
+    @include media-breakpoint-up($breakpoint-pre-md) {
+      flex-direction: column;
+    }
   }
 
   &__was-pregnant {
     display: flex;
     flex-direction: column;
+    width: auto;
+    min-width: 260px;
   }
 
   &__pregnant-count {
     display: flex;
     flex-direction: column;
     margin-left: 25px;
+    min-width: 180px;
+
+    @include media-breakpoint-up($breakpoint-pre-md) {
+      margin-left: 0;
+      margin-top: 30px;
+    }
   }
 
-  .pregnancy__title {
-
-  }
 
   .childbirth {
     margin-bottom: 30px;
@@ -212,6 +223,10 @@ export default class Pregnancy extends Vue {
     &__toggles {
       display: flex;
       margin-top: 30px;
+
+      @include media-breakpoint-up($breakpoint-xs) {
+        flex-direction: column;
+      }
     }
 
     &__toggles-item {
@@ -219,6 +234,15 @@ export default class Pregnancy extends Vue {
 
       &:last-child {
         margin-right: 0;
+      }
+
+      @include media-breakpoint-up($breakpoint-xs) {
+        margin-right: 0;
+        margin-bottom: 18px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }

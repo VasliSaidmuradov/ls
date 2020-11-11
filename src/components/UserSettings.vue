@@ -1,5 +1,13 @@
 <template>
-  <div class="user-settings">
+  <div class="user-settings" :class="{'user-settings--page layout layout--mobile': isProfilePage}">
+    <div class="user-settings__header" v-if="isProfilePage">
+      <BasePageHeader title="Данные профиля"/>
+    </div>
+
+    <div class="user-settings__avatar" v-if="isProfilePage">
+      <UserCardAvatar />
+    </div>
+
     <q-form ref="form">
       <div class="user-settings__base-field">
        <div class="user-settings__base-field-item">
@@ -15,7 +23,7 @@
           <Mail />
         </div>
       </div>
-      <div class="user-settings__password">
+      <div class="user-settings__password" v-if="!isProfilePage">
         <Password />
       </div>
       <div class="user-settings__phone">
@@ -26,17 +34,18 @@
           </template>
         </VuePhoneNumberInput>
       </div>
-      <div class="user-settings__insurance">
-        <h4 class="user-settings__insurance-title">Страховые полисы</h4>
-        <div class="user-settings__insurance-content">
-          <div class="user-settings__base-field-item">
-            <Oms />
-          </div>
-          <div class="user-settings__base-field-item">
-            <Dms />
-          </div>
-        </div>
-      </div>
+<!--      в первом релизе этого быть не должно -->
+<!--      <div class="user-settings__insurance">-->
+<!--        <h4 class="user-settings__insurance-title">Страховые полисы</h4>-->
+<!--        <div class="user-settings__insurance-content">-->
+<!--          <div class="user-settings__base-field-item">-->
+<!--            <Oms />-->
+<!--          </div>-->
+<!--          <div class="user-settings__base-field-item">-->
+<!--            <Dms />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
     </q-form>
   </div>
 </template>
@@ -51,7 +60,11 @@ import Surname from '@/components/Surname.vue';
 import Patronym from '@/components/Patronym.vue';
 import Oms from '@/components/Oms.vue';
 import Dms from '@/components/Dms.vue';
-import Password from '@/components/ Password.vue';
+import Password from '@/components/Password.vue';
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
+import BasePageHeader from '@/components/BasePageHeader.vue';
+import UserCardAvatar from '@/components/UserCardAvatar.vue';
 
   @Component({
     components: {
@@ -63,6 +76,8 @@ import Password from '@/components/ Password.vue';
       Oms,
       Dms,
       Password,
+      BasePageHeader,
+      UserCardAvatar
     }
   })
 
@@ -79,6 +94,10 @@ import Password from '@/components/ Password.vue';
 
     set phone(value: string) {
       this.$store.commit('userCard/setPropertyInStore', {name: 'phone', value});
+    }
+
+    get isProfilePage(): boolean {
+      return this.$route.name === ROUTE_NAME.PROFILE_PAGE;
     }
   }
 </script>
@@ -184,6 +203,15 @@ import Password from '@/components/ Password.vue';
         height: 10px;
         width: 8px;
       }
+    }
+
+    &--page {
+      padding: 50px 20px;
+    }
+
+    &__avatar {
+      margin: 25px 0px;
+      width: 98px;
     }
   }
 </style>

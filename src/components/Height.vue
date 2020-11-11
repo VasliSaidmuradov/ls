@@ -41,7 +41,7 @@ export default class Height extends BaseFormMixins {
   }
 
   set height (value: any) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'height', value: value.match(/[0-9]*/)});
+    this.$store.commit('medicalCard/setPropertyInStore', {name: 'height',value: this.checkInputValueByRegExp(this.onlyNumber, value)});
   }
 
 }

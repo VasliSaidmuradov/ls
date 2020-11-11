@@ -5,6 +5,7 @@
     <q-input
         rounded
         v-model="patronym"
+        placeholder="Фамилия"
         :rules="rules"
         :borderless="false"
         ref="patronym"
@@ -40,7 +41,7 @@ export default class Patronym extends BaseFormMixins {
   }
 
   set patronym(value: string) {
-    this.$store.commit('userCard/setPropertyInStore', {name: 'patronym', value});
+    this.$store.commit('userCard/setPropertyInStore', {name: 'patronym', value: this.checkInputValueByRegExp(this.onlyLetters, value)});
   }
 
 }

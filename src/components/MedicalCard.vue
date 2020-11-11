@@ -1,12 +1,27 @@
 <template>
-  <div class="medical-card">
+  <div class="medical-card" :class="{'medical-card--page layout layout--mobile': isMedicalCardPage}">
+
+    <div class="medical-card__header" v-if="isMedicalCardPage">
+      <BasePageHeader title="Медицинская карта"/>
+    </div>
+
     <div class="medical-card__expansion-info">
       <q-expansion-item
+          default-opened
           style="border-radius: 30px"
           header-class="medical-card__expansion-header"
-          label="Друзья! Помогите нам создать удобный сервис."
           expand-icon-class="text-white"
       >
+
+        <template v-slot:header>
+          <div class="medical-card__expansion-info-header">
+            <span class="medical-card__expansion-info-icon">
+              <icon name="document-icon"></icon>
+              <span class="medical-card__expansion-info-count">+2</span>
+            </span>
+            <span class="medical-card__expansion-info-header-text">Недавно добавленные документы</span>
+          </div>
+        </template>
         <q-card>
           <q-card-section class="expansion-info">
             <p>Друзья, помогите нам стать лучше и создать удобный сервис для управления вашим здоровьем! Сейчас мы находимся на этапе разработки второй версии продукта, который станет вашей личной медицинской картой. У вас появится возможность хранить все свое здоровье в одном месте и предоставлять врачам первичную информацию в 2 клика!</p>
@@ -53,6 +68,9 @@ import Birthday from '@/components/Birthday.vue';
 import {IMedicalCard} from '@/interfaces/medical-card.interface';
 import IAddReactionsFiledData = IMedicalCard.IAddReactionsFiledData;
 import IReaction = IMedicalCard.IReaction;
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
+import BasePageHeader from '@/components/BasePageHeader.vue';
 
   @Component({
     components: {
@@ -67,6 +85,7 @@ import IReaction = IMedicalCard.IReaction;
       BloodType,
       Weight,
       Birthday,
+      BasePageHeader
     }
   })
   export default class MedicalCard extends Vue {
@@ -85,7 +104,7 @@ import IReaction = IMedicalCard.IReaction;
       areaPlaceholder: 'Какой препарат принимаете?',
       property: 'allergicReactions',
       addFilesBtnText: 'Добавить аллергию',
-      addReactionBtnText: 'Добавить реакцию',
+      addReactionBtnText: 'Опишите реакцию',
     }
 
     get hormonalDrugs(): IReaction[] {
@@ -94,6 +113,10 @@ import IReaction = IMedicalCard.IReaction;
 
     get allergicReactions(): IReaction[] {
       return this.$store.state.medicalCard.allergicReactions
+    }
+
+    get isMedicalCardPage(): boolean {
+      return this.$route.name === ROUTE_NAME.MEDICAL_CARD_PAGE;
     }
   }
 
@@ -115,15 +138,38 @@ import IReaction = IMedicalCard.IReaction;
 
       .q-card {
         border-radius: 0px 0px 15px 15px;
-
-        &.expansion-info {
-          font-size: 14px;
-          line-height: 130%;
-          color: #333333;
-        }
       }
     }
 
+    .q-item__label {
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 140%;
+      color: $black-01;
+    }
+  }
+
+  &__expansion-info-header {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+  }
+
+  &__expansion-info-count {
+    margin-left: 5px;
+  }
+
+  &__expansion-info-header-text {
+    font-size: 14px;
+    line-height: 130%;
+    color: #333333;
+  }
+
+  &__expansion-info-icon {
+    color: $status-green;
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
   }
 
   &__expansion-header {

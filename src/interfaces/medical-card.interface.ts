@@ -81,4 +81,10 @@ export namespace IMedicalCard {
     addFilesBtnText: string;
     addReactionBtnText: string;
   }
+
+  export interface IRulesValue {
+    0: string;
+    input: string;
+    groups?: string[];
+  }
 }

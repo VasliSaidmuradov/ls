@@ -1,7 +1,7 @@
 <template>
   <div class="tabs">
     <q-tabs
-        v-model="tabActive"
+        :value="activeTab"
         @input="tabsChange"
         class="tabs__header"
         align="left">
@@ -9,7 +9,7 @@
     </q-tabs>
 
     <q-tab-panels
-        v-model="tabActive"
+        :value="activeTab"
         class="tabs__body"
         animated>
       <q-tab-panel v-for="(tab, index) in data" :name="tab.name" :key="index">
@@ -27,7 +27,7 @@ import {ITabs} from '@/interfaces/tabs.interface';
 export default class Tabs extends Vue {
   @Prop() data: ITabs.ITabItem[];
   @Prop() onTabChange: Function | undefined;
-  tabActive = this.data[0].name;
+  @Prop() activeTab: string;
 
 
   tabsChange(activeTab: string) {

@@ -12,7 +12,7 @@ export default {
   state: {
     wasPregnant: 1,
     pregnantCount: 0,
-    childbirthIsSuccess: false,
+    childbirthIsSuccess: true,
     abortiont: false,
     miscarriages: false,
     nonDeveloping: false,
@@ -21,16 +21,8 @@ export default {
     firstMenstruation: 0,
     durationMenstruation: 0,
     cycleDuration: 0,
-    hormonalDrugs: [{
-      name: '1',
-      id: `f${(~~(Math.random()*1e8)).toString(16)}`,
-      reaction: [],
-      }],
-    allergicReactions: [{
-        name: '1',
-        id: `f${(~~(Math.random()*1e8)).toString(16)}`,
-        reaction: [],
-      }],
+    hormonalDrugs: [],
+    allergicReactions: [],
     biologicalSex: 'man',
     bloodType: 'I положительная',
     race: 'Европеоидная',

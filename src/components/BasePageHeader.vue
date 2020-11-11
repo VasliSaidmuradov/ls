@@ -1,0 +1,47 @@
+<template>
+  <div class="base-page-header">
+    <div class="base-page-header__back">
+      <BackBtn />
+    </div>
+
+    <h4 class="base-page-header__title">{{title}}</h4>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import BackBtn from '@/components/BackBtn.vue';
+
+@Component({
+  components: {
+    BackBtn
+  }
+})
+export default class BasePageHeader extends Vue {
+@Prop() title: string;
+
+}
+</script>
+
+<style lang="scss">
+@import "../styles/vars";
+
+.base-page-header {
+  margin-bottom: 25px;
+  margin-top: 12px;
+
+  &__back {
+    color: $accent-color;
+  }
+
+  &__title {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 120%;
+    color: $black-02;
+    margin-bottom: 0;
+    margin-top: 15px;
+  }
+}
+
+</style>

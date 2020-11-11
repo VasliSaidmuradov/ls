@@ -1,0 +1,27 @@
+.layout {
+  padding: 80px 95px;
+  
+  @include media-breakpoint-up($breakpoint-lg) {
+    padding: 48px 30px;
+  }
+
+  @include media-breakpoint-up($breakpoint-sm) {
+    padding: 38px 20px;
+  }
+}
+
+
+.scrollable {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $light-stroke;
+    border: 1px $light-stroke solid;
+
+    &:hover {
+      background-color: $scroll-hover-color;
+    }
+  }
+}

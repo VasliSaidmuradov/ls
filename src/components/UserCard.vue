@@ -1,19 +1,11 @@
 <template>
   <div class="user-card">
     <div class="user-card__header">
-      <q-btn v-if="isPopup" @click="popupClose" class="user-card-close" text-color="accent" color="light-white" unelevated>
+      <q-btn v-if="isPopup" @click="popupClose" class="user-card__close" unelevated>
         <icon name="close-icon"></icon>
       </q-btn>
       <div class="user-card__info">
-        <div class="user-card__avatar">
-          <q-btn class="user-card__edit">
-            <icon name="edit-icon"></icon>
-          </q-btn>
-          <q-avatar square size="98px" rounded>
-            <img src="https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg" alt="avatar">
-          </q-avatar>
-        </div>
-
+        <UserCardAvatar />
         <div class="user-card__info-name">
           <h6>Роман Филь</h6>
           <p>24 года, 14.02.1996</p>
@@ -21,8 +13,8 @@
       </div>
 
       <div class="user-card__header-controls">
-        <q-btn unelevated padding="13px 20px" class="button1--accent">Настройки пользователя</q-btn>
-        <q-btn unelevated padding="13px 20px" class="button1--accent">Мед.карта</q-btn>
+        <q-btn unelevated padding="13px 20px" class="button1--accent" @click="goToPersonalArea(tabsName.USER_SETTINGS)">Настройки пользователя</q-btn>
+        <q-btn unelevated padding="13px 20px" class="button1--accent" @click="goToPersonalArea(tabsName.MEDICAL_CARD)">Мед.карта</q-btn>
       </div>
     </div>
     <div class="user-card__body">
@@ -61,12 +53,22 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import UserCardAvatar from '@/components/UserCardAvatar.vue';
+import {IPersonalArea} from '@/interfaces/personal-area.interface';
+import TabsName = IPersonalArea.TabsName;
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
 
-@Component({})
+
+@Component({
+  components: {
+    UserCardAvatar
+  }
+})
 export default class UserCard extends Vue {
   @Prop() onCLose: Function | undefined;
   @Prop({default: false, type: Boolean}) isPopup: boolean | undefined;
-
+  tabsName = TabsName
   sections = [
     { label: 'В норме', value: 19, color: '#63C58A' },
     { label: 'Пограничные зоны', value: 5, color: '#FFDE79' },
@@ -80,12 +82,17 @@ export default class UserCard extends Vue {
   popupClose() {
     if(this.onCLose) this.onCLose();
   }
+
+  goToPersonalArea(activeTab: TabsName) {
+    this.$router.push({name: ROUTE_NAME.PAGE_PERSONAL_AREA, query: {activeTab}});
+  }
 }
 </script>
 
 
 <style lang="scss">
 @import "../styles/vars";
+@import "../styles/mixins";
 
 .user-card {
   padding: 18px;
@@ -97,13 +104,14 @@ export default class UserCard extends Vue {
 
   &__header {
     position: relative;
+  }
 
-    .user-card-close {
-      &.q-btn {
-        position: absolute;
-        right: -15px;
-        top: -20px;
-      }
+  &__close {
+    &.q-btn {
+      position: absolute;
+      right: -15px;
+      top: -20px;
+      color: $accent-color;
     }
   }
 
@@ -125,8 +133,8 @@ export default class UserCard extends Vue {
       text-align: center;
       border-radius: 12px;
       text-transform: none;
-      min-width: 191px;
       margin-left: 5px;
+      min-width: 45%;
       margin-right: 5px;
     }
   }
@@ -233,31 +241,8 @@ export default class UserCard extends Vue {
     }
   }
 
-  &__edit {
-    &.q-btn {
-      position: absolute;
-      color: $accent-color;
-      z-index: 99;
-      background-color: $light-white;
-      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
-      border-radius: 10px;
-      width: 34px;
-      height: 34px;
-      bottom: 5px;
-      right: 5px;
-
-      .q-btn__wrapper {
-        padding: 0;
-
-        &:before {
-          display: none;
-        }
-      }
-    }
-  }
-
-  &__avatar {
-    position: relative;
+  @include media-breakpoint-up($breakpoint-lg) {
+    min-width: 350px;
   }
 }
 </style>
