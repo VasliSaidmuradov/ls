@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
-import UserCard from '@/components/UserCard.vue';
+import UserCard from '@/components/userCard/UserCard.vue';
 import {QPopupProxy} from 'quasar';
 import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
@@ -69,7 +69,7 @@ export default class Header extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
+@import "../../styles/vars";
 
   .header {
     &__content {

@@ -54,17 +54,17 @@
 import { Component, Vue } from 'vue-property-decorator';
 import VuePhoneNumberInput from 'vue-phone-number-input';
 import 'vue-phone-number-input/dist/vue-phone-number-input.css';
-import Name from '@/components/Name.vue';
-import Mail from '@/components/Mail.vue';
-import Surname from '@/components/Surname.vue';
-import Patronym from '@/components/Patronym.vue';
-import Oms from '@/components/Oms.vue';
-import Dms from '@/components/Dms.vue';
-import Password from '@/components/Password.vue';
+import Name from '@/components/userSetting/Name.vue';
+import Mail from '@/components/userSetting/Mail.vue';
+import Surname from '@/components/userSetting/Surname.vue';
+import Patronym from '@/components/medicalCard/Patronym.vue';
+import Oms from '@/components/userSetting/Oms.vue';
+import Dms from '@/components/userSetting/Dms.vue';
+import Password from '@/components/userSetting/Password.vue';
 import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
 import BasePageHeader from '@/components/BasePageHeader.vue';
-import UserCardAvatar from '@/components/UserCardAvatar.vue';
+import UserCardAvatar from '@/components/userCard/UserCardAvatar.vue';
 
   @Component({
     components: {
@@ -104,7 +104,7 @@ import UserCardAvatar from '@/components/UserCardAvatar.vue';
 
 
 <style lang="scss">
-@import '../styles/vars';
+@import '../../styles/vars';
 
   .user-settings {
 

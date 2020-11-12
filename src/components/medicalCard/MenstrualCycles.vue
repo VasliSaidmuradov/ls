@@ -8,17 +8,30 @@
     <div class="menstrual-cycles__content">
       <div class="menstrual-cycles__item">
         <label class="form-label" for="firstMenstruation">Возраст первой менструации</label>
-        <q-input type="number" id="firstMenstruation" for="firstMenstruation"  class="form-input" v-model="firstMenstruation"/>
+        <q-select type="number" id="firstMenstruation"
+                  for="firstMenstruation"
+                  :options="optionsFirstMenstruation"
+                  class="form-select" v-model="firstMenstruation"/>
       </div>
 
       <div class="menstrual-cycles__item">
         <label class="form-label" for="durationMenstruation">Длительность менструации</label>
-        <q-input type="number" class="form-input" id="durationMenstruation" for="durationMenstruation" v-model="durationMenstruation"/>
+        <q-select type="number"
+                  class="form-select"
+                  :options="optionsDuration"
+                  id="durationMenstruation"
+                  for="durationMenstruation"
+                  v-model="durationMenstruation"/>
       </div>
 
       <div class="menstrual-cycles__item">
         <label class="form-label" for="cycleDuration">Длительность цикла</label>
-        <q-input class="form-input" v-model="cycleDuration" id="cycleDuration" for="cycleDuration" type="number" />
+        <q-select class="form-select"
+                  v-model="cycleDuration"
+                  :options="optionsСycle"
+                  id="cycleDuration"
+                  for="cycleDuration"
+                  type="number" />
       </div>
     </div>
   </div>
@@ -26,10 +39,25 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {IMedicalCardStore} from '@/interfaces/medical-card.interface';
+import {IMedicalCard, IMedicalCardStore} from '@/interfaces/medical-card.interface';
 
 @Component({})
 export default class MenstrualCycles extends Vue {
+
+  optionsFirstMenstruation: IMedicalCard.FirstMenstruation[] = [
+    IMedicalCard.FirstMenstruation.ELEVEN,
+    IMedicalCard.FirstMenstruation.TEN
+  ];
+
+  optionsDuration: IMedicalCard.DurationMenstruation[] = [
+    IMedicalCard.DurationMenstruation.ELEVEN,
+    IMedicalCard.DurationMenstruation.TEN
+  ];
+
+  optionsСycle: IMedicalCard.CycleDuration[] = [
+    IMedicalCard.CycleDuration.TEN,
+    IMedicalCard.CycleDuration.ELEVEN
+  ];
 
   get firstMenstruation(): number {
     return this.$store.state.medicalCard.firstMenstruation;
@@ -60,8 +88,8 @@ export default class MenstrualCycles extends Vue {
 
 
 <style lang="scss">
-@import '../styles/vars';
-@import '../styles/mixins';
+@import '../../styles/vars';
+@import '../../styles/mixins';
 
   .menstrual-cycles {
     margin: 60px 0px;

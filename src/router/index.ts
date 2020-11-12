@@ -26,12 +26,12 @@ export default new Router({
     }, {
       path: ROUTE_PATH[ROUTE_NAME.MEDICAL_CARD_PAGE],
       name: ROUTE_NAME.MEDICAL_CARD_PAGE,
-      component: () => import('@/components/MedicalCard.vue'),
+      component: () => import('@/components/medicalCard/MedicalCard.vue'),
       beforeEnter: MobileRouteRedirect,
   }, {
       path: ROUTE_PATH[ROUTE_NAME.PROFILE_PAGE],
       name: ROUTE_NAME.PROFILE_PAGE,
-      component: () => import('@/components/UserSettings.vue'),
+      component: () => import('@/components/userSetting/UserSettings.vue'),
       beforeEnter: MobileRouteRedirect,
     }, {
       path: ROUTE_PATH[ROUTE_NAME.PASSWORD_CHANGE_PAGE],

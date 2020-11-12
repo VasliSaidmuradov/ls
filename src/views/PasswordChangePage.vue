@@ -11,7 +11,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import BasePageHeader from '../components/BasePageHeader.vue';
-import PasswordChange from '@/components/PasswordChange.vue';
+import PasswordChange from '@/components/userSetting/PasswordChange.vue';
 
 @Component({
   components: {

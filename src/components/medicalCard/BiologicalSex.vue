@@ -47,7 +47,7 @@ export default class BiologicalSex extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
+@import "../../styles/vars";
 
 .biological-sex {
   margin-top: 60px;

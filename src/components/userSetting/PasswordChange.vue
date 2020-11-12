@@ -7,6 +7,7 @@
       <q-input
           rounded
           v-model="password"
+          placeholder="Введите пароль"
           :type="pwdObject.oldPassword ? 'password': 'text'"
           :borderless="false"
       >
@@ -24,6 +25,7 @@
       <q-input
           rounded
           v-model="newPassword"
+          placeholder="Введите новый пароль"
           :type="pwdObject.newPassword ? 'password': 'text'"
           :borderless="false"
       >
@@ -52,6 +54,7 @@
       <q-input
           rounded
           v-model="repeatPassword"
+          placeholder="Повторите пароль"
           :type="pwdObject.repeatPassword ? 'password': 'text'"
           :borderless="false"
       >
@@ -76,7 +79,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {IUserCard} from '../interfaces/user-card.interface';
+import {IUserCard} from '../../interfaces/user-card.interface';
 import passwordMeter from "vue-simple-password-meter";
 
 @Component({
@@ -124,7 +127,7 @@ export default class PasswordChange extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
+@import "../../styles/vars";
 
 
 .password-change {

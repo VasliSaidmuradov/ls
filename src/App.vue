@@ -32,9 +32,9 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import Header from '@/components/Header.vue';
-import Aside from '@/components/Aside.vue';
-import Footer from '@/components/Footer.vue';
+import Header from '@/components/layout/Header.vue';
+import Aside from '@/components/layout/Aside.vue';
+import Footer from '@/components/layout/Footer.vue';
 import FloatingActionBtn from '@/components/FloatingActionBtn.vue';
 import {ILayout} from '@/interfaces/layout.interface';
 import LayoutPattern = ILayout.LayoutPattern;

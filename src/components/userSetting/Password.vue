@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import PasswordChange from '@/components/PasswordChange.vue';
+import PasswordChange from '@/components/userSetting/PasswordChange.vue';
 
 @Component({
   components: {
@@ -42,7 +42,7 @@ export default class Password extends Vue {
 
 
 <style lang="scss">
-@import "../styles/vars";
+@import "../../styles/vars";
 .password {
   &__btn {
     &.q-btn {

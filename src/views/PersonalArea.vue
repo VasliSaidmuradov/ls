@@ -50,10 +50,10 @@
 <script lang="ts">
 import {Component, Vue, Watch} from 'vue-property-decorator';
 import {IPersonalArea} from '@/interfaces/personal-area.interface.ts';
-import UserSettings from '@/components/UserSettings.vue';
+import UserSettings from '@/components/userSetting/UserSettings.vue';
 import Tabs from '@/components/Tabs.vue';
-import UserCard from '@/components/UserCard.vue';
-import MedicalCart from '@/components/MedicalCard.vue';
+import UserCard from '@/components/userCard/UserCard.vue';
+import MedicalCart from '@/components/medicalCard/MedicalCard.vue';
 import {IMenu} from '@/interfaces/layout.interface';
 import PERSONAL_AREA_MENU = IMenu.PERSONAL_AREA_MENU;
 import {IRouter} from '@/interfaces/router.interface';
@@ -123,21 +123,21 @@ export default class PersonalArea extends Vue {
     &__content {
       display: flex;
 
-      @include media-breakpoint-up($breakpoint-md) {
+      @include media-breakpoint-up($breakpoint-pre-md) {
         flex-direction: column-reverse;
       }
     }
 
     &__tabs {
       margin-right: 200px;
-      width: calc(100% - (200px + 35%));
+      width: calc(100% - (200px + 420px));
 
       @include media-breakpoint-up($breakpoint-lg) {
         margin-right: 100px;
         width: calc(100% - (100px + 350px));
       }
 
-      @include media-breakpoint-up($breakpoint-md) {
+      @include media-breakpoint-up($breakpoint-pre-md) {
         margin-right: 0;
         width: 100%;
       }
@@ -148,10 +148,11 @@ export default class PersonalArea extends Vue {
     }
 
     &__user-card {
-      width: 35%;
+      min-width: 420px;
+      max-width: 420px;
 
-      @include media-breakpoint-up($breakpoint-md) {
-        width: 100%;
+      @include media-breakpoint-up($breakpoint-pre-md) {
+        max-width: 100%;
         margin-bottom: 40px;
       }
 

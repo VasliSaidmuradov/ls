@@ -39,7 +39,7 @@ export default class RegionOfResidence extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
+@import "../../styles/vars";
  .regional-select {
    &__btn {
      display: flex;
