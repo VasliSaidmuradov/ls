@@ -91,9 +91,6 @@ export default class UserCard extends Vue {
 
 
 <style lang="scss">
-@import "../../styles/vars";
-@import "../../styles/mixins";
-
 .user-card {
   padding: 18px;
   display: flex;

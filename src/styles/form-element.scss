@@ -89,6 +89,12 @@
       resize: none !important;
     }
   }
+
+  &--bordered {
+    input, textarea {
+      border-color: $light-stroke;
+    }
+  }
 }
 
 

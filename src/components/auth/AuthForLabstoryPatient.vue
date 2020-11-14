@@ -1,6 +1,6 @@
 <template>
-  <div class="index-page layout">
-      index
+  <div class="auth-labstry-patient">
+    auth-labstry-patient
   </div>
 </template>
 
@@ -8,7 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
-export default class IndexPage extends Vue {
+export default class AuthForLabstoryPatient extends Vue {
 
 }
 </script>

@@ -48,8 +48,6 @@ export default class Height extends BaseFormMixins {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-
   .height-input {
     margin-bottom: 25px;
   }

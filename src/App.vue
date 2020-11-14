@@ -74,8 +74,6 @@ import Breakpoint = ILayout.Breakpoint;
 </script>
 
 <style lang="scss">
-@import "styles/vars";
-@import "styles/mixins";
 
 .main-layout {
   height: 100vh;

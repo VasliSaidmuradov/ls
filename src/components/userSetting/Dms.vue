@@ -51,6 +51,5 @@ export default class Dms extends BaseFormMixins {
 
 
 <style lang="scss">
-@import "../../styles/vars";
 
 </style>

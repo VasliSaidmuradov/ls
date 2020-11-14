@@ -37,8 +37,6 @@ export default class Tabs extends Vue {
 </script>
 
 <style lang="scss">
-@import '../styles/vars';
-
 .tabs {
   &__header {
     width: fit-content;

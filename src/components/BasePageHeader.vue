@@ -24,7 +24,7 @@ export default class BasePageHeader extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
+
 
 .base-page-header {
   margin-bottom: 25px;

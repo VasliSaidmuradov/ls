@@ -44,8 +44,6 @@ export default class Aside extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-
 .aside {
   &__content {
     width: 100%;

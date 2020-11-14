@@ -57,8 +57,6 @@ export default class Weight extends BaseFormMixins {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-
 .weigh-input {
   margin-bottom: 25px;
 

@@ -29,7 +29,7 @@ export default class UserCardAvatar extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
+
 .avatar {
   position: relative;
 

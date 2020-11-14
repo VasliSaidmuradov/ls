@@ -119,8 +119,6 @@ import BasePageHeader from '@/components/BasePageHeader.vue';
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-
 .medical-card {
   &__expansion-info {
     margin-bottom: 40px;

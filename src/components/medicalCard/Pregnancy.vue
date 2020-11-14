@@ -175,9 +175,6 @@ export default class Pregnancy extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-@import "../../styles/mixins";
-
 .pregnancy {
 
   &__title {

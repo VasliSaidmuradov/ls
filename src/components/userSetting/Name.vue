@@ -42,6 +42,7 @@ export default class Name extends BaseFormMixins {
   }
 
   set name(value: string) {
+    console.log( this.checkInputValueByRegExp(this.onlyLetters, value))
     this.$store.commit('userCard/setPropertyInStore', {name: 'name', value: this.checkInputValueByRegExp(this.onlyLetters, value)});
   }
 
@@ -50,6 +51,5 @@ export default class Name extends BaseFormMixins {
 
 
 <style lang="scss">
-@import "../../styles/vars";
 
 </style>

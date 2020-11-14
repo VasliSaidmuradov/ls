@@ -39,8 +39,6 @@ export default class Birthday extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-
   .birthday {
     margin-bottom: 25px;
   }

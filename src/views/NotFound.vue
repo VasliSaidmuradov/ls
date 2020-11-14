@@ -14,7 +14,6 @@ export default class NotFound extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
 
 
 </style>

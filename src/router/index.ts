@@ -62,5 +62,9 @@ export default new Router({
       path: ROUTE_PATH[ROUTE_NAME.NOT_FOUND_PAGE],
       name: ROUTE_NAME.NOT_FOUND_PAGE,
       component: () => import('@/views/NotFound.vue'),
+    },  {
+      path: ROUTE_PATH[ROUTE_NAME.AUTH_PAGE],
+      name: ROUTE_NAME.AUTH_PAGE,
+      component: () => import('@/views/AuthPage.vue'),
     }]
 });

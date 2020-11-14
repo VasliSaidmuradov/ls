@@ -14,7 +14,6 @@ export default class StoragePage extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
 
 
 </style>

@@ -99,7 +99,7 @@ export namespace IMedicalCard {
 
   export interface IRulesValue {
     0: string;
-    input: string;
+    input?: string;
     groups?: string[];
   }
 }

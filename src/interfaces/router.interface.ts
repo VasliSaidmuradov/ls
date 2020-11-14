@@ -8,7 +8,8 @@ export namespace IRouter {
     NOT_FOUND_PAGE = 'notFoundPage',
     PROFILE_PAGE = 'profilePage',
     MEDICAL_CARD_PAGE = 'medicalCart',
-    PASSWORD_CHANGE_PAGE = 'passwordChangePage'
+    PASSWORD_CHANGE_PAGE = 'passwordChangePage',
+    AUTH_PAGE = 'authPage',
   }
 
   export const ROUTE_PATH = {
@@ -21,5 +22,6 @@ export namespace IRouter {
     [ROUTE_NAME.PROFILE_PAGE]: '/profile',
     [ROUTE_NAME.MEDICAL_CARD_PAGE]: '/medical-card',
     [ROUTE_NAME.PASSWORD_CHANGE_PAGE]: '/password-change',
+    [ROUTE_NAME.AUTH_PAGE]: '/auth'
   }
 }

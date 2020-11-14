@@ -59,8 +59,6 @@ export default class FloatingActionBtn extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
-
 
 .actions-btn {
   display: flex;

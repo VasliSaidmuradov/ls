@@ -127,7 +127,7 @@ export default class PasswordChange extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
+
 
 
 .password-change {

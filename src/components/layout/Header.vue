@@ -69,8 +69,6 @@ export default class Header extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-
   .header {
     &__content {
       height: 66px;

@@ -39,7 +39,6 @@ export default class Race extends Vue {
 
 
 <style lang="scss">
-@import "../../styles/vars";
 
   .race-select {
     margin-bottom: 25px;

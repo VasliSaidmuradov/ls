@@ -104,7 +104,7 @@ import UserCardAvatar from '@/components/userCard/UserCardAvatar.vue';
 
 
 <style lang="scss">
-@import '../../styles/vars';
+
 
   .user-settings {
 

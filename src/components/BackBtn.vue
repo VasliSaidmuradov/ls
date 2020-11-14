@@ -19,8 +19,6 @@ export default class BackBtn extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
-
 .back-btn {
   display: flex;
   align-items: center;
