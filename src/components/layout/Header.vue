@@ -1,5 +1,5 @@
 <template>
-    <div class="header__content">
+    <div class="header__content layout">
       <div class="header__content-back">
         <BackBtn />
       </div>
@@ -79,7 +79,6 @@ export default class Header extends Vue {
 
 
     &__content-back {
-      padding-left: 45px;
       color: $accent-color;
     }
 
@@ -91,7 +90,6 @@ export default class Header extends Vue {
     }
 
     &__content-user {
-      margin-right: 60px;
       cursor: pointer;
       display: flex;
       align-items: center;

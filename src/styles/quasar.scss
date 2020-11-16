@@ -1,2 +1,25 @@
 @import './quasar.variables.scss';
 @import '~quasar-styl';
+
+//tooltip
+.tooltip {
+  padding: 6px 12px !important;
+  background: $light-stroke !important;
+  color: $black-02 !important;
+  font-size: 12px !important;
+  line-height: 150% !important;
+  border-radius: 8px !important;
+  &:before {
+    content: '';
+    position: absolute;
+    left: -20px;
+    top: 40%;
+    border: 10px solid transparent;
+    border-right: 10px solid $light-stroke;
+  }
+}
+
+.tooltip.q-tooltip {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}

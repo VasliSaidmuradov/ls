@@ -5,6 +5,7 @@ $black-01: #16142C;
 $black-02: #424056;
 $black-03: #626272;
 $black-04: #C9C9D0;
+$black-05: #DFDFEB;
 $gray-02: #4F4F4F;
 $gray-01: #333333;
 $status-red: #FF7C7C;
@@ -17,12 +18,12 @@ $light-orange: #FCD5C5;
 $light-white: #FFFFFF;
 $text-color: #271C57;
 $scroll-hover-color: rgba($light-stroke, 0.8);
-//SHADOW
-$shadow-color: rgba(22, 20, 44, 0.06);
 
+//SHADOWS
+$shadow-color: rgba(22, 20, 44, 0.06);
+$shadow-color1: 0 4px 15px rgba(22, 20, 44, 0.06);
 
 //BREAKPOINTS
-
 $breakpoint-xl: 1599px;
 $breakpoint-lg: 1367px;
 $breakpoint-pre-md: 1110px;
