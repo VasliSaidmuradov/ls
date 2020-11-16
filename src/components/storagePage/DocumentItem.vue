@@ -12,13 +12,13 @@
             anchor="center right"
             self="center left"
             :max-width="'193px'"
-        >Произошла ошибка. Некоторые страницы из документы не
-          получилось расшифровать
+        >
+          Произошла ошибка. Некоторые страницы из документы не получилось расшифровать
         </q-tooltip>
         <icon name="cancel-icon" class="document-item__header-status-icon"/>
       </div>
 
-      <icon name="delete-icon" class="document-item__header-delete-icon" v-else/>
+      <icon name="delete-icon" class="document-item__header-delete-icon" v-else @click="deleteDocument"/>
     </div>
 
     <div class="document-item__name-edit-wrapper">
@@ -44,16 +44,34 @@
       </q-btn>
       <icon name="download-icon" class="document-item__footer-download-icon" v-else/>
     </div>
+
+    <dialog-modal
+        :is-dialog-modal-open="isDialogModalOpen"
+        @close-dialog-modal="closeDialogModal"
+    />
   </div>
 </template>
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator'
   import {IStorage} from "@/interfaces/storage.interface";
+  import DialogModal from "@/modals/DialogModal.vue";
 
-  @Component({})
+  @Component({
+    components: {DialogModal}
+  })
   export default class DocumentItem extends Vue {
     @Prop() document: IStorage.IDocument
+
+    isDialogModalOpen = false
+
+    closeDialogModal(val: boolean) {
+      this.isDialogModalOpen = val
+    }
+
+    deleteDocument() {
+      this.isDialogModalOpen = true
+    }
   }
 </script>
 
@@ -95,6 +113,7 @@
     }
 
     &__header-delete-icon {
+      margin-top: 7px;
       width: 12px;
       height: 14px;
       color: $black-05;
