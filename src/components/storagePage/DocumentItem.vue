@@ -23,7 +23,7 @@
 
     <div class="document-item__name-edit-wrapper">
       <p class="document-item__name">{{document.name}}</p>
-      <icon name="edit-icon" class="document-item__edit-icon" v-if="document.type === 2"/>
+      <icon name="edit-icon" class="document-item__edit-icon" v-if="document.type === 2" @click="editDocument"/>
     </div>
 
     <p class="document-item__loaded-at">Загружено 22.05.2020</p>
@@ -49,28 +49,43 @@
         :is-dialog-modal-open="isDialogModalOpen"
         @close-dialog-modal="closeDialogModal"
     />
+
+    <edit-document-modal
+      :is-edit-document-modal-open="isEditDocumentModalOpen"
+      @close-edit-document-modal="closeEditDocumentModal"
+    />
   </div>
 </template>
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator'
   import {IStorage} from "@/interfaces/storage.interface";
-  import DialogModal from "@/modals/DialogModal.vue";
+  import DialogModal from "@/components/modals/DialogModal.vue";
+  import EditDocumentModal from "@/components/modals/EditDocumentModal.vue";
 
   @Component({
-    components: {DialogModal}
+    components: {EditDocumentModal, DialogModal}
   })
   export default class DocumentItem extends Vue {
     @Prop() document: IStorage.IDocument
 
     isDialogModalOpen = false
+    isEditDocumentModalOpen = false
 
     closeDialogModal(val: boolean) {
       this.isDialogModalOpen = val
     }
 
+    closeEditDocumentModal(val: boolean) {
+      this.isEditDocumentModalOpen = val
+    }
+
     deleteDocument() {
       this.isDialogModalOpen = true
+    }
+
+    editDocument() {
+      this.isEditDocumentModalOpen = true
     }
   }
 </script>

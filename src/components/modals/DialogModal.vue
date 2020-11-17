@@ -1,5 +1,5 @@
 <template>
-  <q-dialog :value="isDialogModalOpen">
+  <q-dialog :value="isDialogModalOpen" @hide="closeDialogModal">
     <div class="modal">
         <span class="modal__title">
           Вы точно хотите удалить документ?
@@ -11,7 +11,7 @@
           <span class="modal__btn1-text">Удалить</span>
         </q-btn>
 
-        <q-btn class="modal__btn2" flat @click="closeDialogModal">
+        <q-btn class="modal__btn2" flat v-close-popup>
           <span class="modal__btn2-text">Отмена</span>
         </q-btn>
       </div>
@@ -24,7 +24,7 @@
 
   @Component({})
   export default class DialogModal extends Vue {
-    @Prop() isDialogModalOpen: boolean
+    @Prop({required: true}) isDialogModalOpen: boolean
 
     @Emit('close-dialog-modal')
     closeDialogModal() {
