@@ -7,7 +7,7 @@
           Заполните документ, чтобы было проще
         </span>
 
-      <span class="modal__subtitle">Придумайте короткое название, выберите тип и дату исследования</span>
+      <span class="modal__subtitle">Придумайте короткое название, выберите тип и дату <br> исследования</span>
 
       <div class="modal__input form-input form-input--empty">
         <label class="form-label" for="documentName">Название документа</label>
@@ -109,6 +109,7 @@
     }
 
     &__input {
+      width: 455px;
       margin-top: 24px;
     }
 

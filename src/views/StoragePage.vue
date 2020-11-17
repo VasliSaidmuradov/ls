@@ -4,7 +4,7 @@
       <div>
         <h2 class="storage-page__header-title">Ваши документы</h2>
       </div>
-      <q-btn class="storage-page__header-btn">
+      <q-btn class="storage-page__header-btn" @click="openFileModal">
         <div class="storage-page__header-btn-icon-wrapper">
           <icon name="add-icon" class="storage-page__header-btn-icon"/>
         </div>
@@ -47,6 +47,11 @@
         :document="document"
       />
     </div>
+
+    <add-file-modal
+      :is-file-modal-open="isFileModalOpen"
+      @close-file-modal="closeFileModal"
+    />
   </div>
 </template>
 
@@ -54,12 +59,14 @@
   import {Component, Vue} from 'vue-property-decorator';
   import DocumentItem from "@/components/storagePage/DocumentItem.vue";
   import {IStorage} from "@/interfaces/storage.interface";
+  import AddFileModal from "@/components/modals/AddFileModal.vue";
 
   @Component({
-    components: {DocumentItem}
+    components: {AddFileModal, DocumentItem}
   })
   export default class StoragePage extends Vue {
     isCheckboxValue = false
+    isFileModalOpen = false
     selectValue = 'Сортировать'
     selectOptionList: Array<string> = [
       'Сортировать',
@@ -97,6 +104,14 @@
         type: 2,
       },
     ]
+
+    openFileModal() {
+      this.isFileModalOpen = true
+    }
+
+    closeFileModal(val: boolean) {
+      this.isFileModalOpen = val
+    }
   }
 </script>
 

@@ -96,7 +96,7 @@
     padding: 8px 10px 16px 16px;
     border-radius: 20px;
     background-color: $light-white;
-    box-shadow: $shadow-color1;
+    box-shadow: 0 4px 15px $shadow-color;
 
     &__header {
       display: flex;
@@ -115,6 +115,7 @@
     }
 
     &__header-date {
+      margin-top: 4px;
       color: $accent-color;
       font-weight: 500;
       font-size: 12px;
