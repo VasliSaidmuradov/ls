@@ -2,7 +2,7 @@
   <div class="storage-page layout">
     <div class="storage-page__header">
       <h2 class="storage-page__header-title">Ваши документы</h2>
-      <q-btn class="storage-page__header-btn">
+      <q-btn class="storage-page__header-btn" @click="toggleFileModal(true)">
         <div class="storage-page__header-btn-icon-wrapper">
           <icon name="add-icon" class="storage-page__header-btn-icon"/>
         </div>

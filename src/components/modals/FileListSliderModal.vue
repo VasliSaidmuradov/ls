@@ -5,7 +5,7 @@
         <icon name="close-icon" class="modal__close-icon"/>
       </q-btn>
 
-      <img src="@/assets/file.jpg" alt="" v-if="false">
+      <img src="@/assets/file.jpg" alt="" v-if="currentPage === 1">
 
       <div class="modal__pdf-block" v-else>
         <img src="@/assets/Pdf.png" alt="" class="modal__pdf-block-pdf-icon">
@@ -19,7 +19,11 @@
 
       <div class="modal__action-block-wrapper">
         <div class="modal__action-block">
-          <q-btn class="modal__action-block-btn">
+          <q-btn
+              class="modal__action-block-btn"
+              @click="btnPrevClick"
+              :disable="currentPage === 1"
+          >
             <icon name="next-icon" class="modal__action-block-btn-icon"/>
           </q-btn>
 
@@ -28,7 +32,11 @@
             <icon name="download-icon" class="modal__action-block-download-icon"/>
           </div>
 
-          <q-btn class="modal__action-block-btn">
+          <q-btn
+              class="modal__action-block-btn"
+              @click="btnNextClick"
+              :disable="currentPage === countPages.length + 1"
+          >
             <icon name="next-icon" class="modal__action-block-btn-icon modal__action-block-btn-icon--right"/>
           </q-btn>
         </div>
@@ -44,9 +52,20 @@
   export default class FileListSliderModal extends Vue {
     @Prop({required: true}) isFileListSliderModalOpen: boolean
 
+    countPages = "2"
+    currentPage = 1
+
     @Emit('close-modal')
     closeModal() {
       return false
+    }
+
+    btnPrevClick() {
+      this.currentPage--
+    }
+
+    btnNextClick() {
+      this.currentPage++
     }
   }
 </script>
