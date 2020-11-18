@@ -14,7 +14,6 @@ export default class AnalyzesPage extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
 
 
 </style>

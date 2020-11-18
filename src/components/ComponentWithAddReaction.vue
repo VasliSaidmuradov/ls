@@ -81,8 +81,6 @@ export default class ComponentWithAddReaction extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
-
   .reaction {
     &__title {
       font-weight: 500;

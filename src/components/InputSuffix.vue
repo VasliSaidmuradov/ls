@@ -31,8 +31,6 @@ export default class InputSuffix extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
-
   .suffix {
     position: absolute;
     font-size: 14px;

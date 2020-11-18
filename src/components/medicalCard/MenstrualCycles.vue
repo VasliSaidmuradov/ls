@@ -88,9 +88,6 @@ export default class MenstrualCycles extends Vue {
 
 
 <style lang="scss">
-@import '../../styles/vars';
-@import '../../styles/mixins';
-
   .menstrual-cycles {
     margin: 60px 0px;
 

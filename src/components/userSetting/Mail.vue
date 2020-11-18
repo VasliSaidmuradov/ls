@@ -56,9 +56,6 @@ export default class Mail extends BaseFormMixins {
 
 
 <style lang="scss">
-@import "../../styles/vars";
-
-
 .mail-input {
 
   &__desk {

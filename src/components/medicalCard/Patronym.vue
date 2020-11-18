@@ -49,6 +49,5 @@ export default class Patronym extends BaseFormMixins {
 
 
 <style lang="scss">
-@import "../../styles/vars";
 
 </style>

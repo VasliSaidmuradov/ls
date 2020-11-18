@@ -25,7 +25,6 @@ export default class PasswordChangePage extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
 
 
 .password-change-page {

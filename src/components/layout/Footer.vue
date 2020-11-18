@@ -28,8 +28,6 @@ export default class Footer extends Vue {
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-
 .footer {
 
   &__content {

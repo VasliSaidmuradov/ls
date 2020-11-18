@@ -35,7 +35,6 @@ export default class Nationality extends Vue {
 
 
 <style lang="scss">
-@import "../../styles/vars";
 
 .nationality-select {
   margin-bottom: 25px;

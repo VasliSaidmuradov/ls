@@ -60,7 +60,7 @@ import RegionOfResidence from '@/components/medicalCard/RegionOfResidence.vue';
 import Height from '@/components/medicalCard/Height.vue';
 import BloodType from '@/components/medicalCard/BloodType.vue';
 import Weight from '@/components/medicalCard/Weight.vue';
-import Birthday from '@/components/userSetting/Birthday.vue';
+import Birthday from '@/components/medicalCard/Birthday.vue';
 import {IMedicalCard} from '@/interfaces/medical-card.interface';
 import IAddReactionsFiledData = IMedicalCard.IAddReactionsFiledData;
 import IReaction = IMedicalCard.IReaction;
@@ -119,8 +119,6 @@ import BasePageHeader from '@/components/BasePageHeader.vue';
 </script>
 
 <style lang="scss">
-@import "../../styles/vars";
-
 .medical-card {
   &__expansion-info {
     margin-bottom: 40px;

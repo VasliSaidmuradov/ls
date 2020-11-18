@@ -15,7 +15,7 @@ export namespace ILayout {
 
 
 export namespace IMenu {
-  export const MAIN_MENU: IMeinMenuItem[] = [
+  export const MAIN_MENU: IMainMenuItem[] = [
     {
       name: ROUTE_NAME.INDEX_PAGE,
       link: ROUTE_PATH[ROUTE_NAME.INDEX_PAGE],
@@ -44,7 +44,7 @@ export namespace IMenu {
     }
   ];
 
-  export const PERSONAL_AREA_MENU: IMeinMenuItem[] = [
+  export const PERSONAL_AREA_MENU: IMainMenuItem[] = [
     {
       name: ROUTE_NAME.PROFILE_PAGE,
       icon: 'profile-icon',
@@ -63,7 +63,7 @@ export namespace IMenu {
     }
   ]
 
-  export interface IMeinMenuItem {
+  export interface IMainMenuItem {
     icon: string;
     text: string;
     link: string;

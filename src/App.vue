@@ -74,8 +74,6 @@ import Breakpoint = ILayout.Breakpoint;
 </script>
 
 <style lang="scss">
-@import "styles/vars";
-@import "styles/mixins";
 
 .main-layout {
   height: 100vh;
@@ -101,8 +99,8 @@ import Breakpoint = ILayout.Breakpoint;
 
   .footer {
     display: none;
-    box-shadow: 0px 4px 15px $shadow-color;
-    border-radius: 10px 10px 0px 0px;
+    box-shadow: 0 4px 15px $shadow-color;
+    border-radius: 10px 10px 0 0;
     background-color: $light-white;
 
     @include media-breakpoint-up($breakpoint-sm) {

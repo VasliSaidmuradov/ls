@@ -42,7 +42,7 @@ export default class Password extends Vue {
 
 
 <style lang="scss">
-@import "../../styles/vars";
+
 .password {
   &__btn {
     &.q-btn {

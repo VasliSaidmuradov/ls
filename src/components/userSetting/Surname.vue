@@ -50,6 +50,6 @@ export default class Name extends BaseFormMixins {
 
 
 <style lang="scss">
-@import "../../styles/vars";
+
 
 </style>

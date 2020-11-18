@@ -113,8 +113,6 @@ export default class PersonalArea extends Vue {
 </script>
 
 <style lang="scss">
-@import '../styles/vars';
-@import '../styles/mixins';
 
   .personal-area {
     width: 100%;

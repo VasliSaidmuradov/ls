@@ -14,7 +14,6 @@ export default class IndexPage extends Vue {
 </script>
 
 <style lang="scss">
-@import "../styles/vars";
 
 
 </style>
