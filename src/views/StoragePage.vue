@@ -1,10 +1,8 @@
 <template>
   <div class="storage-page layout">
     <div class="storage-page__header">
-      <div>
-        <h2 class="storage-page__header-title">Ваши документы</h2>
-      </div>
-      <q-btn class="storage-page__header-btn" @click="openFileModal">
+      <h2 class="storage-page__header-title">Ваши документы</h2>
+      <q-btn class="storage-page__header-btn" @click="toggleFileModal(true)">
         <div class="storage-page__header-btn-icon-wrapper">
           <icon name="add-icon" class="storage-page__header-btn-icon"/>
         </div>
@@ -42,15 +40,20 @@
 
     <div class="storage-page__document-wrapper">
       <document-item
-        v-for="(document, index) in documentList"
-        :key="index"
-        :document="document"
+          v-for="(document, index) in documentList"
+          :key="index"
+          :document="document"
       />
     </div>
 
     <add-file-modal
-      :is-file-modal-open="isFileModalOpen"
-      @close-file-modal="closeFileModal"
+        :is-file-modal-open="isFileModalOpen"
+        @close-modal="toggleFileModal"
+    />
+
+    <load-document-modal
+        :is-load-document-modal-open="isLoadDocumentModalOpen"
+        @close-modal="toggleLoadDocumentModal"
     />
   </div>
 </template>
@@ -60,11 +63,13 @@
   import DocumentItem from "@/components/storagePage/DocumentItem.vue";
   import {IStorage} from "@/interfaces/storage.interface";
   import AddFileModal from "@/components/modals/AddFileModal.vue";
+  import LoadDocumentModal from "@/components/modals/LoadDocumentModal.vue";
 
   @Component({
-    components: {AddFileModal, DocumentItem}
+    components: {LoadDocumentModal, AddFileModal, DocumentItem}
   })
   export default class StoragePage extends Vue {
+    isLoadDocumentModalOpen = false
     isCheckboxValue = false
     isFileModalOpen = false
     selectValue = 'Сортировать'
@@ -82,35 +87,41 @@
       {
         name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
         type: 1,
+        id: '1',
       },
       {
         name: 'УЗИ живота',
         type: 2,
+        id: '2',
       },
       {
         name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
         type: 1,
+        id: '3',
       },
       {
         name: 'УЗИ живота',
         type: 2,
+        id: '4',
       },
       {
         name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
         type: 1,
+        id: '5',
       },
       {
         name: 'УЗИ живота',
         type: 2,
+        id: '6'
       },
     ]
 
-    openFileModal() {
-      this.isFileModalOpen = true
+    toggleFileModal(val: boolean) {
+      this.isFileModalOpen = val
     }
 
-    closeFileModal(val: boolean) {
-      this.isFileModalOpen = val
+    toggleLoadDocumentModal(val: boolean) {
+      this.isLoadDocumentModalOpen = val
     }
   }
 </script>

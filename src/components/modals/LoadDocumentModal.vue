@@ -1,11 +1,11 @@
 <template>
-  <q-dialog :value="isFileModalOpen" @hide="closeModal">
+  <q-dialog :value="isLoadDocumentModalOpen" @hide="closeModal">
     <div class="modal">
       <q-btn class="modal__close" v-close-popup>
         <icon name="close-icon" class="modal__close-icon"/>
       </q-btn>
 
-      <span class="modal__title" >
+      <span class="modal__title">
           При добавлении нескольких файлов, они будут считаться одним документом внутри приложения.
         </span>
 
@@ -23,22 +23,16 @@
         </label>
       </form>
 
-      <span class="modal__bottom-text">
-        Мы умеем расшифровывать анализы из PDF, картинок или фотографий результатов анализов
-      </span>
     </div>
   </q-dialog>
 </template>
 
 <script lang="ts">
   import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
-  import LoadDocumentModal from "@/components/modals/LoadDocumentModal.vue";
 
-  @Component({
-    components: {LoadDocumentModal}
-  })
-  export default class AddFileModal extends Vue {
-    @Prop({required: true}) isFileModalOpen: boolean
+  @Component({})
+  export default class LoadDocumentModal extends Vue {
+    @Prop({required: true}) isLoadDocumentModalOpen: boolean
 
     @Emit('close-modal')
     closeModal() {
@@ -140,15 +134,6 @@
       font-size: 12px;
       line-height: 15px;
       color: $black-04;
-    }
-
-    &__bottom-text {
-      margin-top: 8px;
-      display: block;
-      font-weight: 500;
-      font-size: 12px;
-      line-height: 15px;
-      text-align: center;
     }
   }
 </style>

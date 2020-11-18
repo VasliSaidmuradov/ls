@@ -51,6 +51,10 @@ export default new Router({
     name: ROUTE_NAME.STORAGE_PAGE,
     component: () => import('@/views/StoragePage.vue'),
   }, {
+    path: ROUTE_PATH[ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE],
+    name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE,
+    component: () => import('@/views/StorageSingleDocumentPage.vue'),
+  },{
     path: ROUTE_PATH[ROUTE_NAME.APPOINTMENT_PAGE],
     name: ROUTE_NAME.APPOINTMENT_PAGE,
     component: () => import('@/views/AppointmentPage.vue'),

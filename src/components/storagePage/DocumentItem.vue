@@ -1,5 +1,5 @@
 <template>
-  <div class="document-item cursor-pointer">
+  <div class="document-item" :class="{'cursor-pointer': document.type === 1}" @click="goToSingleDocumentPage">
     <div class="document-item__header">
       <div class="document-item__header-date-wrapper">
         <icon name="calendar-icon" class="document-item__header-calendar-icon"/>
@@ -18,12 +18,17 @@
         <icon name="cancel-icon" class="document-item__header-status-icon"/>
       </div>
 
-      <icon name="delete-icon" class="document-item__header-delete-icon" v-else @click="deleteDocument"/>
+      <icon name="delete-icon" class="document-item__header-delete-icon" v-else @click="toggleDialogModal(true)"/>
     </div>
 
     <div class="document-item__name-edit-wrapper">
       <p class="document-item__name">{{document.name}}</p>
-      <icon name="edit-icon" class="document-item__edit-icon" v-if="document.type === 2" @click="editDocument"/>
+      <icon
+          name="edit-icon"
+          class="document-item__edit-icon"
+          v-if="document.type === 2"
+          @click="toggleEditDocumentModal(true)"
+      />
     </div>
 
     <p class="document-item__loaded-at">Загружено 22.05.2020</p>
@@ -47,12 +52,12 @@
 
     <dialog-modal
         :is-dialog-modal-open="isDialogModalOpen"
-        @close-dialog-modal="closeDialogModal"
+        @close-modal="toggleDialogModal"
     />
 
     <edit-document-modal
-      :is-edit-document-modal-open="isEditDocumentModalOpen"
-      @close-edit-document-modal="closeEditDocumentModal"
+        :is-edit-document-modal-open="isEditDocumentModalOpen"
+        @close-modal="toggleEditDocumentModal"
     />
   </div>
 </template>
@@ -62,6 +67,8 @@
   import {IStorage} from "@/interfaces/storage.interface";
   import DialogModal from "@/components/modals/DialogModal.vue";
   import EditDocumentModal from "@/components/modals/EditDocumentModal.vue";
+  import {IRouter} from "@/interfaces/router.interface";
+  import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   @Component({
     components: {EditDocumentModal, DialogModal}
@@ -72,20 +79,18 @@
     isDialogModalOpen = false
     isEditDocumentModalOpen = false
 
-    closeDialogModal(val: boolean) {
+    toggleDialogModal(val: boolean) {
       this.isDialogModalOpen = val
     }
 
-    closeEditDocumentModal(val: boolean) {
+    toggleEditDocumentModal(val: boolean) {
       this.isEditDocumentModalOpen = val
     }
 
-    deleteDocument() {
-      this.isDialogModalOpen = true
-    }
-
-    editDocument() {
-      this.isEditDocumentModalOpen = true
+    goToSingleDocumentPage() {
+      if (this.document.type === 1) {
+        this.$router.push({name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: {id: this.document.id}})
+      }
     }
   }
 </script>
@@ -129,6 +134,7 @@
     }
 
     &__header-delete-icon {
+      cursor: pointer;
       margin-top: 7px;
       width: 12px;
       height: 14px;
@@ -149,6 +155,7 @@
     }
 
     &__edit-icon {
+      cursor: pointer;
       width: 10px;
       height: 11px;
       color: $black-05;
@@ -174,6 +181,7 @@
     }
 
     &__footer-img-wrapper {
+      cursor: pointer;
       z-index: 1;
       border-radius: 4px;
       position: relative;

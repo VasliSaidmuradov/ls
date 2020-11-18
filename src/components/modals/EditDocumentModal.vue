@@ -1,5 +1,5 @@
 <template>
-  <q-dialog :value="isEditDocumentModalOpen" @hide="closeEditDocumentModal">
+  <q-dialog :value="isEditDocumentModalOpen" @hide="closeModal">
     <div class="modal">
       <icon name="close-icon" class="modal__close" v-close-popup/>
 
@@ -65,8 +65,8 @@
     selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса']
 
 
-    @Emit('close-edit-document-modal')
-    closeEditDocumentModal() {
+    @Emit('close-modal')
+    closeModal() {
       return false
     }
 
