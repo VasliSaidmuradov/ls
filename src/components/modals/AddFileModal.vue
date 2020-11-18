@@ -5,7 +5,7 @@
         <icon name="close-icon" class="modal__close-icon"/>
       </q-btn>
 
-      <span class="modal__title" >
+      <span class="modal__title">
           При добавлении нескольких файлов, они будут считаться одним документом внутри приложения.
         </span>
 
@@ -32,11 +32,8 @@
 
 <script lang="ts">
   import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
-  import LoadDocumentModal from "@/components/modals/LoadDocumentModal.vue";
 
-  @Component({
-    components: {LoadDocumentModal}
-  })
+  @Component({})
   export default class AddFileModal extends Vue {
     @Prop({required: true}) isFileModalOpen: boolean
 
