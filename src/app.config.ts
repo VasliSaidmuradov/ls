@@ -3,11 +3,9 @@ export interface IAppConfig {
 }
 
 function getConfig(env: any): IAppConfig {
-  const config: IAppConfig = {
+  return {
     apiUrl: process.env['VUE_APP_API']
   };
-
-  return config;
 }
 
 

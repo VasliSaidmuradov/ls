@@ -11,8 +11,8 @@ export default class BaseFormMixins extends Vue {
 
 
   public inputRules = {
-    maxMinlength: (val: IRulesValue) => val[0]?.length > 2 && val[0]?.length <= 20 || 'Please type something',
-    required: (val: IRulesValue) => val[0]?.length || 'обязательно к заполнению',
+    maxMinlength: (val: IRulesValue): string | boolean => val[0]?.length > 2 && val[0]?.length <= 20 || 'Please type something',
+    required: (val: IRulesValue): string | number => val[0]?.length || 'обязательно к заполнению',
   };
 
   checkError(ref: any): boolean {

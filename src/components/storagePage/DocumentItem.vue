@@ -35,7 +35,7 @@
 
     <div class="document-item__footer">
       <div class="document-item__footer-left">
-        <div class="document-item__footer-img-wrapper">
+        <div class="document-item__footer-img-wrapper" @click.stop="toggleFileListSliderModal(true)">
           <img src="@/assets/Doc.jpg" alt="">
         </div>
         <div class="document-item__footer-text-wrapper">
@@ -59,6 +59,11 @@
         :is-edit-document-modal-open="isEditDocumentModalOpen"
         @close-modal="toggleEditDocumentModal"
     />
+
+    <file-list-slider-modal
+      :is-file-list-slider-modal-open="isFileListSliderModalOpen"
+      @close-modal="toggleFileListSliderModal"
+    />
   </div>
 </template>
 
@@ -69,15 +74,17 @@
   import EditDocumentModal from "@/components/modals/EditDocumentModal.vue";
   import {IRouter} from "@/interfaces/router.interface";
   import ROUTE_NAME = IRouter.ROUTE_NAME;
+  import FileListSliderModal from "@/components/modals/FileListSliderModal.vue";
 
   @Component({
-    components: {EditDocumentModal, DialogModal}
+    components: {FileListSliderModal, EditDocumentModal, DialogModal}
   })
   export default class DocumentItem extends Vue {
     @Prop() document: IStorage.IDocument
 
     isDialogModalOpen = false
     isEditDocumentModalOpen = false
+    isFileListSliderModalOpen = false
 
     toggleDialogModal(val: boolean) {
       this.isDialogModalOpen = val
@@ -85,6 +92,10 @@
 
     toggleEditDocumentModal(val: boolean) {
       this.isEditDocumentModalOpen = val
+    }
+
+    toggleFileListSliderModal(val: boolean) {
+      this.isFileListSliderModalOpen = val
     }
 
     goToSingleDocumentPage() {

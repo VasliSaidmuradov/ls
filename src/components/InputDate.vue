@@ -2,10 +2,10 @@
   <div class="form-input">
     <label class="form-label" v-if="label">{{label}}</label>
     <q-input
-        @click="openDateModal"
+        @click="toggleDateModal(true)"
         :value="value ? $date(new Date(value), format): ''"/>
     <q-dialog
-        @hide="closeDateModal"
+        @hide="toggleDateModal(false)"
         v-model="isDateModalOpen"
     >
       <q-date :value="value" @input="changeValue"></q-date>
@@ -29,12 +29,8 @@
       return value
     }
 
-    openDateModal() {
-      this.isDateModalOpen = true
-    }
-
-    closeDateModal() {
-      this.isDateModalOpen = false
+    toggleDateModal(val: boolean) {
+      this.isDateModalOpen = val
     }
   }
 </script>
