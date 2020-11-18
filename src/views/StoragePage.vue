@@ -2,7 +2,7 @@
   <div class="storage-page layout">
     <div class="storage-page__header">
       <h2 class="storage-page__header-title">Ваши документы</h2>
-      <q-btn class="storage-page__header-btn" @click="toggleFileModal(true)">
+      <q-btn class="storage-page__header-btn">
         <div class="storage-page__header-btn-icon-wrapper">
           <icon name="add-icon" class="storage-page__header-btn-icon"/>
         </div>
@@ -50,11 +50,6 @@
         :is-file-modal-open="isFileModalOpen"
         @close-modal="toggleFileModal"
     />
-
-    <load-document-modal
-        :is-load-document-modal-open="isLoadDocumentModalOpen"
-        @close-modal="toggleLoadDocumentModal"
-    />
   </div>
 </template>
 
@@ -63,13 +58,11 @@
   import DocumentItem from "@/components/storagePage/DocumentItem.vue";
   import {IStorage} from "@/interfaces/storage.interface";
   import AddFileModal from "@/components/modals/AddFileModal.vue";
-  import LoadDocumentModal from "@/components/modals/LoadDocumentModal.vue";
 
   @Component({
-    components: {LoadDocumentModal, AddFileModal, DocumentItem}
+    components: { AddFileModal, DocumentItem}
   })
   export default class StoragePage extends Vue {
-    isLoadDocumentModalOpen = false
     isCheckboxValue = false
     isFileModalOpen = false
     selectValue = 'Сортировать'
@@ -118,10 +111,6 @@
 
     toggleFileModal(val: boolean) {
       this.isFileModalOpen = val
-    }
-
-    toggleLoadDocumentModal(val: boolean) {
-      this.isLoadDocumentModalOpen = val
     }
   }
 </script>

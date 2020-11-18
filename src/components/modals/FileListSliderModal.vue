@@ -1,19 +1,37 @@
 <template>
   <q-dialog :value="isFileListSliderModalOpen" @hide="closeModal">
     <div class="modal">
-        <span class="modal__title">
-          Вы точно хотите удалить документ?
-        </span>
+      <q-btn class="modal__close" v-close-popup>
+        <icon name="close-icon" class="modal__close-icon"/>
+      </q-btn>
 
-      <div class="modal__btn-wrapper">
-        <q-btn class="modal__btn1">
-          <icon name="delete-icon" class="modal__btn1-icon"/>
-          <span class="modal__btn1-text">Удалить</span>
-        </q-btn>
+      <img src="@/assets/file.jpg" alt="" v-if="false">
 
-        <q-btn class="modal__btn2" flat v-close-popup>
-          <span class="modal__btn2-text">Отмена</span>
+      <div class="modal__pdf-block" v-else>
+        <img src="@/assets/Pdf.png" alt="" class="modal__pdf-block-pdf-icon">
+        <span class="modal__pdf-block-title">PDF-файл</span>
+
+        <q-btn class="modal__pdf-block-btn">
+          <icon name="next-icon" class="modal__pdf-block-btn-icon"/>
+          <span class="modal__pdf-block-btn-text">Открыть в новой вкладке</span>
         </q-btn>
+      </div>
+
+      <div class="modal__action-block-wrapper">
+        <div class="modal__action-block">
+          <q-btn class="modal__action-block-btn">
+            <icon name="next-icon" class="modal__action-block-btn-icon"/>
+          </q-btn>
+
+          <div class="modal__action-block-middle-wrapper">
+            <icon name="delete-icon" class="modal__action-block-delete-icon"/>
+            <icon name="download-icon" class="modal__action-block-download-icon"/>
+          </div>
+
+          <q-btn class="modal__action-block-btn">
+            <icon name="next-icon" class="modal__action-block-btn-icon modal__action-block-btn-icon--right"/>
+          </q-btn>
+        </div>
       </div>
     </div>
   </q-dialog>
@@ -35,55 +53,146 @@
 
 <style lang="scss" scoped>
   .modal {
-    background-color: $light-white;
-    border-radius: 8px;
-    padding: 30px 24px;
-    max-width: 308px;
+    max-width: 495px;
+    position: relative;
+    overflow: initial;
+    box-shadow: none;
 
-    &__title {
-      display: block;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 130%;
-    }
+    &__close {
+      position: absolute;
+      top: 12px;
+      right: -62px;
+      width: 34px;
+      height: 34px;
+      background-color: $light-white;
 
-    &__btn-wrapper {
-      margin-top: 20px;
-    }
-
-    &__btn1 {
-      border-radius: 16px;
-      background-color: $red-color;
-    }
-
-    &__btn1-icon {
-      width: 12px;
-      height: 14px;
-      color: $light-white;
-    }
-
-    &__btn1-text {
-      text-transform: none;
-      margin-left: 10px;
-      color: $light-white;
-      font-size: 12px;
-      line-height: 150%;
-    }
-
-    &__btn2 {
-      margin-left: 29px;
-
-      /deep/.q-btn__wrapper {
-        min-height: initial;
+      & /deep/ .q-btn__wrapper {
         padding: 0;
+      }
+
+      & /deep/ .q-btn__wrapper:before {
+        box-shadow: 0 4px 15px $shadow-color;
       }
     }
 
-    &__btn2-text {
-      text-transform: none;
-      cursor: pointer;
+    &__close-icon {
+      width: 8.28px;
+      height: 8.28px;
+      color: $accent-color;
+    }
+
+    &__pdf-block {
+      width: 245px;
+      margin: 200px 0 170px 0;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      border-radius: 15px;
+      background-color: $light-background;
+    }
+
+    &__pdf-block-pdf-icon {
+      align-self: center;
+    }
+
+    &__pdf-block-title {
+      display: block;
+      align-self: center;
+      margin-top: 13px;
       font-size: 12px;
       line-height: 150%;
+    }
+
+    &__pdf-block-btn {
+      height: 42px;
+      margin-top: 20px;
+      border-radius: 16px;
+      border: 1px silud $light-stroke;
+    }
+
+    &__pdf-block-btn-icon {
+      width: 4px;
+      height: 8px;
+      color: $accent-color;
+      transform: rotate(180deg);
+    }
+
+    &__pdf-block-btn-text {
+      margin-left: 14px;
+      text-transform: none;
+      color: $accent-color;
+      font-size: 12px;
+      line-height: 150%;
+    }
+
+    &__action-block-wrapper {
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    &__action-block {
+      width: 206px;
+      height: 50px;
+      padding: 0 18px;
+      display: flex;
+      align-items: center;
+      background-color: $light-background;
+      border-radius: 100px;
+    }
+
+    &__action-block-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $accent-color;
+      border-radius: 10px;
+      width: 32px;
+      height: 32px;
+
+      /deep/ .q-btn__wrapper {
+        padding: 0 !important;
+
+        svg {
+          width: 4px;
+        }
+      }
+    }
+
+    &__action-block-btn-icon {
+      width: 4px;
+      height: 8px;
+      color: $light-white;
+
+      &--right {
+        transform: rotate(180deg);
+      }
+    }
+
+    &__action-block-middle-wrapper {
+      width: 84px;
+      height: 32px;
+      background-color: $light-white;
+      border-radius: 12px;
+      margin: 0 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    &__action-block-delete-icon {
+      cursor: pointer;
+      width: 12px;
+      height: 14px;
+      color: $black-05;
+    }
+
+    &__action-block-download-icon {
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
     }
   }
 </style>
