@@ -134,12 +134,10 @@ export default class PasswordChange extends Vue {
 
 
   onScore({ score, strength }: {score: number; strength: string}) {
-    console.log(this.$store.state.userCard)
     if (Object.keys(this.passwordStrengthText).includes(strength)) this.passwordStrength = strength;
   }
 
   changePwd(pwd: keyof {oldPassword: boolean; newPassword: boolean; repeatPassword: boolean}) {
-    console.log(this.isCreatePassword)
     this.pwdObject[pwd] = !this.pwdObject[pwd];
   }
 

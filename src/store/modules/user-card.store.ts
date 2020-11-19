@@ -28,7 +28,6 @@ export default {
   actions: {
     setUser({commit}: UserCardStore, {data}: {data: IUserCard.IUser}) {
       Object.keys(data).forEach((key: string) => {
-        console.log(data, key, data[(key as keyof IUserCard.IUser)])
         commit('setPropertyInStore', {name: key, value: data[(key as keyof IUserCard.IUser)]})
       })
     }

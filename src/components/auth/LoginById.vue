@@ -1,63 +1,77 @@
 <template>
   <div class="login-by-id">
-    <div class="form-input form-input--bordered" v-if="!checkResearchDate">
-      <label for="userId" class="form-label">Введите ваш номер ID</label>
-      <q-input
-          for="userId"
-          id="userId"
-          :rules="rules"
-          ref="userId"
-          placeholder="Введите ваш номер ID"
-          v-model="userId"
-      >
-
-      </q-input>
-
-      <p class="login-by-id__input-desk">
-        Авторизуясь, вы принимаете условия <a href="#">«Пользовательского соглашения»</a>
-      </p>
-    </div>
-
-    <div v-if="checkResearchDate" class="login-by-id__check-research-date">
-      <div class="form-input form-input--bordered">
-        <label for="fio" class="form-label">Введите ФИО</label>
+    <template v-if="!notFoundUser">
+      <div class="form-input form-input--bordered" v-if="!checkResearchDate">
+        <label for="userId" class="form-label">Введите ваш номер ID</label>
         <q-input
-            for="fio"
-            id="fio"
-            ref="fio"
+            for="userId"
+            id="userId"
             :rules="rules"
-            placeholder="Введите ФИО"
-            v-model="fio"
+            ref="userId"
+            placeholder="Введите ваш номер ID"
+            v-model="userId"
         >
+
         </q-input>
+
+        <p class="login-by-id__input-desk">
+          Авторизуясь, вы принимаете условия <a href="#">«Пользовательского соглашения»</a>
+        </p>
       </div>
 
-      <div class="date-input">
-        <InputDate :value="researchDate"
-                   ref="inputDate"
-                   :propsRules="rules"
-                   label="Введите дату сдачи исследования"
-                   customClass="form-input--bordered"
-                   @change-value="onResearchDateChange"/>
-      </div>
-    </div>
+      <div v-if="checkResearchDate" class="login-by-id__check-research-date">
+        <div class="form-input form-input--bordered">
+          <label for="fio" class="form-label">Введите ФИО</label>
+          <q-input
+              for="fio"
+              id="fio"
+              ref="fio"
+              :rules="rules"
+              placeholder="Введите ФИО"
+              v-model="fio"
+          >
+          </q-input>
+        </div>
 
-    <q-btn padding="8px"
-           class="button1--bordered-with-icon button1 login-by-id__btn"
-           @click="checkResearchDate ? checkUserByResearchDate() : checkUserById()">
+        <div class="date-input">
+          <InputDate :value="researchDate"
+                     ref="inputDate"
+                     :propsRules="rules"
+                     label="Введите дату сдачи исследования"
+                     customClass="form-input--bordered"
+                     @change-value="onResearchDateChange"/>
+        </div>
+      </div>
+
+      <q-btn padding="8px"
+             class="button1--bordered-with-icon button1 login-by-id__btn"
+             @click="checkResearchDate ? checkUserByResearchDate() : checkUserById()">
         <span class="login-by-id__btn-icon icon">
           <icon name="next-icon"></icon>
         </span>
-      <span class="login-by-id__btn-text">
+        <span class="login-by-id__btn-text">
         Продолжить
       </span>
-    </q-btn>
+      </q-btn>
 
-    <button class="change-step-btn login-by-id__change-step"
-            @click.stop="changeStep(steps.CHECK_USER)" v-if="!checkResearchDate">
-      <span class="icon"><icon name="next-icon"></icon></span>
-      <span>Войти через телефон/emal</span>
-    </button>
+      <button class="change-step-btn login-by-id__change-step"
+              @click.stop="changeStep(steps.CHECK_USER)" v-if="!checkResearchDate">
+        <span class="icon"><icon name="next-icon"></icon></span>
+        <span>Войти через телефон/emal</span>
+      </button>
+    </template>
+    <template v-else>
+      <div class="not-found-user">
+        <div class="not-found-user__desk">
+          К сожалению, мы не смогли идентифицировать как пациента ЛабСтори. Чтобы попасть в личный кабинет, свяжитесь с медцентром, где вы оформляли свои данные, либо зарегистрируйтесь как новый пациент.
+        </div>
+
+        <div class="not-found-user__actions">
+          <q-btn padding="16px 20px" class="not-found-user__actions-contacts button1 button1--flooded">Контакты медцентров</q-btn>
+          <q-btn class="not-found-user__actions-register">Зарегистрироваться</q-btn>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -85,6 +99,7 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   fio: string = ''
   researchDate: string | Date = new Date();
   rules: Function[] = [];
+  notFoundUser = true;
 
 
 
@@ -101,7 +116,6 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   }
 
   async checkUserById() {
-    console.log(this.checkResearchDate)
     if (this.validate()) return;
 
     this.$store.dispatch('auth/checkUser', {value: this.userId, type: IAuthApi.CheckUserParamsType.ID})
@@ -111,7 +125,6 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   }
 
   async checkUserByResearchDate() {
-    console.log(this.rules)
     if (this.validate()) return;
 
     this.$store.dispatch('auth/loginById', this.covertLoginData())
@@ -133,15 +146,15 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   }
 
   afterCheckUser() {
-    if (this.userAccountInfo.user_exist || true) {
+    if (this.userAccountInfo.user_exist) {
       this.checkHasLogin();
     } else {
-      this.$store.dispatch('error/showErrorNotice', {message: 'Пользователя с таким id нет'})
+      this.notFoundUser = true;
     }
   }
 
   checkHasLogin() {
-    if (false) {
+    if (this.userAccountInfo.has_login) {
       this.changeStep(IAuthForOtherUser.RegistrationSteps.CHECK_USER)
     } else {
       this.checkResearchDate = true;
@@ -189,7 +202,57 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
       margin-top: 30px;
     }
   }
+}
 
+.not-found-user {
+
+  &__desk {
+    font-size: 14px;
+    line-height: 20px;
+    color: $black-02;
+    margin-bottom: 30px;
+  }
+
+  &__actions {
+    display: flex;
+
+    @include media-breakpoint-up($breakpoint-xs) {
+      flex-direction: column;
+    }
+  }
+
+  &__actions-contacts {
+  /deep/ &.q-btn {
+      border-radius: 22px;
+    }
+  }
+
+  &__actions-register {
+    margin-left: 15px;
+
+    /deep/ &.q-btn {
+      border-radius: 22px;
+      text-transform: none;
+      background: transparent;
+
+      .q-btn__wrapper {
+        background: transparent;
+        ont-size: 12px;
+        line-height: 150%;
+        color: $black-02;
+        font-weight: 300;
+
+        &:before {
+          display: none;
+        }
+      }
+    }
+
+    @include media-breakpoint-up($breakpoint-xs) {
+      margin-left: 0;
+      margin-top: 15px;
+    }
+  }
 }
 
 </style>
