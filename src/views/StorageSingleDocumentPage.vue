@@ -12,13 +12,23 @@
         <span class="document-page__header-status-text">Документ загружается</span>
       </div>
     </div>
+
+    <info-block/>
+
+    <div class="document-page__file-wrapper">
+      <file-item />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
+  import InfoBlock from "@/components/StorageSingleDocumentPage/InfoBlock.vue";
+  import FileItem from "@/components/StorageSingleDocumentPage/FileItem.vue";
 
-  @Component({})
+  @Component({
+    components: {FileItem, InfoBlock}
+  })
   export default class StorageSingleDocumentPage extends Vue {
 
   }
@@ -75,6 +85,12 @@
         color: $black-01;
         letter-spacing: 0.5px;
       }
+    }
+
+    &__file-wrapper {
+      margin-top: 30px;
+      display: flex;
+      align-items: center;
     }
   }
 </style>
