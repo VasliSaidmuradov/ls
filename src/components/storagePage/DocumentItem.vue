@@ -65,8 +65,8 @@
     />
 
     <file-list-slider-modal
-      :is-file-list-slider-modal-open="isFileListSliderModalOpen"
-      @close-modal="toggleFileListSliderModal"
+        :is-file-list-slider-modal-open="isFileListSliderModalOpen"
+        @close-modal="toggleFileListSliderModal"
     />
   </div>
 </template>
@@ -77,8 +77,8 @@
   import DialogModal from "@/components/modals/DialogModal.vue";
   import EditDocumentModal from "@/components/modals/EditDocumentModal.vue";
   import {IRouter} from "@/interfaces/router.interface";
-  import ROUTE_NAME = IRouter.ROUTE_NAME;
   import FileListSliderModal from "@/components/modals/FileListSliderModal.vue";
+  import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   @Component({
     components: {FileListSliderModal, EditDocumentModal, DialogModal}
@@ -121,39 +121,39 @@
     &__header {
       display: flex;
       justify-content: space-between;
-    }
 
-    &__header-date-wrapper {
-      margin-top: 10px;
-      display: flex;
-      align-items: center;
-    }
+      &-date-wrapper {
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+      }
 
-    &__header-calendar-icon {
-      width: 22px;
-      height: 22px;
-    }
+      &-calendar-icon {
+        width: 22px;
+        height: 22px;
+      }
 
-    &__header-date {
-      margin-top: 4px;
-      color: $accent-color;
-      font-weight: 500;
-      font-size: 12px;
-      line-height: 15px;
-    }
+      &-date {
+        margin-top: 4px;
+        color: $accent-color;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 15px;
+      }
 
-    &__header-status-icon {
-      margin-top: 7px;
-      width: 18px;
-      height: 18px;
-    }
+      &-status-icon {
+        margin-top: 7px;
+        width: 18px;
+        height: 18px;
+      }
 
-    &__header-delete-icon {
-      cursor: pointer;
-      margin-top: 7px;
-      width: 12px;
-      height: 14px;
-      color: $black-05;
+      &-delete-icon {
+        cursor: pointer;
+        margin-top: 7px;
+        width: 12px;
+        height: 14px;
+        color: $black-05;
+      }
     }
 
     &__name-edit-wrapper {
@@ -188,103 +188,103 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
 
-    &__footer-left {
-      display: flex;
-      align-items: center;
-    }
+      &-left {
+        display: flex;
+        align-items: center;
+      }
 
-    &__footer-img-wrapper {
-      cursor: pointer;
-      z-index: 1;
-      border-radius: 4px;
-      position: relative;
-      width: 30px;
-      height: 42px;
+      &-img-wrapper {
+        cursor: pointer;
+        z-index: 1;
+        border-radius: 4px;
+        position: relative;
+        width: 30px;
+        height: 42px;
 
-      &:before {
-        content: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 3;
+        &:before {
+          content: none;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 3;
+          color: $light-white;
+        }
+
+        &:after {
+          content: none;
+          position: absolute;
+          background: rgba(22, 20, 44, 0.4);
+          z-index: 2;
+          border-radius: 4px;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      &-img-wrapper:hover {
+        &:before {
+          content: '+';
+        }
+
+        &:after {
+          content: '';
+        }
+      }
+
+      &-text-wrapper {
+        margin-left: 8px;
+      }
+
+      &-event-name {
+        display: block;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 15px;
+      }
+
+      &-list-count {
+        margin-top: 4px;
+        display: block;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 15px;
+        color: $black-04;
+      }
+
+      &-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $accent-color;
+        border-radius: 10px;
+        width: 32px;
+        height: 32px;
+
+        /deep/ .q-btn__wrapper {
+          padding: 0 !important;
+
+          svg {
+            width: 4px;
+          }
+        }
+      }
+
+      &-btn-icon {
+        transform: rotate(180deg);
+        width: 4px;
+        height: 8px;
         color: $light-white;
       }
 
-      &:after {
-        content: none;
-        position: absolute;
-        background: rgba(22, 20, 44, 0.4);
-        z-index: 2;
-        border-radius: 4px;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+      &-download-icon {
+        align-self: flex-end;
+        width: 24px;
+        height: 24px;
       }
-    }
-
-    &__footer-img-wrapper:hover {
-      &:before {
-        content: '+';
-      }
-
-      &:after {
-        content: '';
-      }
-    }
-
-    &__footer-text-wrapper {
-      margin-left: 8px;
-    }
-
-    &__footer-event-name {
-      display: block;
-      font-weight: 500;
-      font-size: 12px;
-      line-height: 15px;
-    }
-
-    &__footer-list-count {
-      margin-top: 4px;
-      display: block;
-      font-weight: 500;
-      font-size: 12px;
-      line-height: 15px;
-      color: $black-04;
-    }
-
-    &__footer-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: $accent-color;
-      border-radius: 10px;
-      width: 32px;
-      height: 32px;
-
-      /deep/ .q-btn__wrapper {
-        padding: 0 !important;
-
-        svg {
-          width: 4px;
-        }
-      }
-    }
-
-    &__footer-btn-icon {
-      transform: rotate(180deg);
-      width: 4px;
-      height: 8px;
-      color: $light-white;
-    }
-
-    &__footer-download-icon {
-      align-self: flex-end;
-      width: 24px;
-      height: 24px;
     }
   }
 </style>

@@ -54,7 +54,7 @@ export default class Aside extends Vue {
   }
 
   &__content-logo {
-    padding: 19px 17px 0px 19px;
+    padding: 19px 17px 0 19px;
   }
 
   &__content-menu {
@@ -75,7 +75,7 @@ export default class Aside extends Vue {
     .router-link-exact-active {
       color: $accent-color;
       background-color: $light-white;
-      box-shadow: 0px 4px 15px $shadow-color;
+      box-shadow: 0 4px 15px $shadow-color;
       border-radius: 15px;
 
       .aside__content-item-text {

@@ -105,7 +105,7 @@
     <dialog-modal
         :btn1-with-icon="true"
         :is-dialog-modal-open="isDialogModalOpen"
-        :title="'Если вы вернетесь на шаг назад, то прикрепленные файлы удаляться. Вернуться? '"
+        :title="'Если вы вернетесь на шаг назад, то прикрепленные файлы удалятся. Вернуться? '"
         :btn1-text="'Вернуться'"
         :btn2-text="'Остаться'"
         :btn-confirm-color-type="'blue'"
@@ -180,12 +180,12 @@
       & /deep/ .q-btn__wrapper:before {
         box-shadow: 0 4px 15px $shadow-color;
       }
-    }
 
-    &__close-icon {
-      width: 8.28px;
-      height: 8.28px;
-      color: $accent-color;
+      &-icon {
+        width: 8.28px;
+        height: 8.28px;
+        color: $accent-color;
+      }
     }
 
     &__back-btn {
@@ -193,24 +193,24 @@
       margin-bottom: 20px;
       display: flex;
       align-items: center;
-    }
 
-    &__back-btn-icon {
-      width: 4px;
-      height: 8px;
-      color: $accent-color;
-    }
+      &-icon {
+        width: 4px;
+        height: 8px;
+        color: $accent-color;
+      }
 
-    &__back-btn-text {
-      margin-left: 16px;
-      font-size: 12px;
-      line-height: 150%;
+      &-text {
+        margin-left: 16px;
+        font-size: 12px;
+        line-height: 150%;
+      }
     }
 
     &__title {
       max-width: 640px;
       display: block;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       font-size: 16px;
       line-height: 22px;
       color: $gray-01;
@@ -219,6 +219,7 @@
     &__subtitle {
       max-width: 640px;
       margin-top: 10px;
+      margin-bottom: 26px;
       color: $black-04;
       display: block;
       letter-spacing: 0.5px;
@@ -229,25 +230,25 @@
 
     &__input {
       width: 310px;
-    }
 
-    &__input-wrapper {
-      margin-top: 20px;
-      display: flex;
-      align-items: flex-end;
-    }
+      &-wrapper {
+        margin-top: 20px;
+        display: flex;
+        align-items: flex-end;
+      }
 
-    &__input-block {
-      margin-left: 10px;
-    }
+      &-block {
+        margin-left: 10px;
+      }
 
-    &__input-postscript {
-      display: block;
-      margin-top: 8px;
-      font-size: 12px;
-      line-height: 150%;
-      color: $black-04;
-      letter-spacing: 0.6px;
+      &-postscript {
+        display: block;
+        margin-top: 8px;
+        font-size: 12px;
+        line-height: 150%;
+        color: $black-04;
+        letter-spacing: 0.6px;
+      }
     }
 
     .modal__date {
@@ -283,22 +284,31 @@
       border-radius: 22px;
       background-color: $accent-color;
       margin-top: 43px;
-    }
 
-    &__load-btn-icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: $light-white;
-      border-radius: 16px;
-      width: 34px;
-      height: 40px;
-    }
+      &-icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $light-white;
+        border-radius: 16px;
+        width: 34px;
+        height: 40px;
+      }
 
-    &__load-btn-icon {
-      width: 24px;
-      height: 24px;
-      color: $accent-color;
+      &-icon {
+        width: 24px;
+        height: 24px;
+        color: $accent-color;
+      }
+
+      &-text {
+        margin-left: 12px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 140%;
+        color: $light-white;
+        text-transform: none;
+      }
     }
 
     &__count-documents {
@@ -312,6 +322,10 @@
       font-weight: 400;
       font-size: 12px;
       line-height: 15px;
+    }
+
+    &__file {
+
     }
 
     &__file-wrapper {
@@ -339,28 +353,19 @@
         border-radius: 8px;
         background-color: $accent-color;
       }
-    }
 
-    &__file-scroll-block-item {
-      display: flex;
-      margin-right: 20px;
-    }
+      &-item {
+        display: flex;
+        margin-right: 20px;
+      }
 
-    &__file-scroll-block-icon {
-      width: 12px;
-      height: 14px;
-      cursor: pointer;
-      margin-left: 6px;
-      color: $red-color;
-    }
-
-    &__load-btn-text {
-      margin-left: 12px;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 140%;
-      color: $light-white;
-      text-transform: none;
+      &-icon {
+        width: 12px;
+        height: 14px;
+        cursor: pointer;
+        margin-left: 6px;
+        color: $red-color;
+      }
     }
   }
 </style>

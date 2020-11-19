@@ -60,7 +60,7 @@
   import AddFileModal from "@/components/modals/AddFileModal/AddFileModal.vue";
 
   @Component({
-    components: { AddFileModal, DocumentItem}
+    components: {AddFileModal, DocumentItem}
   })
   export default class StoragePage extends Vue {
     isCheckboxValue = false
@@ -117,8 +117,8 @@
 
 <style lang="scss" scoped>
   .layout {
-    padding-top: 80px;
-    padding-bottom: 80px;
+    padding-top: 70px;
+    padding-bottom: 97px;
   }
 
   .storage-page {
@@ -126,46 +126,46 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
 
-    &__header-title {
-      font-weight: 500;
-      font-size: 36px;
-      line-height: 130%;
-    }
-
-    &__header-btn {
-      text-transform: none;
-      border-radius: 22px;
-      background-color: $accent-color;
-
-      /deep/ .q-btn__wrapper {
-        padding: 8px 20px 8px 8px;
+      &-title {
+        font-weight: 500;
+        font-size: 36px;
+        line-height: 130%;
       }
-    }
 
-    &__header-btn-icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 40px;
-      background-color: $light-white;
-      border-radius: 16px;
-    }
+      &-btn {
+        text-transform: none;
+        border-radius: 22px;
+        background-color: $accent-color;
 
-    &__header-btn-icon {
-      width: 10px;
-      height: 10px;
-      color: $accent-color;
-    }
+        /deep/ .q-btn__wrapper {
+          padding: 8px 20px 8px 8px;
+        }
+      }
 
-    &__header-btn-text {
-      margin-left: 12px;
-      font-weight: 500;
-      font-size: 14px;
-      line-height: 140%;
-      color: $light-white;
+      &-btn-icon-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 40px;
+        background-color: $light-white;
+        border-radius: 16px;
+      }
+
+      &-btn-icon {
+        width: 10px;
+        height: 10px;
+        color: $accent-color;
+      }
+
+      &-btn-text {
+        margin-left: 12px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 140%;
+        color: $light-white;
+      }
     }
 
     &__subtitle {
@@ -179,51 +179,51 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
 
-    &__middle-block-title {
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 130%;
-    }
-
-    &__middle-block-right {
-      display: flex;
-      align-items: center;
-
-      .form-checkbox {
-        margin-right: 30px;
-      }
-    }
-
-    &__middle-block-select {
-      /deep/ .q-field__inner {
-        width: 245px;
-        border: 1px solid $light-stroke;
+      &-title {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 130%;
       }
 
-      /deep/ .q-field__prepend {
-        padding-left: 15px;
-        padding-right: 10px;
+      &-right {
+        display: flex;
+        align-items: center;
+
+        .form-checkbox {
+          margin-right: 30px;
+        }
       }
 
-      /deep/ .q-field__append {
-        padding-right: 5px;
+      &-select {
+        /deep/ .q-field__inner {
+          width: 245px;
+          border: 1px solid $light-stroke;
+        }
+
+        /deep/ .q-field__prepend {
+          padding-left: 15px;
+          padding-right: 10px;
+        }
+
+        /deep/ .q-field__append {
+          padding-right: 5px;
+        }
+
+        /deep/ .q-field__native {
+          padding: 0;
+        }
       }
 
-      /deep/ .q-field__native {
-        padding: 0;
+      &-select-prepend-icon {
+        width: 24px;
+        height: 24px;
       }
-    }
 
-    &__middle-block-select-prepend-icon {
-      width: 24px;
-      height: 24px;
-    }
-
-    &__middle-block-select-append-icon {
-      width: 12px;
-      height: 12px;
+      &-select-append-icon {
+        width: 12px;
+        height: 12px;
+      }
     }
 
     &__document-wrapper {

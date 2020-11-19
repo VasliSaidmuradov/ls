@@ -146,13 +146,13 @@
     &__btn1 {
       border-radius: 16px;
       background-color: $accent-color;
-    }
 
-    &__btn1-text {
-      text-transform: none;
-      color: $light-white;
-      font-size: 12px;
-      line-height: 150%;
+      &-text {
+        text-transform: none;
+        color: $light-white;
+        font-size: 12px;
+        line-height: 150%;
+      }
     }
 
     &__btn2 {
@@ -162,13 +162,13 @@
         min-height: initial;
         padding: 0;
       }
-    }
 
-    &__btn2-text {
-      text-transform: none;
-      cursor: pointer;
-      font-size: 12px;
-      line-height: 150%;
+      &-text {
+        text-transform: none;
+        cursor: pointer;
+        font-size: 12px;
+        line-height: 150%;
+      }
     }
   }
 </style>

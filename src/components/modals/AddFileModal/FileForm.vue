@@ -77,10 +77,6 @@
   }
 
   .file-form-1 .file-form {
-    width: 635px;
-    height: 187px;
-    margin-top: 26px;
-
     &__file-block {
       padding: 60px 150px;
     }
@@ -96,9 +92,6 @@
   }
 
   .file-form-2 .file-form {
-    max-width: 191px;
-    height: 125px;
-
     &__file-block {
       padding: 29px 25px;
     }

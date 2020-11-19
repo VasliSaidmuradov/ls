@@ -76,37 +76,37 @@
 
     &__btn1 {
       border-radius: 16px;
-    }
 
-    &__btn1--red {
-      background-color: $red-color;
-    }
+      &--red {
+        background-color: $red-color;
+      }
 
-    &__btn1--blue {
-      background-color: $accent-color;
-    }
+      &--blue {
+        background-color: $accent-color;
+      }
 
-    &__btn1-icon {
-      margin-right: 10px;
-    }
+      &-icon {
+        margin-right: 10px;
+      }
 
-    &__btn1--red-icon {
-      width: 12px;
-      height: 14px;
-      color: $light-white;
-    }
+      &--red-icon {
+        width: 12px;
+        height: 14px;
+        color: $light-white;
+      }
 
-    &__btn1--blue-icon {
-      width: 4px;
-      height: 8px;
-      color: $light-white;
-    }
+      &--blue-icon {
+        width: 4px;
+        height: 8px;
+        color: $light-white;
+      }
 
-    &__btn1-text {
-      text-transform: none;
-      color: $light-white;
-      font-size: 12px;
-      line-height: 150%;
+      &-text {
+        text-transform: none;
+        color: $light-white;
+        font-size: 12px;
+        line-height: 150%;
+      }
     }
 
     &__btn2 {
@@ -116,13 +116,13 @@
         min-height: initial;
         padding: 0;
       }
-    }
 
-    &__btn2-text {
-      text-transform: none;
-      cursor: pointer;
-      font-size: 12px;
-      line-height: 150%;
+      &-text {
+        text-transform: none;
+        cursor: pointer;
+        font-size: 12px;
+        line-height: 150%;
+      }
     }
   }
 </style>
