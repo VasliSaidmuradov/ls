@@ -1,17 +1,15 @@
 <template>
   <div class="document-page layout">
-    <div>
-      <div class="document-page__header">
-        <div class="document-page__header-wrapper">
-          <span class="document-page__header-event-text">Анализ</span>
-          <span class="document-page__header-file-text">PDF</span>
-          <span class="document-page__header-date-text">Загрузка 22.05.2020</span>
-        </div>
+    <div class="document-page__header">
+      <div class="document-page__header-wrapper">
+        <span class="document-page__header-event-text">Анализ</span>
+        <span class="document-page__header-file-text">PDF</span>
+        <span class="document-page__header-date-text">Загрузка 22.05.2020</span>
+      </div>
 
-        <div class="document-page__header-wrapper">
-          <icon name="process-icon" class="document-page__header-icon"/>
-          <span class="document-page__header-status-text">Документ загружается</span>
-        </div>
+      <div class="document-page__header-wrapper">
+        <icon name="process-icon" class="document-page__header-icon"/>
+        <span class="document-page__header-status-text">Документ загружается</span>
       </div>
     </div>
   </div>

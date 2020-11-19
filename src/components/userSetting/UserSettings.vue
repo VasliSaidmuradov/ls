@@ -166,7 +166,7 @@ import UserCardAvatar from '@/components/userCard/UserCardAvatar.vue';
 
       .country-selector__country-flag {
         top: 50%;
-        transform: translate(0px, -50%);
+        transform: translate(0, -50%);
       }
 
       .country-selector__label {
@@ -210,7 +210,7 @@ import UserCardAvatar from '@/components/userCard/UserCardAvatar.vue';
     }
 
     &__avatar {
-      margin: 25px 0px;
+      margin: 25px 0;
       width: 98px;
     }
   }

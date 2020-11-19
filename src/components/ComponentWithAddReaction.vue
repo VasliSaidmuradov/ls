@@ -149,7 +149,7 @@ export default class ComponentWithAddReaction extends Vue {
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
           background-color: $light-white;
           border-radius: 15px;
         }

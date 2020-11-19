@@ -158,7 +158,7 @@ export default class Header extends Vue {
         width: 34px;
         height: 34px;
         background: #FFFFFF;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         border-radius: 10px;
 
         .q-btn__wrapper {
