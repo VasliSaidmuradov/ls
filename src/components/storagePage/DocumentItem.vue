@@ -52,6 +52,9 @@
 
     <dialog-modal
         :is-dialog-modal-open="isDialogModalOpen"
+        :title="'Вы точно хотите удалить документ? '"
+        :btn1-text="'Удалить'"
+        :btn2-text="'Отмена'"
         @close-modal="toggleDialogModal"
     />
 

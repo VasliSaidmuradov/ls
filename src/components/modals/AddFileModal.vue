@@ -5,6 +5,15 @@
         <icon name="close-icon" class="modal__close-icon"/>
       </q-btn>
 
+      <div
+          class="modal__back-btn"
+          v-if="type === 2"
+          @click="toggleDialogModal(true)"
+      >
+        <icon name="next-icon" class="modal__back-btn-icon"/>
+        <span class="modal__back-btn-text">Назад</span>
+      </div>
+
       <span class="modal__title">
           При добавлении нескольких файлов, они будут считаться одним документом внутри приложения.
         </span>
@@ -16,30 +25,59 @@
 
       <form class="modal__file" ref="file-form">
         <input type="file" id="file" class="modal__file-input">
-        <label class="modal__file-block" for="file">
+        <label class="modal__file-block" for="file" @click.prevent="clickAddFile">
           <icon name="cloud-icon" class="modal__file-block-icon"/>
           <span class="modal__file-block-title">Перетяните или нажмите, чтобы добавить файл</span>
           <span class="modal__file-block-subtitle">Файлы до 3мб</span>
         </label>
       </form>
 
-      <span class="modal__bottom-text">
+      <span class="modal__bottom-text" v-if="type === 1">
         Мы умеем расшифровывать анализы из PDF, картинок или фотографий результатов анализов
       </span>
     </div>
+
+    <dialog-modal
+        :is-dialog-modal-open="isDialogModalOpen"
+        :title="'Если вы вернетесь на шаг назад, то прикрепленные файлы удаляться. Вернуться? '"
+        :btn1-text="'Вернуться'"
+        :btn2-text="'Остаться'"
+        :btn-confirm-color-type="'blue'"
+        @click-confirm-btn="clickConfirmBtnDialogModal"
+        @close-modal="toggleDialogModal"
+    />
   </q-dialog>
 </template>
 
 <script lang="ts">
   import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
+  import DialogModal from "@/components/modals/DialogModal.vue";
 
-  @Component({})
+  @Component({
+    components: {DialogModal}
+  })
   export default class AddFileModal extends Vue {
     @Prop({required: true}) isFileModalOpen: boolean
+
+    isDialogModalOpen = false
+    type = 1
 
     @Emit('close-modal')
     closeModal() {
       return false
+    }
+
+    clickAddFile() {
+      this.type = 2
+    }
+
+    toggleDialogModal(val: boolean) {
+      this.isDialogModalOpen = val
+    }
+
+    clickConfirmBtnDialogModal() {
+      this.type = 1
+      this.toggleDialogModal(false)
     }
   }
 </script>
@@ -72,6 +110,25 @@
       width: 8.28px;
       height: 8.28px;
       color: $accent-color;
+    }
+
+    &__back-btn {
+      cursor: pointer;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    &__back-btn-icon {
+      width: 4px;
+      height: 8px;
+      color: $accent-color;
+    }
+
+    &__back-btn-text {
+      margin-left: 16px;
+      font-size: 12px;
+      line-height: 150%;
     }
 
     &__title {
@@ -113,7 +170,7 @@
     }
 
     &__file-block-icon {
-      align-self: flex-end;
+      align-self: center;
       color: $accent-color;
       width: 24px;
       height: 24px;
