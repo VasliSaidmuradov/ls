@@ -51,6 +51,7 @@
     </div>
 
     <dialog-modal
+        :btn1-with-icon="true"
         :is-dialog-modal-open="isDialogModalOpen"
         :title="'Вы точно хотите удалить документ? '"
         :btn1-text="'Удалить'"

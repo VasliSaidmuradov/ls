@@ -11,7 +11,9 @@
         >
           <icon
               :name="countBtn1Icon"
+              class="modal__btn1-icon"
               :class="`modal__btn1--${btnConfirmColorType}-icon`"
+              v-if="btn1WithIcon"
           />
           <span class="modal__btn1-text">{{btn1Text}}</span>
         </q-btn>
@@ -34,6 +36,8 @@
     @Prop() btn1Text: string
     @Prop() btn2Text: string
     @Prop({default: 'red'}) btnConfirmColorType: string
+    @Prop() btn1WithIcon: boolean
+    @Prop() btn2WithIcon: boolean
 
     @Emit('close-modal')
     closeModal() {
@@ -82,6 +86,10 @@
       background-color: $accent-color;
     }
 
+    &__btn1-icon {
+      margin-right: 10px;
+    }
+
     &__btn1--red-icon {
       width: 12px;
       height: 14px;
@@ -96,7 +104,6 @@
 
     &__btn1-text {
       text-transform: none;
-      margin-left: 10px;
       color: $light-white;
       font-size: 12px;
       line-height: 150%;

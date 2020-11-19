@@ -3,7 +3,9 @@
     <label class="form-label" v-if="label">{{label}}</label>
     <q-input
         @click="toggleDateModal(true)"
-        :value="value ? $date(new Date(value), format): ''"/>
+        :value="value ? $date(new Date(value), format): ''"
+        :placeholder="placeholder"
+    />
     <q-dialog
         @hide="toggleDateModal(false)"
         v-model="isDateModalOpen"
@@ -21,6 +23,7 @@
     @Prop({required: true}) value: Date | string
     @Prop({default: 'dd.MM.yyyy' }) format: string
     @Prop() label: string
+    @Prop({default: 'Введите значение'}) placeholder: string
 
     isDateModalOpen = false;
 

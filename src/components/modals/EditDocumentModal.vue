@@ -13,27 +13,29 @@
         <label class="form-label" for="documentName">Название документа</label>
         <q-input
             :value="'ss'"
+            :placeholder="'Введите название документа'"
             id="documentName"
         />
+      </div>
 
-        <div class="modal__input-wrapper">
-          <input-date
-              class="modal__date"
-              :label="'Дата исследования'"
-              :value="date"
-              @change-value="changeDate"
-          />
+      <div class="modal__input-wrapper">
+        <input-date
+            class="modal__date modal__input form-input form-input--empty"
+            :label="'Дата исследования'"
+            :value="date"
+            :placeholder="'Дата исследования'"
+            @change-value="changeDate"
+        />
 
-          <div class="form-select modal__select">
-            <label class="form-label" for="eventName">Тип исследования</label>
-            <q-select hide-dropdown-icon id="eventName" v-model="selectValue" :options="selectOptionList">
-              <template v-slot:append>
-                <div class="select-icon">
-                  <icon name="select-icon" class="modal__select-icon"/>
-                </div>
-              </template>
-            </q-select>
-          </div>
+        <div class="form-select modal__select">
+          <label class="form-label" for="eventName">Тип исследования</label>
+          <q-select hide-dropdown-icon id="eventName" v-model="selectValue" :options="selectOptionList">
+            <template v-slot:append>
+              <div class="select-icon">
+                <icon name="select-icon" class="modal__select-icon"/>
+              </div>
+            </template>
+          </q-select>
         </div>
       </div>
 
