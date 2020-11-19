@@ -39,7 +39,6 @@ import FloatingActionBtn from '@/components/FloatingActionBtn.vue';
 import {ILayout} from '@/interfaces/layout.interface';
 import LayoutPattern = ILayout.LayoutPattern;
 import Breakpoint = ILayout.Breakpoint;
-
 @Component({
     components: {
       Header,
@@ -105,6 +104,7 @@ import Breakpoint = ILayout.Breakpoint;
 
     @include media-breakpoint-up($breakpoint-sm) {
       display: flex;
+      width: 100vw;
     }
   }
 

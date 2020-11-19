@@ -1,0 +1,195 @@
+<template>
+  <div class="login-by-id">
+    <div class="form-input form-input--bordered" v-if="!checkResearchDate">
+      <label for="userId" class="form-label">Введите ваш номер ID</label>
+      <q-input
+          for="userId"
+          id="userId"
+          :rules="rules"
+          ref="userId"
+          placeholder="Введите ваш номер ID"
+          v-model="userId"
+      >
+
+      </q-input>
+
+      <p class="login-by-id__input-desk">
+        Авторизуясь, вы принимаете условия <a href="#">«Пользовательского соглашения»</a>
+      </p>
+    </div>
+
+    <div v-if="checkResearchDate" class="login-by-id__check-research-date">
+      <div class="form-input form-input--bordered">
+        <label for="fio" class="form-label">Введите ФИО</label>
+        <q-input
+            for="fio"
+            id="fio"
+            ref="fio"
+            :rules="rules"
+            placeholder="Введите ФИО"
+            v-model="fio"
+        >
+        </q-input>
+      </div>
+
+      <div class="date-input">
+        <InputDate :value="researchDate"
+                   ref="inputDate"
+                   :propsRules="rules"
+                   label="Введите дату сдачи исследования"
+                   customClass="form-input--bordered"
+                   @change-value="onResearchDateChange"/>
+      </div>
+    </div>
+
+    <q-btn padding="8px"
+           class="button1--bordered-with-icon button1 login-by-id__btn"
+           @click="checkResearchDate ? checkUserByResearchDate() : checkUserById()">
+        <span class="login-by-id__btn-icon icon">
+          <icon name="next-icon"></icon>
+        </span>
+      <span class="login-by-id__btn-text">
+        Продолжить
+      </span>
+    </q-btn>
+
+    <button class="change-step-btn login-by-id__change-step"
+            @click.stop="changeStep(steps.CHECK_USER)" v-if="!checkResearchDate">
+      <span class="icon"><icon name="next-icon"></icon></span>
+      <span>Войти через телефон/emal</span>
+    </button>
+  </div>
+</template>
+
+<script lang="ts">
+import {Component, Mixins, Prop, Vue} from 'vue-property-decorator';
+import AuthMixin from '@/mixins/auth-mixin';
+import {IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
+import InputDate from '@/components/InputDate.vue';
+import format from 'date-fns/format'
+import BaseFormMixins from '@/mixins/base-form-mixins';
+import {QInput} from 'quasar';
+
+@Component({
+  components: {
+    InputDate
+  }
+})
+export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
+
+  @Prop() onLogined: Function;
+
+  userId = '';
+  steps = IAuthForOtherUser.RegistrationSteps
+  checkResearchDate: boolean = false;
+  fio: string = ''
+  researchDate: string | Date = new Date();
+  rules: Function[] = [];
+
+
+
+  mounted() {
+    this.rules.push(this.inputRules.required);
+  }
+
+  validate() {
+    return [
+        this.checkResearchDate ? (this.$refs.inputDate as InputDate).validate() : true,
+        this.checkResearchDate ? (this.$refs.fio as QInput).validate() : true,
+        !this.checkResearchDate ? (this.$refs.userId as QInput).validate() : true,
+    ].includes(false);
+  }
+
+  async checkUserById() {
+    console.log(this.checkResearchDate)
+    if (this.validate()) return;
+
+    this.$store.dispatch('auth/checkUser', {value: this.userId, type: IAuthApi.CheckUserParamsType.ID})
+      .then((status) => {
+        if (status) this.afterCheckUser();
+      })
+  }
+
+  async checkUserByResearchDate() {
+    console.log(this.rules)
+    if (this.validate()) return;
+
+    this.$store.dispatch('auth/loginById', this.covertLoginData())
+      .then(isSuccess => {
+        if (isSuccess) this.onLogined();
+      })
+  }
+
+  covertLoginData(): any {
+    return {
+      patient_id: this.userId,
+      fio: this.fio,
+      research_date: format(new Date(this.researchDate), 'yyyy-MM-dd')
+    }
+  }
+
+  onResearchDateChange(value: string | Date) {
+    this.researchDate = value;
+  }
+
+  afterCheckUser() {
+    if (this.userAccountInfo.user_exist || true) {
+      this.checkHasLogin();
+    } else {
+      this.$store.dispatch('error/showErrorNotice', {message: 'Пользователя с таким id нет'})
+    }
+  }
+
+  checkHasLogin() {
+    if (false) {
+      this.changeStep(IAuthForOtherUser.RegistrationSteps.CHECK_USER)
+    } else {
+      this.checkResearchDate = true;
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.login-by-id {
+
+  &__input-desk {
+    margin-top: 15px;
+    font-size: 12px;
+    line-height: 15px;
+    color: $black-04;
+    margin-bottom: 0;
+
+    a {
+      color: $black-04;
+    }
+  }
+
+  &__btn {
+    margin-top: 26px;
+  }
+
+  &__btn-icon {
+    transform: rotate(180deg);
+
+    svg {
+      width: 4px;
+      height: 8px;
+    }
+  }
+
+  &__change-step {
+    .icon {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__check-research-date {
+    .date-input {
+      margin-top: 30px;
+    }
+  }
+
+}
+
+</style>

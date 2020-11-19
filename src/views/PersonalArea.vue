@@ -117,6 +117,8 @@ export default class PersonalArea extends Vue {
   .personal-area {
     width: 100%;
     height: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
 
     &__content {
       display: flex;

@@ -28,6 +28,36 @@
   }
 }
 
+.button1--bordered-with-icon {
+  &.q-btn {
+    border: 1px solid $light-stroke;
+    border-radius: 22px;
+    color: $black-02;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 140%;
+    text-transform: none;
+
+    .q-btn__wrapper {
+
+      &:before {
+        display: none;
+      }
+    }
+  }
+
+  .icon {
+    width: 32px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $accent-color;
+    border-radius: 16px;
+    color: $light-white;
+    margin-right: 12px;
+  }
+}
 
 .form-input {
   input, textarea {
@@ -252,4 +282,11 @@
   }
 }
 
-
+.pwd-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
+  color: $accent-color;
+  font-size: 20px;
+}

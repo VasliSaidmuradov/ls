@@ -9,11 +9,13 @@ import '@quasar/extras/material-icons-outlined/material-icons-outlined.css'
 import '@quasar/extras/material-icons-round/material-icons-round.css'
 import '@quasar/extras/material-icons-sharp/material-icons-sharp.css'
 import '@quasar/extras/fontawesome-v5/fontawesome-v5.css'
-import {Quasar} from 'quasar'
+import {Notify, Quasar} from 'quasar'
+
 Vue.use(Quasar, {
   config: {
   },
   plugins: {
+    Notify
   },
   lang: lang
 })

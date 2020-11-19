@@ -1,6 +1,9 @@
 <template>
   <div class="password-change">
+
+    <h3 class="password-change__title" v-if="isCreatePassword">Придумайте пароль</h3>
     <div
+        v-if="!isCreatePassword"
         class="password-change__input form-input"
         :class="{'form-input--empty': !password}"
     >
@@ -65,7 +68,8 @@
       </q-input>
     </div>
 
-    <q-btn padding="14px 13px"
+    <q-btn v-if="!isCreatePassword"
+           padding="14px 13px"
            unelevated
            class="password-change__btn password-change__btn--flooded">
       <span class="password-change__btn-icon">
@@ -73,12 +77,23 @@
       </span>
       <span class="password-change__btn-text">Сохранить новый пароль</span>
     </q-btn>
+
+    <q-btn
+        v-if="isCreatePassword"
+        padding="8px"
+        class="password-change__create-btn button1 button1--bordered-with-icon">
+
+      <span class="password-change__create-btn-icon icon">
+        <icon name="exit-icon"></icon>
+      </span>
+      <span class="password-change__create-btn-text">Войти</span>
+    </q-btn>
   </div>
 
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import {IUserCard} from '../../interfaces/user-card.interface';
 import passwordMeter from "vue-simple-password-meter";
 
@@ -88,6 +103,9 @@ import passwordMeter from "vue-simple-password-meter";
   }
 })
 export default class PasswordChange extends Vue {
+
+  @Prop({default: false, type: Boolean}) isCreatePassword: boolean;
+
   pwdObject = {
     oldPassword: true,
     newPassword: true,
@@ -116,10 +134,12 @@ export default class PasswordChange extends Vue {
 
 
   onScore({ score, strength }: {score: number; strength: string}) {
+    console.log(this.$store.state.userCard)
     if (Object.keys(this.passwordStrengthText).includes(strength)) this.passwordStrength = strength;
   }
 
   changePwd(pwd: keyof {oldPassword: boolean; newPassword: boolean; repeatPassword: boolean}) {
+    console.log(this.isCreatePassword)
     this.pwdObject[pwd] = !this.pwdObject[pwd];
   }
 
@@ -131,17 +151,6 @@ export default class PasswordChange extends Vue {
 
 
 .password-change {
-
-  .pwd-icon {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translate(0, -50%);
-    color: $accent-color;
-    font-size: 20px;
-  }
-
-
   .password-change__input {
     .q-field__append {
       right: 40px;
@@ -243,6 +252,15 @@ export default class PasswordChange extends Vue {
 
   &__input {
     margin-bottom: 25px;
+  }
+
+  &__title {
+    margin-bottom: 25px;
+    margin-top: 0;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 130%;
+    color: $gray-01;
   }
 }
 

@@ -1,18 +1,19 @@
 import { Component, Vue } from 'vue-property-decorator';
 import {QInput, QSelect} from 'quasar';
 import {IMedicalCard} from '@/interfaces/medical-card.interface';
-import IRulesValue = IMedicalCard.IRulesValue;
 
 
 @Component({})
 export default class BaseFormMixins extends Vue {
   onlyLetters = /[a-zA-ZА-Яа-я ]*/
   onlyNumber = /[0-9]*/;
+  emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
 
 
   public inputRules = {
-    maxMinlength: (val: IRulesValue): string | boolean => val[0]?.length > 2 && val[0]?.length <= 20 || 'Please type something',
-    required: (val: IRulesValue): string | number => val[0]?.length || 'обязательно к заполнению',
+    maxMinlength: (val: string) => val.length > 2 && val.length <= 20 || 'Please type something',
+    required: (val: string) => val.length || 'обязательно к заполнению',
+    validEmail: (val: string) => this.emailPattern.test(val) || 'Invalid email',
   };
 
   checkError(ref: any): boolean {
@@ -24,7 +25,7 @@ export default class BaseFormMixins extends Vue {
     ref.showPopup();
   }
 
-  checkInputValueByRegExp(regexp: RegExp, value: string) {
-    return value.match(regexp);
+  checkInputValueByRegExp(regexp: RegExp, value: string): string | undefined{
+    return (value.match(regexp) as RegExpMatchArray).input
   }
 }
