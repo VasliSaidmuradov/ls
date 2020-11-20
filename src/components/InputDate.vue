@@ -9,7 +9,6 @@
         :placeholder="placeholder"
     />
 
-    />
     <q-dialog
         @hide="toggleDateModal(false)"
         v-model="isDateModalOpen"

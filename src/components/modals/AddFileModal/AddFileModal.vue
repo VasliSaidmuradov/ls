@@ -279,11 +279,14 @@
     }
 
     &__load-btn {
-      width: 214px;
       height: 56px;
       border-radius: 22px;
       background-color: $accent-color;
       margin-top: 43px;
+
+      /deep/ .q-btn__wrapper {
+        padding: 8px 20px 8px 8px;
+      }
 
       &-icon-wrapper {
         display: flex;
@@ -322,10 +325,6 @@
       font-weight: 400;
       font-size: 12px;
       line-height: 15px;
-    }
-
-    &__file {
-
     }
 
     &__file-wrapper {
