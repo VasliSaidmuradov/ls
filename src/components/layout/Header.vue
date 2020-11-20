@@ -124,6 +124,11 @@ export default class Header extends Vue {
       background-color: $accent-color;
       color: $light-white;
       border-radius: 16px;
+
+      svg {
+        width: 10px;
+        height: 10px;
+      }
     }
 
     &__content-user-research-text {

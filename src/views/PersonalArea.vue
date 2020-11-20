@@ -58,6 +58,7 @@ import {IMenu} from '@/interfaces/layout.interface';
 import PERSONAL_AREA_MENU = IMenu.PERSONAL_AREA_MENU;
 import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
+import IAppRoute = IRouter.IAppRoute;
 
 @Component({
   components: {
@@ -85,6 +86,8 @@ export default class PersonalArea extends Vue {
 
   mobileMenuData = PERSONAL_AREA_MENU;
 
+  $route: IAppRoute<{activeTab: IPersonalArea.TabsName | string}>
+
   mounted() {
     this.onQueryChange();
   }
@@ -100,7 +103,7 @@ export default class PersonalArea extends Vue {
   }
 
   get activeTabFromRoute(): string {
-     return (this.$route.query.activeTab as string);
+     return this.$route.query.activeTab;
   }
 
   @Watch('activeTabFromRoute')
@@ -117,6 +120,8 @@ export default class PersonalArea extends Vue {
   .personal-area {
     width: 100%;
     height: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
 
     &__content {
       display: flex;

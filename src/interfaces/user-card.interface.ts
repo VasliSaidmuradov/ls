@@ -8,6 +8,7 @@ export namespace IUserCardStore {
     dms: string;
     phone: string | number;
     password: string;
+    avatar: null | string;
   }
 }
 
@@ -19,5 +20,21 @@ export namespace IUserCard {
     WEEK = 'week',
     SAFE = 'safe',
     SECURE = 'secure'
+  }
+
+  export interface IUser {
+    avatar: null | string;
+    email: string;
+    name: string;
+    password: string;
+    patronymic: string;
+    phone: string;
+    surname: string;
+    created_at: string;
+    deleted_at: null | string;
+    id: string;
+    is_deleted: boolean;
+    updated_at: string;
+    user_id: string;
   }
 }

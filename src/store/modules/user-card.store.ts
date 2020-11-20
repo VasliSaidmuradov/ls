@@ -1,7 +1,7 @@
 import { IAppState } from '@/interfaces/app-state.interface';
 import {ActionContext} from 'vuex';
 import Vue from 'vue';
-import {IUserCardStore} from '@/interfaces/user-card.interface';
+import {IUserCard, IUserCardStore} from '@/interfaces/user-card.interface';
 type UserCardStore = ActionContext<IUserCardStore.IState, IAppState>;
 
 export default {
@@ -14,15 +14,22 @@ export default {
     mail: '',
     oms: '',
     dms: '',
-    phone: '',
+    phone: '89529273591',
     password: '',
+    avatar: null,
   },
 
   mutations: {
-    setPropertyInStore(state: IUserCardStore.IState, { name, value }: { name: string; value: any}) {
+    setPropertyInStore(state: IUserCardStore.IState, { name, value }: { name: any; value: any}) {
       Vue.set(state, name, value);
     },
   },
 
-  actions: {}
+  actions: {
+    setUser({commit}: UserCardStore, {data}: {data: IUserCard.IUser}) {
+      Object.keys(data).forEach((key: string) => {
+        commit('setPropertyInStore', {name: key, value: data[(key as keyof IUserCard.IUser)]})
+      })
+    }
+  }
 };
