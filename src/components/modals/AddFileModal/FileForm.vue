@@ -1,14 +1,24 @@
 <template>
   <form
       class="file-form"
-      :class="{'file-form-1': type === 1, 'file-form-2': type === 2}"
+      :class="`file-form-${type}`"
       ref="file-form"
   >
-    <input type="file" id="file" class="file-form__file-input">
+    <input
+        type="file"
+        multiple
+        id="file"
+        ref="file"
+        class="file-form__file-input"
+        @change="handleFileUpload"
+
+    >
     <label
         class="file-form__file-block"
         for="file"
-        @click.prevent="clickAddFile"
+        @dragenter.prevent.stop
+        @dragover.prevent.stop
+        @drop.prevent.stop="handleFileDrop"
     >
       <icon :name="countIcon" class="file-form__file-block-icon"/>
       <span class="file-form__file-block-title">{{title}}</span>
@@ -20,18 +30,29 @@
 <script lang="ts">
   import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
 
+  interface IRefs {
+    file: HTMLInputElement;
+  }
+
   @Component({})
   export default class FileForm extends Vue {
     @Prop() type: number
     @Prop({default: 'Перетяните или нажмите, чтобы добавить файл'}) title: string
 
-    @Emit('click-add-file')
-    clickAddFile() {
-      return false
-    }
+    $refs: IRefs & Vue['$refs'];
 
     get countIcon() {
       return this.type === 1 ? 'cloud-icon' : 'add-icon'
+    }
+
+    @Emit('add-files')
+    handleFileUpload() {
+      return this.$refs.file.files && this.$refs.file.files
+    }
+
+    handleFileDrop(e: DataTransfer) {
+      // const dt = e.dataTransfer;
+      // const files = dt.files;
     }
   }
 </script>
@@ -54,7 +75,6 @@
     &__file-block-title {
       margin-top: 4px;
       display: block;
-      letter-spacing: 0.45px;
       font-weight: 500;
       font-size: 14px;
       line-height: 140%;
@@ -78,7 +98,7 @@
 
   .file-form-1 .file-form {
     &__file-block {
-      padding: 60px 150px;
+      padding: 60px 140px;
     }
 
     &__file-block-icon {

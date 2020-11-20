@@ -7,7 +7,7 @@
 
       <div
           class="modal__back-btn"
-          v-if="type === 2"
+          v-if="modalVisibleType === 2"
           @click="toggleDialogModal(true)"
       >
         <icon name="next-icon" class="modal__back-btn-icon"/>
@@ -24,12 +24,12 @@
       </span>
 
       <file-form
-          v-if="type === 1"
-          :type="type"
-          @click-add-file="clickAddFile"
+          v-if="modalVisibleType === 1"
+          :type="modalVisibleType"
+          @add-files="addFiles"
       />
 
-      <div v-if="type === 2">
+      <div v-if="modalVisibleType === 2">
         <div class="form-select modal__select">
           <label class="form-label" for="eventName">Тип исследования</label>
           <q-select hide-dropdown-icon id="eventName" v-model="selectValue" :options="selectOptionList">
@@ -69,26 +69,26 @@
         </div>
       </div>
 
-      <span class="modal__bottom-text" v-if="type === 1">
+      <span class="modal__bottom-text" v-if="modalVisibleType === 1">
         Мы умеем расшифровывать анализы из PDF, картинок или фотографий результатов анализов
       </span>
 
-      <div v-if="type === 2">
+      <div v-if="modalVisibleType === 2">
         <p class="modal__count-documents">1 документ, <span class="modal__count-files">7 файлов</span></p>
 
         <div class="modal__file-wrapper">
           <div class="modal__file-scroll-block">
-            <div class="modal__file-scroll-block-item" v-for="document in 4" :key="document">
+            <div class="modal__file-scroll-block-item" v-for="(file, fileIndex) in fileList" :key="fileIndex">
               <img src="@/assets/Doc.jpg" width="86px" height="126px" alt="">
-              <icon name="delete-icon" class="modal__file-scroll-block-icon"/>
+              <icon name="delete-icon" class="modal__file-scroll-block-icon" @click="deleteFile(fileIndex)"/>
             </div>
           </div>
 
           <file-form
-              v-if="type === 2"
-              :type="type"
+              v-if="modalVisibleType === 2"
+              :type="modalVisibleType"
               :title="'Добавить еще файл'"
-              @click-add-file="clickAddFile"
+              @add-files="addFiles"
           />
         </div>
 
@@ -116,7 +116,7 @@
 </template>
 
 <script lang="ts">
-  import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
+  import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator'
   import DialogModal from "@/components/modals/DialogModal.vue";
   import InputDate from "@/components/InputDate.vue";
   import FileForm from "@/components/modals/AddFileModal/FileForm.vue";
@@ -128,23 +128,34 @@
     @Prop({required: true}) isFileModalOpen: boolean
 
     isDialogModalOpen = false
-    type = 2
+    modalVisibleType = 1
     date = ''
     selectValue = 'Узи'
     isCheckboxValue = false
     selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса']
+    fileList: FileList[] = []
 
-    @Emit('close-modal')
-    closeModal() {
-      return false
+    @Watch('fileList', {
+      deep: true
+    })
+    fileListChanged() {
+      this.fileList.length
+        ? this.modalVisibleType = 2
+        : this.modalVisibleType = 1
+    }
+
+    addFiles(files: FileList[]) {
+      files.forEach((file: FileList) => {
+        this.fileList.push(file)
+      })
+    }
+
+    deleteFile(index: number) {
+      this.fileList.splice(index, 1)
     }
 
     changeDate(value: string) {
       this.date = value
-    }
-
-    clickAddFile() {
-      this.type = 2
     }
 
     toggleDialogModal(val: boolean) {
@@ -152,8 +163,13 @@
     }
 
     clickConfirmBtnDialogModal() {
-      this.type = 1
       this.toggleDialogModal(false)
+      this.fileList = []
+    }
+
+    @Emit('close-modal')
+    closeModal() {
+      return false
     }
   }
 </script>
