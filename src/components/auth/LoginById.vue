@@ -85,9 +85,9 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
 import {QInput} from 'quasar';
 
 interface IRefs {
-  inputDate: InputDate,
-  fio: QInput,
-  userId: QInput,
+  inputDate: InputDate;
+  fio: QInput;
+  userId: QInput;
 }
 
 @Component({

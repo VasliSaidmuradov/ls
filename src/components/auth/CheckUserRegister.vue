@@ -41,9 +41,9 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
 import AuthMixin from '@/mixins/auth-mixin';
 import {QInput} from 'quasar';
 interface IRefs {
-  surname: Surname,
-  name: Name,
-  phone: QInput,
+  surname: Surname;
+  name: Name;
+  phone: QInput;
 }
 
 @Component({
