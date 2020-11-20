@@ -32,6 +32,7 @@ import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
 import AuthForm from '@/components/auth/AuthForm.vue';
 import AuthMixin from '@/mixins/auth-mixin';
+import IAppRoute = IRouter.IAppRoute;
 
 @Component({
   components: {
@@ -50,6 +51,8 @@ export default class AuthPage extends AuthMixin {
       value: IAuth.AuthMode.LOGIN
     }
   ]
+
+  $route: IAppRoute<{pageMode: IAuth.AuthMode}>;
 
   mounted() {
     this.pageMode ? void 0 : this.$router.replace({name: ROUTE_NAME.AUTH_PAGE, query: {pageMode: IAuth.AuthMode.REGISTRATION}});
@@ -75,7 +78,7 @@ export default class AuthPage extends AuthMixin {
   }
 
   get pageMode(): IAuth.AuthMode {
-    return (this.$route.query.pageMode as IAuth.AuthMode);
+    return this.$route.query.pageMode;
   }
 
   setPageMode(value: boolean | string) {

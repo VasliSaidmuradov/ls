@@ -40,6 +40,11 @@ import Name from '@/components/userSetting/Name.vue';
 import BaseFormMixins from '@/mixins/base-form-mixins';
 import AuthMixin from '@/mixins/auth-mixin';
 import {QInput} from 'quasar';
+interface IRefs {
+  surname: Surname,
+  name: Name,
+  phone: QInput,
+}
 
 @Component({
   components: {
@@ -56,16 +61,18 @@ export default class CheckUserRegister extends Mixins(BaseFormMixins, AuthMixin)
 
   phone: string = '';
 
+  $refs: IRefs & Vue['$refs'];
+
   mounted() {
     this.rules.push(this.inputRules.required)
   }
 
   validate(): boolean {
     return [
-      (this.$refs.surname as Surname).validate(),
+      this.$refs.surname.validate(),
       this.acceptCheckbox,
-      (this.$refs.name as Name).validate(),
-      (this.$refs.phone as QInput).validate(),
+      this.$refs.name.validate(),
+      this.$refs.phone.validate(),
     ].includes(false);
   }
 

@@ -84,6 +84,12 @@ import format from 'date-fns/format'
 import BaseFormMixins from '@/mixins/base-form-mixins';
 import {QInput} from 'quasar';
 
+interface IRefs {
+  inputDate: InputDate,
+  fio: QInput,
+  userId: QInput,
+}
+
 @Component({
   components: {
     InputDate
@@ -101,6 +107,8 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   rules: Function[] = [];
   notFoundUser = true;
 
+  $refs: IRefs & Vue['$refs'];
+
 
 
   mounted() {
@@ -109,9 +117,9 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
 
   validate() {
     return [
-        this.checkResearchDate ? (this.$refs.inputDate as InputDate).validate() : true,
-        this.checkResearchDate ? (this.$refs.fio as QInput).validate() : true,
-        !this.checkResearchDate ? (this.$refs.userId as QInput).validate() : true,
+        this.checkResearchDate ? this.$refs.inputDate.validate() : true,
+        this.checkResearchDate ? this.$refs.fio.validate() : true,
+        !this.checkResearchDate ? this.$refs.userId.validate() : true,
     ].includes(false);
   }
 

@@ -14,12 +14,18 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+export interface IRefs {
+  uploader: HTMLElement;
+}
+
 @Component({})
 export default class UserCardAvatar extends Vue {
   url: string = 'https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg';
 
+  $refs: IRefs & Vue['$refs'];
+
   uploadPhoto() {
-    (this.$refs.uploader as HTMLElement).click();
+    this.$refs.uploader.click();
   }
 
   onFileGet(fileList: FileList) {

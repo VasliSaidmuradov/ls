@@ -34,6 +34,10 @@ export default class Name extends BaseFormMixins {
 
   rules: Function[] = []
 
+  $refs: {
+    surname: QInput;
+  }
+
   oldValue = '';
 
   mounted() {
@@ -50,7 +54,7 @@ export default class Name extends BaseFormMixins {
   }
 
   validate(): Promise<boolean> | boolean {
-    return (this.$refs.surname as QInput).validate();
+    return this.$refs.surname.validate()
   }
 
 }

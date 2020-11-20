@@ -22,6 +22,10 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
 import SaveFieldBtn from '@/components/SaveField.vue';
 import {QInput} from 'quasar';
 
+interface IRefs {
+  name: QInput;
+}
+
 @Component({
   components: {
     SaveFieldBtn
@@ -33,6 +37,8 @@ export default class Name extends BaseFormMixins {
 
   oldValue = '';
   rules: Function[] = [];
+
+  $refs: IRefs & Vue['$refs']
 
   mounted() {
     this.rules.push(this.inputRules.maxMinlength, ...this.propRules)
@@ -49,7 +55,7 @@ export default class Name extends BaseFormMixins {
   }
 
   validate(): Promise<boolean> | boolean {
-    return (this.$refs.name as QInput).validate();
+    return this.$refs.name.validate();
   }
 
 }

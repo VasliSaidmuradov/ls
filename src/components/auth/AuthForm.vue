@@ -33,6 +33,8 @@ import CheckUserRegister from '@/components/auth/CheckUserRegister.vue';
 import CheckUserLogin from '@/components/auth/CheckUserLogin.vue';
 import LoginById from '@/components/auth/LoginById.vue';
 import AuthMixin from '@/mixins/auth-mixin';
+import {IRouter} from '@/interfaces/router.interface';
+import IAppRoute = IRouter.IAppRoute;
 
 
 @Component({
@@ -53,12 +55,14 @@ export default class AuthFormOtherUser extends Mixins(BaseFormMixins, AuthMixin)
   checkedValue: string = '';
   isLoginedById: boolean | undefined = false;
 
+  $route: IAppRoute<{pageMode: IAuth.AuthMode}>
+
   get currentStep(): IAuthForOtherUser.RegistrationSteps {
     return this.$store.state.auth.currentAuthStep;
   }
 
   get pageMode(): IAuth.AuthMode {
-    return (this.$route.query.pageMode as IAuth.AuthMode);
+    return this.$route.query.pageMode;
   }
 
   get isLabstoryUser(): boolean {

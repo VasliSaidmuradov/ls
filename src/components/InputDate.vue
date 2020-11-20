@@ -20,6 +20,10 @@
   import BaseFormMixins from '@/mixins/base-form-mixins';
   import {QInput} from 'quasar';
 
+  export interface IRefs {
+    dateInput: QInput;
+  }
+
   @Component({})
   export default class InputDate extends BaseFormMixins {
     @Prop({required: true}) value: Date | string
@@ -29,6 +33,8 @@
     @Prop({default: () => []}) propRules: Function[];
 
     isDateModalOpen = false;
+
+    $refs: IRefs & Vue['$refs'];
 
     @Emit('change-value')
     changeValue(value: string) {
@@ -40,7 +46,7 @@
     }
 
     validate(): Promise<boolean> | boolean {
-      return (this.$refs.dateInput as QInput).validate();
+      return this.$refs.dateInput.validate();
     }
   }
 </script>

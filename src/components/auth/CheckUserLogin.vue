@@ -75,6 +75,10 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
 import AuthMixin from '@/mixins/auth-mixin';
 import {QInput} from 'quasar';
 
+interface IRefs {
+  phoneOrMail: QInput;
+}
+
 @Component({})
 export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
   @Prop({required: true}) onCodeSend: Function;
@@ -87,6 +91,7 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
   rules: Function[] = [];
   tryEmail: boolean = false;
 
+  $refs: IRefs & Vue['$refs'];
 
   mounted() {
     this.rules.push(this.inputRules.required);
@@ -102,7 +107,7 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
 
   validate(): boolean {
     return [
-      (this.$refs.phoneOrMail as QInput).validate(),
+      this.$refs.phoneOrMail.validate(),
       this.hasPassword ? (this.$refs.password as QInput).validate() : true
     ].includes(false)
   }
@@ -149,6 +154,7 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
   checkDuplicates() {
     if (this.userAccountInfo.has_duplicates) {
       // openDuplicateStep
+      this.checkPassword();
     } else {
       this.checkPassword();
     }
