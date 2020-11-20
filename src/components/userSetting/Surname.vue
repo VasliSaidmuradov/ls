@@ -11,15 +11,16 @@
         ref="surname"
     >
 
-      <SaveFieldBtn v-if="oldValue !== surname && !checkError($refs.surname)" v-slot:append/>
+      <SaveFieldBtn v-if="oldValue !== surname && !checkError($refs.surname) && !disableAcceptField" v-slot:append/>
     </q-input>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import SaveFieldBtn from '@/components/SaveField.vue';
 import BaseFormMixins from '@/mixins/base-form-mixins';
+import {QInput} from 'quasar';
 
 @Component({
   components: {
@@ -28,12 +29,19 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
 })
 export default class Name extends BaseFormMixins {
 
+  @Prop() propRules: Function[];
+  @Prop({default: false, type: Boolean}) disableAcceptField: boolean;
+
   rules: Function[] = []
+
+  $refs: {
+    surname: QInput;
+  }
 
   oldValue = '';
 
   mounted() {
-    this.rules.push(this.inputRules.maxMinlength);
+    this.rules.push(this.inputRules.maxMinlength, ...this.propRules);
     this.oldValue = this.surname;
   }
 
@@ -43,6 +51,10 @@ export default class Name extends BaseFormMixins {
 
   set surname(value: string) {
     this.$store.commit('userCard/setPropertyInStore', {name: 'surname', value: this.checkInputValueByRegExp(this.onlyLetters, value)});
+  }
+
+  validate(): Promise<boolean> | boolean {
+    return this.$refs.surname.validate()
   }
 
 }

@@ -3,4 +3,32 @@
   background: $light-white;
   box-shadow: 0 4px 15px $shadow-color;
   border-radius: 26px;
+
+  @include media-breakpoint-up($breakpoint-xs) {
+    padding: 34px 24px;
+  }
+}
+
+.change-step-btn {
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+  font-size: 12px;
+  color: $black-02;
+  margin-top: 25px;
+
+  .icon {
+    margin-right: 16px;
+    color: $accent-color;
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 4px;
+      height: 8px;
+    }
+  }
 }

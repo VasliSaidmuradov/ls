@@ -66,5 +66,6 @@ export default new Router({
     path: ROUTE_PATH[ROUTE_NAME.AUTH_PAGE],
     name: ROUTE_NAME.AUTH_PAGE,
     component: () => import('@/views/AuthPage.vue'),
+    props: (route: Route) => ({query: route.query.pageMode}),
   }]
 });

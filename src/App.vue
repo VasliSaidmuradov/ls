@@ -31,16 +31,15 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
-  import Header from '@/components/layout/Header.vue';
-  import Aside from '@/components/layout/Aside.vue';
-  import Footer from '@/components/layout/Footer.vue';
-  import FloatingActionBtn from '@/components/FloatingActionBtn.vue';
-  import {ILayout} from '@/interfaces/layout.interface';
-  import LayoutPattern = ILayout.LayoutPattern;
-  import Breakpoint = ILayout.Breakpoint;
-
-  @Component({
+import {Component, Vue} from 'vue-property-decorator';
+import Header from '@/components/layout/Header.vue';
+import Aside from '@/components/layout/Aside.vue';
+import Footer from '@/components/layout/Footer.vue';
+import FloatingActionBtn from '@/components/FloatingActionBtn.vue';
+import {ILayout} from '@/interfaces/layout.interface';
+import LayoutPattern = ILayout.LayoutPattern;
+import Breakpoint = ILayout.Breakpoint;
+@Component({
     components: {
       Header,
       Aside,
@@ -99,10 +98,11 @@
       border-radius: 10px 10px 0 0;
       background-color: $light-white;
 
-      @include media-breakpoint-up($breakpoint-sm) {
-        display: flex;
-      }
+    @include media-breakpoint-up($breakpoint-sm) {
+      display: flex;
+      width: 100vw;
     }
+  }
 
     .q-header {
       display: block;

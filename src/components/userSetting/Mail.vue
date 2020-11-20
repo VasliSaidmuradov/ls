@@ -30,17 +30,13 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
 })
 export default class Mail extends BaseFormMixins {
 
-  rules: Function[] = [(val: string) => this.isValidEmail(val) || 'Please type something']
+  rules: Function[] = [];
 
   oldValue = '';
 
   mounted() {
     this.oldValue = this.mail;
-  }
-
-  isValidEmail (val: string): boolean | string {
-    const emailPattern = /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
-    return emailPattern.test(val) || 'Invalid email';
+    this.rules.push(this.inputRules.validEmail)
   }
 
   get mail(): string {

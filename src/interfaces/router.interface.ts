@@ -1,3 +1,5 @@
+import {Dictionary, Route, VueRouter} from 'vue-router/types/router';
+
 export namespace IRouter {
   export enum ROUTE_NAME {
     PAGE_PERSONAL_AREA = 'personalArea',
@@ -25,5 +27,9 @@ export namespace IRouter {
     [ROUTE_NAME.MEDICAL_CARD_PAGE]: '/medical-card',
     [ROUTE_NAME.PASSWORD_CHANGE_PAGE]: '/password-change',
     [ROUTE_NAME.AUTH_PAGE]: '/auth'
+  }
+
+  export interface IAppRoute<T> extends Omit<Route, 'query'> {
+    query: T;
   }
 }

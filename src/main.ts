@@ -6,6 +6,10 @@ import './plugins/quasar'
 import './plugins/vue-awesome'
 import './plugins/vueDonutChart'
 import './plugins/date-fns'
+import './plugins/axios'
+import './plugins/bus'
+import './plugins/vue.cookes'
+import './styles/main.scss'
 
 Vue.config.productionTip = false
 
