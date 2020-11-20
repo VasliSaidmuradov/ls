@@ -245,7 +245,7 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
 
       .q-btn__wrapper {
         background: transparent;
-        ont-size: 12px;
+        font-size: 12px;
         line-height: 150%;
         color: $black-02;
         font-weight: 300;

@@ -29,7 +29,7 @@ import {QInput} from 'quasar';
 })
 export default class Name extends BaseFormMixins {
 
-  @Prop() propRules: Function[];
+  @Prop({default: () => []}) propRules: Function[];
   @Prop({default: false, type: Boolean}) disableAcceptField: boolean;
 
   rules: Function[] = []

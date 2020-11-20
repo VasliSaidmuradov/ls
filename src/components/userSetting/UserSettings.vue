@@ -47,6 +47,10 @@
 <!--        </div>-->
 <!--      </div>-->
     </q-form>
+
+    <div class="user-settings__legal">
+      <LegalInformation />
+    </div>
   </div>
 </template>
 
@@ -65,6 +69,7 @@ import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
 import BasePageHeader from '@/components/BasePageHeader.vue';
 import UserCardAvatar from '@/components/userCard/UserCardAvatar.vue';
+import LegalInformation from '@/components/userSetting/LegalInformation.vue';
 
   @Component({
     components: {
@@ -77,7 +82,8 @@ import UserCardAvatar from '@/components/userCard/UserCardAvatar.vue';
       Dms,
       Password,
       BasePageHeader,
-      UserCardAvatar
+      UserCardAvatar,
+      LegalInformation
     }
   })
 
@@ -212,6 +218,10 @@ import UserCardAvatar from '@/components/userCard/UserCardAvatar.vue';
     &__avatar {
       margin: 25px 0px;
       width: 98px;
+    }
+
+    &__legal {
+      margin-top: 60px;
     }
   }
 </style>
