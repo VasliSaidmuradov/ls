@@ -16,7 +16,7 @@
     <info-block/>
 
     <div class="document-page__file-wrapper">
-      <file-item />
+      <file-item/>
     </div>
   </div>
 </template>
@@ -35,11 +35,6 @@
 </script>
 
 <style lang="scss" scoped>
-  .layout {
-    padding-top: 70px;
-    padding-bottom: 97px;
-  }
-
   .document-page {
     &__header {
       max-width: 838px;

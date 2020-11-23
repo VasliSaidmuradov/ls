@@ -1,7 +1,12 @@
 <template>
   <div class="storage-page layout">
     <div class="storage-page__header">
-      <h2 class="storage-page__header-title">Ваши документы</h2>
+      <div class="storage-page__header-left">
+        <span class="storage-page__header-title">Ваши документы</span>
+        <span class="storage-page__header-subtitle">Вы можете загружать документы только следующих форматов: .pdf, .jpeg, .png
+          и размером до 5мб.</span>
+      </div>
+
       <q-btn class="storage-page__header-btn" @click="toggleFileModal(true)">
         <div class="storage-page__header-btn-icon-wrapper">
           <icon name="add-icon" class="storage-page__header-btn-icon"/>
@@ -10,11 +15,8 @@
       </q-btn>
     </div>
 
-    <p class="storage-page__subtitle">Вы можете загружать документы только следующих форматов: .pdf, .jpeg, .png
-      и размером до 5мб.</p>
-
     <div class="storage-page__middle-block">
-      <h4 class="storage-page__middle-block-title">Всего 15 документов:</h4>
+      <span class="storage-page__middle-block-title">Всего 15 документов:</span>
 
       <div class="storage-page__middle-block-right">
         <q-checkbox
@@ -116,21 +118,33 @@
 </script>
 
 <style lang="scss" scoped>
-  .layout {
-    padding-top: 70px;
-    padding-bottom: 97px;
-  }
-
   .storage-page {
     &__header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+
+      @include media-breakpoint-up($breakpoint-md) {
+        flex-direction: column;
+      }
 
       &-title {
+        display: block;
         font-weight: 500;
         font-size: 36px;
         line-height: 130%;
+
+        @include media-breakpoint-up($breakpoint-md) {
+          font-size: 30px;
+        }
+      }
+
+      &-subtitle {
+        margin-top: 20px;
+        display: block;
+        font-size: 16px;
+        line-height: 22px;
+        max-width: 432px;
       }
 
       &-btn {
@@ -140,6 +154,10 @@
 
         /deep/ .q-btn__wrapper {
           padding: 8px 20px 8px 8px;
+        }
+
+        @include media-breakpoint-up($breakpoint-md) {
+          margin-top: 20px;
         }
       }
 
@@ -168,30 +186,46 @@
       }
     }
 
-    &__subtitle {
-      font-size: 16px;
-      line-height: 22px;
-      max-width: 432px;
-    }
-
     &__middle-block {
       margin-top: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
 
+      @include media-breakpoint-up($breakpoint-md) {
+        margin-top: 46px;
+        flex-direction: column-reverse;
+        align-items: flex-start;
+      }
+
       &-title {
+        display: block;
         font-weight: 600;
         font-size: 14px;
         line-height: 130%;
+
+        @include media-breakpoint-up($breakpoint-md) {
+          margin-top: 50px;
+        }
       }
 
       &-right {
         display: flex;
         align-items: center;
 
+        @include media-breakpoint-up($breakpoint-md) {
+          flex-direction: column-reverse;
+          align-items: flex-start;
+        }
+
         .form-checkbox {
           margin-right: 30px;
+
+          @include media-breakpoint-up($breakpoint-md) {
+            margin-top: 20px;
+            margin-right: 0;
+            margin-left: -6px;
+          }
         }
       }
 
@@ -233,6 +267,15 @@
       grid-row-gap: 40px;
       align-items: start;
       grid-template-columns: repeat(4, 1fr);
+
+      @include media-breakpoint-up($breakpoint-lg) {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-row-gap: 20px;
+      }
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        grid-row-gap: 12px;
+      }
     }
   }
 </style>

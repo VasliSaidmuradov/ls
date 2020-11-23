@@ -1,5 +1,5 @@
 <template>
-    <div class="header__content layout">
+    <div class="header__content layout-header">
       <div class="header__content-back">
         <BackBtn />
       </div>

@@ -112,7 +112,6 @@
 
 <style lang="scss" scoped>
   .document-item {
-    width: 298px;
     padding: 8px 10px 16px 16px;
     border-radius: 20px;
     background-color: $light-white;

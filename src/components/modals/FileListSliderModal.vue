@@ -77,6 +77,10 @@
     overflow: initial;
     box-shadow: none;
 
+    @include media-breakpoint-up($breakpoint-sm) {
+      max-width: 320px;
+    }
+
     &__close {
       position: absolute;
       top: 12px;

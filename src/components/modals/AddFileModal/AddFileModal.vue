@@ -74,7 +74,7 @@
       </span>
 
       <div v-if="modalVisibleType === 2">
-        <p class="modal__count-documents">1 документ, <span class="modal__count-files">7 файлов</span></p>
+        <p class="modal__count-documents">1 документ, <span class="modal__count-files">{{fileList.length}} файлов</span></p>
 
         <div class="modal__file-wrapper">
           <div class="modal__file-scroll-block">
@@ -182,6 +182,10 @@
     padding: 40px 62px;
     position: relative;
 
+    @include media-breakpoint-up($breakpoint-sm) {
+      padding: 40px 25px;
+    }
+
     &__close {
       position: absolute;
       top: 12px;
@@ -230,6 +234,10 @@
       font-size: 16px;
       line-height: 22px;
       color: $gray-01;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        margin-top: 10px;
+      }
     }
 
     &__subtitle {
@@ -245,16 +253,30 @@
     }
 
     &__input {
-      width: 310px;
+    width: 310px;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        width: 242px;
+      }
 
       &-wrapper {
         margin-top: 20px;
         display: flex;
         align-items: flex-end;
+
+        @include media-breakpoint-up($breakpoint-sm) {
+          flex-direction: column-reverse;
+          align-items: flex-start;
+        }
       }
 
       &-block {
         margin-left: 10px;
+
+        @include media-breakpoint-up($breakpoint-sm) {
+          margin-left: 0;
+          margin-bottom: 14px;
+        }
       }
 
       &-postscript {
@@ -291,6 +313,7 @@
       font-weight: 500;
       font-size: 12px;
       line-height: 15px;
+      max-width: 635px;
       text-align: center;
     }
 
@@ -347,6 +370,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     &__file-scroll-block {

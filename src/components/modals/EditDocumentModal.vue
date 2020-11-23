@@ -111,7 +111,8 @@
     }
 
     &__input {
-      width: 455px;
+      max-width: 455px;
+      width: 100%;
       margin-top: 24px;
     }
 
@@ -119,6 +120,11 @@
       margin-top: 20px;
       display: flex;
       align-items: flex-end;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     .modal__date {
@@ -128,6 +134,11 @@
     &__select {
       margin-left: 20px;
       width: 100%;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        margin-top: 20px;
+        margin-left: 0;
+      }
 
       /deep/ .q-field__inner {
         width: 245px;

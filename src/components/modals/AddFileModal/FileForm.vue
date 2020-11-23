@@ -73,6 +73,7 @@
     }
 
     &__file-block-title {
+      text-align: center;
       margin-top: 4px;
       display: block;
       font-weight: 500;
@@ -99,6 +100,10 @@
   .file-form-1 .file-form {
     &__file-block {
       padding: 60px 140px;
+
+      @include media-breakpoint-up($breakpoint-md) {
+        padding: 30px 30px;
+      }
     }
 
     &__file-block-icon {
@@ -114,6 +119,10 @@
   .file-form-2 .file-form {
     &__file-block {
       padding: 29px 25px;
+
+      @include media-breakpoint-up($breakpoint-md) {
+        padding: 30px 34px;
+      }
     }
 
     &__file-block-icon {
