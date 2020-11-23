@@ -2,7 +2,7 @@
   <div class="footer__content">
     <ul class="footer__menu">
       <li class="footer__menu-item" :class="`footer__menu-item--${item.name}`" v-for="(item, index) in menu" :key="index">
-        <router-link class="footer__menu-link" :to="item.link">
+        <router-link class="footer__menu-link" :to="item.link" :exact="item.exact">
           <span class="footer__menu-icon">
             <icon :name="item.icon"></icon>
           </span>
@@ -39,7 +39,6 @@ export default class Footer extends Vue {
     margin: 0;
     display: flex;
     list-style-type: none;
-    display: flex;
     justify-content: center;
     margin: 0 -5px;
   }
