@@ -8,7 +8,7 @@
       <div
           class="modal__back-btn"
           v-if="modalVisibleType === 2"
-          @click="toggleDialogModal(true)"
+          @click="toggleGoBackModal(true)"
       >
         <icon name="next-icon" class="modal__back-btn-icon"/>
         <span class="modal__back-btn-text">Назад</span>
@@ -74,13 +74,18 @@
       </span>
 
       <div v-if="modalVisibleType === 2">
-        <p class="modal__count-documents">1 документ, <span class="modal__count-files">{{fileList.length}} файлов</span></p>
+        <p class="modal__count-documents">1 документ, <span class="modal__count-files">{{fileList.length}} файлов</span>
+        </p>
 
         <div class="modal__file-wrapper">
           <div class="modal__file-scroll-block">
             <div class="modal__file-scroll-block-item" v-for="(file, fileIndex) in fileList" :key="fileIndex">
               <img src="@/assets/Doc.jpg" width="86px" height="126px" alt="">
-              <icon name="delete-icon" class="modal__file-scroll-block-icon" @click="deleteFile(fileIndex)"/>
+              <icon
+                  name="delete-icon"
+                  class="modal__file-scroll-block-icon"
+                  @click="clickDeleteIcon(fileIndex)"
+              />
             </div>
           </div>
 
@@ -104,13 +109,23 @@
 
     <dialog-modal
         :btn1-with-icon="true"
-        :is-dialog-modal-open="isDialogModalOpen"
+        :is-dialog-modal-open="isGoBackModalOpen"
         :title="'Если вы вернетесь на шаг назад, то прикрепленные файлы удалятся. Вернуться? '"
         :btn1-text="'Вернуться'"
         :btn2-text="'Остаться'"
         :btn-confirm-color-type="'blue'"
-        @click-confirm-btn="clickConfirmBtnDialogModal"
-        @close-modal="toggleDialogModal"
+        @click-confirm-btn="goBack"
+        @close-modal="toggleGoBackModal"
+    />
+
+    <dialog-modal
+        :btn1-with-icon="true"
+        :is-dialog-modal-open="isDeleteFileModalOpen"
+        :title="'Вы точно хотите удалить файл? '"
+        :btn1-text="'Удалить'"
+        :btn2-text="'Отмена'"
+        @click-confirm-btn="deleteFile"
+        @close-modal="toggleDeleteFileModal"
     />
   </q-dialog>
 </template>
@@ -127,7 +142,9 @@
   export default class AddFileModal extends Vue {
     @Prop({required: true}) isFileModalOpen: boolean
 
-    isDialogModalOpen = false
+    isGoBackModalOpen = false
+    isDeleteFileModalOpen = false
+    deleteFileIndex = 0
     modalVisibleType = 1
     date = ''
     selectValue = 'Узи'
@@ -135,9 +152,7 @@
     selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса']
     fileList: FileList[] = []
 
-    @Watch('fileList', {
-      deep: true
-    })
+    @Watch('fileList')
     fileListChanged() {
       this.fileList.length
         ? this.modalVisibleType = 2
@@ -150,20 +165,30 @@
       })
     }
 
-    deleteFile(index: number) {
-      this.fileList.splice(index, 1)
+    clickDeleteIcon(index: number) {
+      this.deleteFileIndex = index
+      this.toggleDeleteFileModal(true)
+    }
+
+    deleteFile() {
+      this.fileList.splice(this.deleteFileIndex, 1)
+      this.toggleDeleteFileModal(false)
     }
 
     changeDate(value: string) {
       this.date = value
     }
 
-    toggleDialogModal(val: boolean) {
-      this.isDialogModalOpen = val
+    toggleGoBackModal(val: boolean) {
+      this.isGoBackModalOpen = val
     }
 
-    clickConfirmBtnDialogModal() {
-      this.toggleDialogModal(false)
+    toggleDeleteFileModal(val: boolean) {
+      this.isDeleteFileModalOpen = val
+    }
+
+    goBack() {
+      this.toggleGoBackModal(false)
       this.fileList = []
     }
 
@@ -253,7 +278,7 @@
     }
 
     &__input {
-    width: 310px;
+      width: 310px;
 
       @include media-breakpoint-up($breakpoint-sm) {
         width: 240px;
