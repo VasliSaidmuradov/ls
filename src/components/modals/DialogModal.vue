@@ -29,6 +29,9 @@
 <script lang="ts">
   import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
 
+  const DELETE_ICON = 'delete-icon'
+  const NEXT_ICON = 'next-icon'
+
   @Component({})
   export default class DialogModal extends Vue {
     @Prop({required: true}) isDialogModalOpen: boolean
@@ -50,7 +53,7 @@
     }
 
     get countBtn1Icon() {
-      return this.btnConfirmColorType === 'red' ? 'delete-icon' : 'next-icon'
+      return this.btnConfirmColorType === 'red' ? DELETE_ICON : NEXT_ICON
     }
   }
 </script>
