@@ -125,7 +125,7 @@
         height: 42px;
         margin-top: 20px;
         border-radius: 16px;
-        border: 1px silud $light-stroke;
+        border: 1px solid $light-stroke;
       }
 
       &-btn-icon {

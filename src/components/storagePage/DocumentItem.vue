@@ -123,6 +123,7 @@
       justify-content: space-between;
 
       &-date-wrapper {
+        margin-left: -5px;
         margin-top: 10px;
         display: flex;
         align-items: center;

@@ -23,3 +23,11 @@
   overflow-x: visible !important;
   overflow-y: visible !important;
 }
+
+
+//btn
+.q-btn {
+  /deep/ .q-btn__wrapper:before {
+    box-shadow: none;
+  }
+}

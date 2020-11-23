@@ -170,5 +170,11 @@
         line-height: 150%;
       }
     }
+
+    &__btn2.q-hoverable:hover {
+      /deep/.q-focus-helper {
+        background: $light-white;
+      }
+    }
   }
 </style>
