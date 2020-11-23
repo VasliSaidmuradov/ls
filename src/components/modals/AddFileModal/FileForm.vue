@@ -50,9 +50,9 @@
       return this.$refs.file.files && this.$refs.file.files
     }
 
-    handleFileDrop(e: DataTransfer) {
-      // const dt = e.dataTransfer;
-      // const files = dt.files;
+    @Emit('add-files')
+    handleFileDrop(e: DragEvent) {
+      return e.dataTransfer?.files
     }
   }
 </script>
