@@ -20,27 +20,32 @@ export namespace IMenu {
       name: ROUTE_NAME.INDEX_PAGE,
       link: ROUTE_PATH[ROUTE_NAME.INDEX_PAGE],
       icon: 'home-icon',
-      text: 'Главная'
+      text: 'Главная',
+      exact: true
     }, {
       name: ROUTE_NAME.ANALYZES_PAGE,
       link: ROUTE_PATH[ROUTE_NAME.ANALYZES_PAGE],
       icon: 'analyzes-icon',
-      text: 'Анализы'
+      text: 'Анализы',
+      exact: false
     }, {
       name: ROUTE_NAME.APPOINTMENT_PAGE,
       link: ROUTE_PATH[ROUTE_NAME.APPOINTMENT_PAGE],
       icon: 'manual-icon',
-      text: 'Приемы'
+      text: 'Приемы',
+      exact: false
     }, {
       name: ROUTE_NAME.STORAGE_PAGE,
       link: ROUTE_PATH[ROUTE_NAME.STORAGE_PAGE],
       icon: 'storage-icon',
-      text: 'Хранилище'
+      text: 'Хранилище',
+      exact: false
     }, {
       name: ROUTE_NAME.PAGE_PERSONAL_AREA,
       link: ROUTE_PATH[ROUTE_NAME.PAGE_PERSONAL_AREA],
       icon: 'profile-icon',
-      text: 'Профиль'
+      text: 'Профиль',
+      exact: false
     }
   ];
 
@@ -50,16 +55,19 @@ export namespace IMenu {
       icon: 'profile-icon',
       text: 'Данные профиля',
       link: ROUTE_PATH[ROUTE_NAME.PROFILE_PAGE],
+      exact: false
     }, {
       name: ROUTE_NAME.MEDICAL_CARD_PAGE,
       icon: 'paper-icon',
       text: 'Медицинская карта',
       link: ROUTE_PATH[ROUTE_NAME.MEDICAL_CARD_PAGE],
+      exact: false
     }, {
       name: ROUTE_NAME.PASSWORD_CHANGE_PAGE,
       icon: 'key-icon',
       text: 'Сменить пароль',
       link: ROUTE_PATH[ROUTE_NAME.PASSWORD_CHANGE_PAGE],
+      exact: false
     }
   ]
 
@@ -68,5 +76,6 @@ export namespace IMenu {
     text: string;
     link: string;
     name: string;
+    exact: boolean;
   }
 }

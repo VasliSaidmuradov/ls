@@ -172,7 +172,7 @@ import LegalInformation from '@/components/userSetting/LegalInformation.vue';
 
       .country-selector__country-flag {
         top: 50%;
-        transform: translate(0px, -50%);
+        transform: translate(0, -50%);
       }
 
       .country-selector__label {
@@ -216,7 +216,7 @@ import LegalInformation from '@/components/userSetting/LegalInformation.vue';
     }
 
     &__avatar {
-      margin: 25px 0px;
+      margin: 25px 0;
       width: 98px;
     }
 

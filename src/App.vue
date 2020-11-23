@@ -2,7 +2,7 @@
   <div class="main-layout">
     <q-layout @resize="onResize" :view="activePattern" container style="height: 100%" class="no-shadow">
       <q-header class="bg-white no-shadow header">
-        <Header />
+        <Header/>
       </q-header>
 
       <q-drawer
@@ -11,19 +11,19 @@
           show-if-above
           :width="100"
           content-class="bg-white aside-left">
-        <Aside />
+        <Aside/>
       </q-drawer>
 
       <q-page-container class="no-shadow">
         <q-page class="no-shadow">
-          <router-view />
+          <router-view/>
           <FloatingActionBtn v-if="activePattern === layoutPattern.MOBILE"/>
         </q-page>
       </q-page-container>
 
       <q-footer class="footer">
         <q-toolbar>
-          <Footer />
+          <Footer/>
         </q-toolbar>
       </q-footer>
     </q-layout>
@@ -49,13 +49,10 @@ import Breakpoint = ILayout.Breakpoint;
   })
 
   export default class App extends Vue {
-
-
     activePattern: LayoutPattern = LayoutPattern.DESKTOP;
     breakpoint = Breakpoint;
     layoutPattern = LayoutPattern;
     drawer = false;
-
 
     mounted() {
       this.setPattern(window.screen.width)
@@ -65,7 +62,6 @@ import Breakpoint = ILayout.Breakpoint;
       this.setPattern(window.screen.width);
     }
 
-
     setPattern(windowSize: number) {
       this.activePattern = windowSize <= Breakpoint.MOBILE ? LayoutPattern.MOBILE : LayoutPattern.DESKTOP;
     }
@@ -74,33 +70,33 @@ import Breakpoint = ILayout.Breakpoint;
 
 <style lang="scss">
 
-.main-layout {
-  height: 100vh;
+  .main-layout {
+    height: 100vh;
 
-  .aside-left {
-    position: relative;
-  }
+    .aside-left {
+      position: relative;
+    }
 
-  .q-drawer--left {
-    box-shadow: 0px 4px 15px $shadow-color;
-    border-radius: 0px 35px 35px 0px;
-    top: 0 !important;
-  }
+    .q-drawer--left {
+      box-shadow: 0 4px 15px $shadow-color;
+      border-radius: 0 35px 35px 0;
+      top: 0 !important;
+    }
 
-  .q-page {
-    background: $light-background;
-  }
+    .q-page {
+      background: $light-background;
+    }
 
-  .q-drawer-container {
-    position: relative;
-    z-index: 2001;
-  }
+    .q-drawer-container {
+      position: relative;
+      z-index: 2001;
+    }
 
-  .footer {
-    display: none;
-    box-shadow: 0 4px 15px $shadow-color;
-    border-radius: 10px 10px 0 0;
-    background-color: $light-white;
+    .footer {
+      display: none;
+      box-shadow: 0 4px 15px $shadow-color;
+      border-radius: 10px 10px 0 0;
+      background-color: $light-white;
 
     @include media-breakpoint-up($breakpoint-sm) {
       display: flex;
@@ -108,12 +104,12 @@ import Breakpoint = ILayout.Breakpoint;
     }
   }
 
-  .q-header {
-    display: block;
+    .q-header {
+      display: block;
 
-     @include media-breakpoint-up($breakpoint-sm) {
-      display: none;
+      @include media-breakpoint-up($breakpoint-sm) {
+        display: none;
+      }
     }
   }
-}
 </style>

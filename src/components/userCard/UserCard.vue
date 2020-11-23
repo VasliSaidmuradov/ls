@@ -95,7 +95,7 @@ export default class UserCard extends Vue {
   padding: 18px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 4px 15px $shadow-color;
+  box-shadow: 0 4px 15px $shadow-color;
   border-radius: 26px;
   background-color: $light-white;
 

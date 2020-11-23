@@ -5,7 +5,10 @@
         @click="toggleDateModal(true)"
         :rules="propRules"
         ref="dateInput"
-        :value="value ? $date(new Date(value), format): ''"/>
+        :value="value ? $date(new Date(value), format): ''"
+        :placeholder="placeholder"
+    />
+
     <q-dialog
         @hide="toggleDateModal(false)"
         v-model="isDateModalOpen"
@@ -28,7 +31,8 @@
   export default class InputDate extends BaseFormMixins {
     @Prop({required: true}) value: Date | string
     @Prop({default: 'dd.MM.yyyy' }) format: string
-    @Prop() label: string;
+    @Prop() label: string
+    @Prop({default: 'Введите значение'}) placeholder: string
     @Prop({default: 'input-date'}) customClass: string;
     @Prop({default: () => []}) propRules: Function[];
 

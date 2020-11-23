@@ -89,7 +89,7 @@ export default class MenstrualCycles extends Vue {
 
 <style lang="scss">
   .menstrual-cycles {
-    margin: 60px 0px;
+    margin: 60px 0;
 
     &__title {
       margin-bottom: 12px;
@@ -121,7 +121,7 @@ export default class MenstrualCycles extends Vue {
 
       .q-field__control-container {
         input {
-          padding: 0px 0px 0px 20px;
+          padding: 0 0 0 20px;
           max-height: 56px;
         }
       }

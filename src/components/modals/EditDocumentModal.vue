@@ -13,27 +13,29 @@
         <label class="form-label" for="documentName">Название документа</label>
         <q-input
             :value="'ss'"
+            :placeholder="'Введите название документа'"
             id="documentName"
         />
+      </div>
 
-        <div class="modal__input-wrapper">
-          <input-date
-              class="modal__date"
-              :label="'Дата исследования'"
-              :value="date"
-              @change-value="changeDate"
-          />
+      <div class="modal__input-wrapper">
+        <input-date
+            class="modal__date modal__input form-input form-input--empty"
+            :label="'Дата исследования'"
+            :value="date"
+            :placeholder="'Дата исследования'"
+            @change-value="changeDate"
+        />
 
-          <div class="form-select modal__select">
-            <label class="form-label" for="eventName">Тип исследования</label>
-            <q-select hide-dropdown-icon id="eventName" v-model="selectValue" :options="selectOptionList">
-              <template v-slot:append>
-                <div class="select-icon">
-                  <icon name="select-icon" class="modal__select-icon"/>
-                </div>
-              </template>
-            </q-select>
-          </div>
+        <div class="form-select modal__select">
+          <label class="form-label" for="eventName">Тип исследования</label>
+          <q-select hide-dropdown-icon id="eventName" v-model="selectValue" :options="selectOptionList">
+            <template v-slot:append>
+              <div class="select-icon">
+                <icon name="select-icon" class="modal__select-icon"/>
+              </div>
+            </template>
+          </q-select>
         </div>
       </div>
 
@@ -109,7 +111,8 @@
     }
 
     &__input {
-      width: 455px;
+      max-width: 455px;
+      width: 100%;
       margin-top: 24px;
     }
 
@@ -117,6 +120,11 @@
       margin-top: 20px;
       display: flex;
       align-items: flex-end;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     .modal__date {
@@ -126,6 +134,11 @@
     &__select {
       margin-left: 20px;
       width: 100%;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        margin-top: 20px;
+        margin-left: 0;
+      }
 
       /deep/ .q-field__inner {
         width: 245px;
@@ -138,19 +151,20 @@
     }
 
     &__btn-wrapper {
+      display: flex;
       margin-top: 20px;
     }
 
     &__btn1 {
       border-radius: 16px;
       background-color: $accent-color;
-    }
 
-    &__btn1-text {
-      text-transform: none;
-      color: $light-white;
-      font-size: 12px;
-      line-height: 150%;
+      &-text {
+        text-transform: none;
+        color: $light-white;
+        font-size: 12px;
+        line-height: 150%;
+      }
     }
 
     &__btn2 {
@@ -160,13 +174,19 @@
         min-height: initial;
         padding: 0;
       }
+
+      &-text {
+        text-transform: none;
+        cursor: pointer;
+        font-size: 12px;
+        line-height: 150%;
+      }
     }
 
-    &__btn2-text {
-      text-transform: none;
-      cursor: pointer;
-      font-size: 12px;
-      line-height: 150%;
+    &__btn2.q-hoverable:hover {
+      /deep/.q-focus-helper {
+        background: $light-white;
+      }
     }
   }
 </style>

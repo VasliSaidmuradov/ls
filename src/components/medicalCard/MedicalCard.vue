@@ -124,14 +124,14 @@ import BasePageHeader from '@/components/BasePageHeader.vue';
     margin-bottom: 40px;
 
     .q-expansion-item--expanded {
-      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
 
       .medical-card__expansion-header {
-        border-radius: 15px 15px 0px 0px;
+        border-radius: 15px 15px 0 0;
       }
 
       .q-card {
-        border-radius: 0px 0px 15px 15px;
+        border-radius: 0 0 15px 15px;
       }
     }
 
