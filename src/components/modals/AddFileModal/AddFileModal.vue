@@ -256,7 +256,7 @@
     width: 310px;
 
       @include media-breakpoint-up($breakpoint-sm) {
-        width: 242px;
+        width: 240px;
       }
 
       &-wrapper {

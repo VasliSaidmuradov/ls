@@ -269,7 +269,7 @@
       grid-template-columns: repeat(4, 1fr);
 
       @include media-breakpoint-up($breakpoint-lg) {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         grid-row-gap: 20px;
       }
 

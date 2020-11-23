@@ -151,6 +151,7 @@
     }
 
     &__btn-wrapper {
+      display: flex;
       margin-top: 20px;
     }
 
