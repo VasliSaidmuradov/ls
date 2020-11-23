@@ -73,8 +73,10 @@ export default class LegalInformation extends Vue {
     margin-right: 10px;
     color: $accent-color;
     transform: rotate(180deg);
-    display: block;
     margin-left: auto;
+    display: flex;
+    align-items: center;
+
 
     svg {
       width: 4px;

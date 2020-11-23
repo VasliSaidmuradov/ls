@@ -108,6 +108,7 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
   validate(): boolean {
     return [
       this.$refs.phoneOrMail.validate(),
+      this.$refs.phoneOrMail,
       this.hasPassword ? (this.$refs.password as QInput).validate() : true
     ].includes(false)
   }

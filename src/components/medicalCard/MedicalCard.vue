@@ -210,5 +210,10 @@ import BasePageHeader from '@/components/BasePageHeader.vue';
     line-height: 120%;
     color: $gray-01;
   }
+
+  &--page {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
 }
 </style>

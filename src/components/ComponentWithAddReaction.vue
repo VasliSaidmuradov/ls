@@ -118,7 +118,7 @@ export default class ComponentWithAddReaction extends Vue {
     }
 
     &__add {
-      margin-bottom: 15px;
+      margin-top: 15px;
 
       &.q-btn {
         background-color: transparent;

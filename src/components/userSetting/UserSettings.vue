@@ -211,10 +211,6 @@ import LegalInformation from '@/components/userSetting/LegalInformation.vue';
       }
     }
 
-    &--page {
-      padding: 50px 20px;
-    }
-
     &__avatar {
       margin: 25px 0px;
       width: 98px;
@@ -222,6 +218,12 @@ import LegalInformation from '@/components/userSetting/LegalInformation.vue';
 
     &__legal {
       margin-top: 60px;
+    }
+
+
+    &--page {
+      padding-top: 30px;
+      padding-bottom: 30px;
     }
   }
 </style>
