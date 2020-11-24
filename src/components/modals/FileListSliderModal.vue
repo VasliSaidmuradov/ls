@@ -5,7 +5,7 @@
         <icon name="close-icon" class="modal__close-icon"/>
       </q-btn>
 
-      <img src="@/assets/file.jpg" alt="" v-if="currentPage === 1">
+      <img src="@/assets/file.jpg" class="modal__file-img" alt="" v-if="currentPage === 1">
 
       <div class="modal__pdf-block" v-else>
         <img src="@/assets/Pdf.png" alt="" class="modal__pdf-block-pdf-icon">
@@ -89,6 +89,10 @@
       height: 34px;
       background-color: $light-white;
 
+      @include media-breakpoint-up($breakpoint-sm) {
+        right: -35px;
+      }
+
       & /deep/ .q-btn__wrapper {
         padding: 0;
       }
@@ -101,6 +105,18 @@
         width: 8.28px;
         height: 8.28px;
         color: $accent-color;
+      }
+    }
+
+    &__close.q-hoverable:hover {
+      /deep/.q-focus-helper {
+        background: $light-white;
+      }
+    }
+
+    &__file-img {
+      @include media-breakpoint-up($breakpoint-sm) {
+        max-width: 240px;
       }
     }
 

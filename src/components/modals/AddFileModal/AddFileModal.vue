@@ -80,7 +80,7 @@
         <div class="modal__file-wrapper">
           <div class="modal__file-scroll-block">
             <div class="modal__file-scroll-block-item" v-for="(file, fileIndex) in fileList" :key="fileIndex">
-              <img src="@/assets/Doc.jpg" width="86px" height="126px" alt="">
+              <preview-img :file="file"/>
               <icon
                   name="delete-icon"
                   class="modal__file-scroll-block-icon"
@@ -135,16 +135,17 @@
   import DialogModal from "@/components/modals/DialogModal.vue";
   import InputDate from "@/components/InputDate.vue";
   import FileForm from "@/components/modals/AddFileModal/FileForm.vue";
+  import PreviewImg from "@/components/modals/AddFileModal/PreviewImg.vue";
 
   @Component({
-    components: {FileForm, InputDate, DialogModal}
+    components: {PreviewImg, FileForm, InputDate, DialogModal}
   })
   export default class AddFileModal extends Vue {
     @Prop({required: true}) isFileModalOpen: boolean
 
     isGoBackModalOpen = false
     isDeleteFileModalOpen = false
-    deleteFileIndex = 0
+    deletedFileIndex: number
     modalVisibleType = 1
     date = ''
     selectValue = 'Узи'
@@ -166,12 +167,12 @@
     }
 
     clickDeleteIcon(index: number) {
-      this.deleteFileIndex = index
+      this.deletedFileIndex = index
       this.toggleDeleteFileModal(true)
     }
 
     deleteFile() {
-      this.fileList.splice(this.deleteFileIndex, 1)
+      this.fileList.splice(this.deletedFileIndex, 1)
       this.toggleDeleteFileModal(false)
     }
 
@@ -230,6 +231,12 @@
         width: 8.28px;
         height: 8.28px;
         color: $accent-color;
+      }
+    }
+
+    &__close.q-hoverable:hover {
+      /deep/ .q-focus-helper {
+        background: $light-white;
       }
     }
 
@@ -408,6 +415,11 @@
       overflow: auto;
       display: flex;
       align-items: center;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        max-width: 239px;
+        margin-bottom: 30px;
+      }
 
       &::-webkit-scrollbar {
         height: 2px;
