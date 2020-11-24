@@ -168,7 +168,7 @@
       })
     }
 
-    validateFile(file: File) {
+    validateFile(file: File): boolean {
       return file.type === 'image/png'
         || file.type === 'image/jpeg'
         || file.type === 'application/pdf'
