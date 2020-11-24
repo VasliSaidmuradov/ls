@@ -151,7 +151,7 @@
     selectValue = 'Узи'
     isCheckboxValue = false
     selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса']
-    fileList: FileList[] = []
+    fileList: File[] = []
 
     @Watch('fileList')
     fileListChanged() {
@@ -160,10 +160,18 @@
         : this.modalVisibleType = 1
     }
 
-    addFiles(files: FileList[]) {
-      files.forEach((file: FileList) => {
-        this.fileList.push(file)
+    addFiles(files: File[]) {
+      files.forEach((file: File) => {
+        this.validateFile(file)
+          ? this.fileList.push(file)
+          : alert('Неверный формат файла')
       })
+    }
+
+    validateFile(file: File) {
+      return file.type === 'image/png'
+        || file.type === 'image/jpeg'
+        || file.type === 'application/pdf'
     }
 
     clickDeleteIcon(index: number) {
