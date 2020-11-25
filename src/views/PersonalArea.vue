@@ -212,7 +212,7 @@ export default class PersonalArea extends Vue {
 
 
     &__mobile-text {
-      margin: 0 24px 0px 19px;
+      margin: 0 24px 0 19px;
       font-weight: 500;
       font-size: 14px;
       line-height: 140%;

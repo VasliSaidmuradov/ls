@@ -5,7 +5,7 @@
         <icon name="close-icon" class="modal__close-icon"/>
       </q-btn>
 
-      <img src="@/assets/file.jpg" alt="" v-if="currentPage === 1">
+      <img src="@/assets/file.jpg" class="modal__file-img" alt="" v-if="currentPage === 1">
 
       <div class="modal__pdf-block" v-else>
         <img src="@/assets/Pdf.png" alt="" class="modal__pdf-block-pdf-icon">
@@ -77,6 +77,10 @@
     overflow: initial;
     box-shadow: none;
 
+    @include media-breakpoint-up($breakpoint-sm) {
+      max-width: 320px;
+    }
+
     &__close {
       position: absolute;
       top: 12px;
@@ -85,6 +89,10 @@
       height: 34px;
       background-color: $light-white;
 
+      @include media-breakpoint-up($breakpoint-sm) {
+        right: -35px;
+      }
+
       & /deep/ .q-btn__wrapper {
         padding: 0;
       }
@@ -92,12 +100,24 @@
       & /deep/ .q-btn__wrapper:before {
         box-shadow: 0 4px 15px $shadow-color;
       }
+
+      &-icon {
+        width: 8.28px;
+        height: 8.28px;
+        color: $accent-color;
+      }
     }
 
-    &__close-icon {
-      width: 8.28px;
-      height: 8.28px;
-      color: $accent-color;
+    &__close.q-hoverable:hover {
+      /deep/.q-focus-helper {
+        background: $light-white;
+      }
+    }
+
+    &__file-img {
+      @include media-breakpoint-up($breakpoint-sm) {
+        max-width: 240px;
+      }
     }
 
     &__pdf-block {
@@ -108,40 +128,40 @@
       padding: 20px;
       border-radius: 15px;
       background-color: $light-background;
-    }
 
-    &__pdf-block-pdf-icon {
-      align-self: center;
-    }
+      &-pdf-icon {
+        align-self: center;
+      }
 
-    &__pdf-block-title {
-      display: block;
-      align-self: center;
-      margin-top: 13px;
-      font-size: 12px;
-      line-height: 150%;
-    }
+      &-title {
+        display: block;
+        align-self: center;
+        margin-top: 13px;
+        font-size: 12px;
+        line-height: 150%;
+      }
 
-    &__pdf-block-btn {
-      height: 42px;
-      margin-top: 20px;
-      border-radius: 16px;
-      border: 1px silud $light-stroke;
-    }
+      &-btn {
+        height: 42px;
+        margin-top: 20px;
+        border-radius: 16px;
+        border: 1px solid $light-stroke;
+      }
 
-    &__pdf-block-btn-icon {
-      width: 4px;
-      height: 8px;
-      color: $accent-color;
-      transform: rotate(180deg);
-    }
+      &-btn-icon {
+        width: 4px;
+        height: 8px;
+        color: $accent-color;
+        transform: rotate(180deg);
+      }
 
-    &__pdf-block-btn-text {
-      margin-left: 14px;
-      text-transform: none;
-      color: $accent-color;
-      font-size: 12px;
-      line-height: 150%;
+      &-btn-text {
+        margin-left: 14px;
+        text-transform: none;
+        color: $accent-color;
+        font-size: 12px;
+        line-height: 150%;
+      }
     }
 
     &__action-block-wrapper {
@@ -160,58 +180,58 @@
       align-items: center;
       background-color: $light-background;
       border-radius: 100px;
-    }
 
-    &__action-block-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: $accent-color;
-      border-radius: 10px;
-      width: 32px;
-      height: 32px;
+      &-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $accent-color;
+        border-radius: 10px;
+        width: 32px;
+        height: 32px;
 
-      /deep/ .q-btn__wrapper {
-        padding: 0 !important;
+        /deep/ .q-btn__wrapper {
+          padding: 0 !important;
 
-        svg {
-          width: 4px;
+          svg {
+            width: 4px;
+          }
         }
       }
-    }
 
-    &__action-block-btn-icon {
-      width: 4px;
-      height: 8px;
-      color: $light-white;
+      &-btn-icon {
+        width: 4px;
+        height: 8px;
+        color: $light-white;
 
-      &--right {
-        transform: rotate(180deg);
+        &--right {
+          transform: rotate(180deg);
+        }
       }
-    }
 
-    &__action-block-middle-wrapper {
-      width: 84px;
-      height: 32px;
-      background-color: $light-white;
-      border-radius: 12px;
-      margin: 0 11px;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-    }
+      &-middle-wrapper {
+        width: 84px;
+        height: 32px;
+        background-color: $light-white;
+        border-radius: 12px;
+        margin: 0 11px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
 
-    &__action-block-delete-icon {
-      cursor: pointer;
-      width: 12px;
-      height: 14px;
-      color: $black-05;
-    }
+      &-delete-icon {
+        cursor: pointer;
+        width: 12px;
+        height: 14px;
+        color: $black-05;
+      }
 
-    &__action-block-download-icon {
-      cursor: pointer;
-      width: 24px;
-      height: 24px;
+      &-download-icon {
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+      }
     }
   }
 </style>

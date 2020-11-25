@@ -1,8 +1,22 @@
 .layout {
   max-width: 1340px;
-  padding: 0 44px;
+  padding: 70px 44px 97px 44px;
   margin: 0 auto;
   
+  @include media-breakpoint-up($breakpoint-lg) {
+    padding: 60px 30px 130px 30px;
+  }
+
+  @include media-breakpoint-up($breakpoint-sm) {
+    padding: 90px 20px 200px 20px;
+  }
+}
+
+.layout-header {
+  max-width: 1340px;
+  padding: 0 44px;
+  margin: 0 auto;
+
   @include media-breakpoint-up($breakpoint-lg) {
     padding: 0 30px;
   }

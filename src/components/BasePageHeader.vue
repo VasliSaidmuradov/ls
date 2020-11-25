@@ -28,7 +28,7 @@ export default class BasePageHeader extends Vue {
 
 .base-page-header {
   margin-bottom: 25px;
-  margin-top: 12px;
+  padding-top: 12px;
 
   &__back {
     color: $accent-color;
