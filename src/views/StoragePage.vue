@@ -16,7 +16,7 @@
     </div>
 
     <div class="storage-page__middle-block">
-      <span class="storage-page__middle-block-title">Всего 15 документов:</span>
+      <span class="storage-page__middle-block-title">Всего {{documentList.length}} документов:</span>
 
       <div class="storage-page__middle-block-right">
         <q-checkbox

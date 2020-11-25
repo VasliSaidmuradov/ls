@@ -46,7 +46,7 @@
     box-shadow: 0 4px 15px 0 $shadow-color;
 
     &__date {
-      margin-left: -5px;
+      margin-left: -7px;
       display: flex;
       align-items: center;
     }

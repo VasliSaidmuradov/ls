@@ -134,7 +134,6 @@
       }
 
       &-date {
-        margin-top: 4px;
         color: $accent-color;
         font-weight: 500;
         font-size: 12px;

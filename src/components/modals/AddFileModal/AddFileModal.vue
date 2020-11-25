@@ -8,7 +8,7 @@
       <div
           class="modal__back-btn"
           v-if="modalVisibleType === 2"
-          @click="toggleDialogModal(true)"
+          @click="toggleGoBackModal(true)"
       >
         <icon name="next-icon" class="modal__back-btn-icon"/>
         <span class="modal__back-btn-text">Назад</span>
@@ -74,13 +74,18 @@
       </span>
 
       <div v-if="modalVisibleType === 2">
-        <p class="modal__count-documents">1 документ, <span class="modal__count-files">{{fileList.length}} файлов</span></p>
+        <p class="modal__count-documents">1 документ, <span class="modal__count-files">{{fileList.length}} файлов</span>
+        </p>
 
         <div class="modal__file-wrapper">
           <div class="modal__file-scroll-block">
             <div class="modal__file-scroll-block-item" v-for="(file, fileIndex) in fileList" :key="fileIndex">
-              <img src="@/assets/Doc.jpg" width="86px" height="126px" alt="">
-              <icon name="delete-icon" class="modal__file-scroll-block-icon" @click="deleteFile(fileIndex)"/>
+              <preview-img :file="file"/>
+              <icon
+                  name="delete-icon"
+                  class="modal__file-scroll-block-icon"
+                  @click="clickDeleteIcon(fileIndex)"
+              />
             </div>
           </div>
 
@@ -104,13 +109,23 @@
 
     <dialog-modal
         :btn1-with-icon="true"
-        :is-dialog-modal-open="isDialogModalOpen"
+        :is-dialog-modal-open="isGoBackModalOpen"
         :title="'Если вы вернетесь на шаг назад, то прикрепленные файлы удалятся. Вернуться? '"
         :btn1-text="'Вернуться'"
         :btn2-text="'Остаться'"
         :btn-confirm-color-type="'blue'"
-        @click-confirm-btn="clickConfirmBtnDialogModal"
-        @close-modal="toggleDialogModal"
+        @click-confirm-btn="goBack"
+        @close-modal="toggleGoBackModal"
+    />
+
+    <dialog-modal
+        :btn1-with-icon="true"
+        :is-dialog-modal-open="isDeleteFileModalOpen"
+        :title="'Вы точно хотите удалить файл? '"
+        :btn1-text="'Удалить'"
+        :btn2-text="'Отмена'"
+        @click-confirm-btn="deleteFile"
+        @close-modal="toggleDeleteFileModal"
     />
   </q-dialog>
 </template>
@@ -120,50 +135,69 @@
   import DialogModal from "@/components/modals/DialogModal.vue";
   import InputDate from "@/components/InputDate.vue";
   import FileForm from "@/components/modals/AddFileModal/FileForm.vue";
+  import PreviewImg from "@/components/modals/AddFileModal/PreviewImg.vue";
 
   @Component({
-    components: {FileForm, InputDate, DialogModal}
+    components: {PreviewImg, FileForm, InputDate, DialogModal}
   })
   export default class AddFileModal extends Vue {
     @Prop({required: true}) isFileModalOpen: boolean
 
-    isDialogModalOpen = false
+    isGoBackModalOpen = false
+    isDeleteFileModalOpen = false
+    deletedFileIndex: number
     modalVisibleType = 1
     date = ''
     selectValue = 'Узи'
     isCheckboxValue = false
     selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса']
-    fileList: FileList[] = []
+    fileList: File[] = []
 
-    @Watch('fileList', {
-      deep: true
-    })
+    @Watch('fileList')
     fileListChanged() {
       this.fileList.length
         ? this.modalVisibleType = 2
         : this.modalVisibleType = 1
     }
 
-    addFiles(files: FileList[]) {
-      files.forEach((file: FileList) => {
-        this.fileList.push(file)
+    addFiles(files: File[]) {
+      files.forEach((file: File) => {
+        this.validateFile(file)
+          ? this.fileList.push(file)
+          : alert('Неверный формат файла')
       })
     }
 
-    deleteFile(index: number) {
-      this.fileList.splice(index, 1)
+    validateFile(file: File): boolean {
+      return file.type === 'image/png'
+        || file.type === 'image/jpeg'
+        || file.type === 'application/pdf'
+    }
+
+    clickDeleteIcon(index: number) {
+      this.deletedFileIndex = index
+      this.toggleDeleteFileModal(true)
+    }
+
+    deleteFile() {
+      this.fileList.splice(this.deletedFileIndex, 1)
+      this.toggleDeleteFileModal(false)
     }
 
     changeDate(value: string) {
       this.date = value
     }
 
-    toggleDialogModal(val: boolean) {
-      this.isDialogModalOpen = val
+    toggleGoBackModal(val: boolean) {
+      this.isGoBackModalOpen = val
     }
 
-    clickConfirmBtnDialogModal() {
-      this.toggleDialogModal(false)
+    toggleDeleteFileModal(val: boolean) {
+      this.isDeleteFileModalOpen = val
+    }
+
+    goBack() {
+      this.toggleGoBackModal(false)
       this.fileList = []
     }
 
@@ -205,6 +239,12 @@
         width: 8.28px;
         height: 8.28px;
         color: $accent-color;
+      }
+    }
+
+    &__close.q-hoverable:hover {
+      /deep/ .q-focus-helper {
+        background: $light-white;
       }
     }
 
@@ -253,7 +293,7 @@
     }
 
     &__input {
-    width: 310px;
+      width: 310px;
 
       @include media-breakpoint-up($breakpoint-sm) {
         width: 240px;
@@ -383,6 +423,11 @@
       overflow: auto;
       display: flex;
       align-items: center;
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        max-width: 239px;
+        margin-bottom: 30px;
+      }
 
       &::-webkit-scrollbar {
         height: 2px;

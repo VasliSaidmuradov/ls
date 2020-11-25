@@ -2,7 +2,6 @@
   <form
       class="file-form"
       :class="`file-form-${type}`"
-      ref="file-form"
   >
     <input
         type="file"
@@ -47,7 +46,7 @@
 
     @Emit('add-files')
     handleFileUpload() {
-      return this.$refs.file.files && this.$refs.file.files
+      return this.$refs.file?.files
     }
 
     @Emit('add-files')
