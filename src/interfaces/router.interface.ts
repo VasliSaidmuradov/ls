@@ -13,6 +13,7 @@ export namespace IRouter {
     MEDICAL_CARD_PAGE = 'medicalCart',
     PASSWORD_CHANGE_PAGE = 'passwordChangePage',
     AUTH_PAGE = 'authPage',
+    CHANGE_CABINETS = 'changeCabinets',
   }
 
   export const ROUTE_PATH = {
@@ -26,7 +27,8 @@ export namespace IRouter {
     [ROUTE_NAME.PROFILE_PAGE]: '/profile',
     [ROUTE_NAME.MEDICAL_CARD_PAGE]: '/medical-card',
     [ROUTE_NAME.PASSWORD_CHANGE_PAGE]: '/password-change',
-    [ROUTE_NAME.AUTH_PAGE]: '/auth'
+    [ROUTE_NAME.AUTH_PAGE]: '/auth',
+    [ROUTE_NAME.CHANGE_CABINETS]: '/change-cabinets'
   }
 
   export interface IAppRoute<T> extends Omit<Route, 'query'> {

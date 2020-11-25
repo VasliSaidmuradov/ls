@@ -7,6 +7,7 @@ export namespace IAuthStore {
     userAccountInfo: IAuthApi.ICheckUserResponse | null;
     token: string | null;
     currentAuthStep: IAuthForOtherUser.RegistrationSteps;
+    cabinets: IAuth.IUserCabinet[];
   }
 }
 
@@ -17,7 +18,7 @@ export namespace IAuthForOtherUser {
     CHECK_PHONE = 'checkPhone',
     SET_PASSWORD = 'setPassword',
     LOGIN_BY_ID = 'loginById',
-    HAS_DUPLICATE = 'hasDuplicate',
+    HAS_LOGIN = 'hasLogin',
   }
 }
 
@@ -25,6 +26,13 @@ export namespace IAuth {
   export enum AuthMode {
     REGISTRATION = 'register',
     LOGIN = 'login',
+  }
+
+  export interface IUserCabinet {
+    birth_date: string;
+    fio: string;
+    patient_id: string;
+    role: string;
   }
 }
 
@@ -41,6 +49,7 @@ export namespace IAuthApi {
     has_password: boolean;
     user_exist: boolean;
     has_login: boolean;
+    only_patient_id: boolean;
   }
 
   export interface ISendCodeResponse {
@@ -76,6 +85,8 @@ export namespace IAuthApi {
     patient: IUserCard.IUser;
     access: string;
     refresh: string;
+    cabinets?: IAuth.IUserCabinet[];
+    role: string;
   }
 
   export interface ILoginByIdInputData {
@@ -86,6 +97,15 @@ export namespace IAuthApi {
 
   export interface ILoginByIdResponse {
     patient_token: string;
+    email?: string;
+    phone?: string;
+  }
+
+  export interface ILoginInputData {
+    phone?: string;
+    email?: string;
+    code?: string;
+    password?: string;
   }
 }
 

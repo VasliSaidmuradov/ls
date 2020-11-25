@@ -28,6 +28,8 @@
       <q-input
           rounded
           v-model="newPassword"
+          ref="newPassword"
+          :rules="rules"
           placeholder="Введите новый пароль"
           :type="pwdObject.newPassword ? 'password': 'text'"
           :borderless="false"
@@ -57,6 +59,8 @@
       <q-input
           rounded
           v-model="repeatPassword"
+          ref="repeatPassword"
+          :rules="[newPasswordValidate, ...rules]"
           placeholder="Повторите пароль"
           :type="pwdObject.repeatPassword ? 'password': 'text'"
           :borderless="false"
@@ -81,6 +85,7 @@
     <q-btn
         v-if="isCreatePassword"
         padding="8px"
+        @click="createNewPassword"
         class="password-change__create-btn button1 button1--bordered-with-icon">
 
       <span class="password-change__create-btn-icon icon">
@@ -96,13 +101,20 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import {IUserCard} from '../../interfaces/user-card.interface';
 import passwordMeter from "vue-simple-password-meter";
+import BaseFormMixins from '@/mixins/base-form-mixins';
+import {QInput} from 'quasar';
+
+interface IRefs {
+  newPassword: QInput;
+  repeatPassword: QInput;
+}
 
 @Component({
   components: {
     passwordMeter
   }
 })
-export default class PasswordChange extends Vue {
+export default class PasswordChange extends BaseFormMixins {
 
   @Prop({default: false, type: Boolean}) isCreatePassword: boolean;
 
@@ -116,12 +128,24 @@ export default class PasswordChange extends Vue {
   repeatPassword = '';
   passwordStrength = '';
 
+  rules: Function[] = []
+
   passwordStrengthStatus = IUserCard.PasswordStrength;
 
   passwordStrengthText = {
     [IUserCard.PasswordStrength.RISKY]: `<h6>Слабый пароль</h6><p>Пароль должен быть не менее 8 символов и содержать заглавные и строчные буквы, цифры и специальные символы</p>`,
     [IUserCard.PasswordStrength.QUESSABLE]: `<h6>Средний пароль</h6><p>Пароль должен быть не менее 8 символов и содержать заглавные и строчные буквы, цифры и специальные символы</p>`,
     [IUserCard.PasswordStrength.SECURE]: `<h6>Надежный пароль</h6><p>Пароль должен быть не менее 8 символов и содержать заглавные и строчные буквы, цифры и специальные символы</p>`,
+  }
+
+  $refs: IRefs & Vue['$refs'];
+
+  mounted() {
+    this.rules.push(this.inputRules.required);
+  }
+
+  newPasswordValidate(val: string) {
+    return val === this.repeatPassword || 'Пароли не совпадают'
   }
 
   get password(): string {
@@ -141,6 +165,17 @@ export default class PasswordChange extends Vue {
     this.pwdObject[pwd] = !this.pwdObject[pwd];
   }
 
+  validate() {
+    return [
+      this.$refs.newPassword.validate(),
+      this.$refs.repeatPassword.validate()
+    ].includes(false);
+  }
+
+  createNewPassword() {
+    if (this.validate()) return;
+    this.$store.dispatch('auth/changePatientsData', {changedData: {password: this.newPassword}, id: this.$store.state.userCard.patient.id});
+  }
 }
 </script>
 

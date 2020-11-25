@@ -59,6 +59,30 @@
   }
 }
 
+.button1--simple-with-icon {
+  background-color: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+  font-size: 12px;
+  color: $black-02;
+
+  .icon {
+    margin-right: 16px;
+    color: $accent-color;
+    display: flex;
+    align-items: center;
+    transform: rotate(180deg);
+
+    svg {
+      width: 4px;
+      height: 8px;
+    }
+  }
+}
+
 .form-input {
   input, textarea {
     height: 56px;
