@@ -22,7 +22,7 @@ class AuthResource {
     }) as Promise<AxiosResponse<IAuthApi.IAuthResponse>>)
   }
 
-  authUser({data, authType}: {data: IAuthApi.IRegisterUserInputData | IAuthApi.ILoginUserInputData; authType: IAuthApi.AuthType}): Promise<AxiosResponse<IAuthApi.IAuthResponse>> {
+  authUser({authData, authType}: {data: IAuthApi.IRegisterUserInputData | IAuthApi.ILoginUserInputData; authType: IAuthApi.AuthType}): Promise<AxiosResponse<IAuthApi.IAuthResponse>> {
     return (Axios.post(`${AppConfig.apiUrl}auth/${authType}/`, {
       ...data
     }) as Promise<AxiosResponse<IAuthApi.IAuthResponse>>)

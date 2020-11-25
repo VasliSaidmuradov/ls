@@ -32,8 +32,8 @@ export default {
   actions: {
     async checkUser({commit, dispatch}: AuthStore, {value, type}: {value: string; type: IAuthApi.CheckUserParamsType}) {
       try {
-        const response: AxiosResponse<IAuthApi.ICheckUserResponse> = await authResource.checkUser(value, type);
-        commit('setPropertyInStore', {name: 'userAccountInfo', value: response.data})
+        const {data}: AxiosResponse<IAuthApi.ICheckUserResponse> = await authResource.checkUser(value, type);
+        commit('setPropertyInStore', {name: 'userAccountInfo', value: data})
         return true;
       } catch (error) {
         if (error.errorData.phone) {
@@ -45,8 +45,8 @@ export default {
 
     async sendCheckCode({dispatch}: AuthStore, {value, type}: {value: string; type: IAuthApi.CheckUserParamsType}) {
       try {
-        const response: AxiosResponse<IAuthApi.ISendCodeResponse> = await authResource.sendCheckCode(value, type);
-        return response.data;
+        const {data}: AxiosResponse<IAuthApi.ISendCodeResponse> = await authResource.sendCheckCode(value, type);
+        return data;
       } catch (error) {
         if (error.errorData.phone) {
           dispatch('error/showErrorNotice', {message: error.errorData.phone[0]},{root: true})
@@ -67,15 +67,15 @@ export default {
       }
     },
 
-    async authUser({commit, dispatch}: AuthStore, {data, authType}: {data: IAuthApi.IRegisterUserInputData | IAuthApi.ILoginUserInputData; authType: IAuthApi.AuthType}) {
+    async authUser({commit, dispatch}: AuthStore, {authData, authType}: {authData: IAuthApi.IRegisterUserInputData | IAuthApi.ILoginUserInputData; authType: IAuthApi.AuthType}) {
       try {
-        const response: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.authUser({data, authType});
+        const {data}: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.authUser({authData, authType});
 
-        commit('setPropertyInStore', {name: 'token', value: response.data.access});
-        commit('userCard/setPropertyInStore', {name: 'patient', value: response.data.patient}, {root: true})
+        commit('setPropertyInStore', {name: 'token', value: data.access});
+        commit('userCard/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
 
-        if (response?.data?.cabinets) {
-          commit('setPropertyInStore', {name: 'cabinets', value: response.data.cabinets});
+        if (data?.cabinets) {
+          commit('setPropertyInStore', {name: 'cabinets', value: data.cabinets});
           router.push({name: ROUTE_NAME.CHANGE_CABINETS});
         } else {
           return true;
@@ -88,17 +88,17 @@ export default {
       }
     },
 
-    async loginById({commit, dispatch}: AuthStore, data: IAuthApi.ILoginByIdInputData) {
+    async loginById({commit, dispatch}: AuthStore, loginData: IAuthApi.ILoginByIdInputData) {
       try {
-        const response: AxiosResponse<IAuthApi.ILoginByIdResponse> = await authResource.loginById(data);
-        commit('setPropertyInStore', {name: 'patientToken', value: response.data.patient_token});
+        const {data}: AxiosResponse<IAuthApi.ILoginByIdResponse> = await authResource.loginById(loginData);
+        commit('setPropertyInStore', {name: 'patientToken', value: data.patient_token});
 
-        if (response?.data?.email) {
-          commit('userCard/setPatientProperty', {property: 'email', value: response.data.email}, {root: true})
+        if (data?.email) {
+          commit('userCard/setPatientProperty', {property: 'email', value: data.email}, {root: true})
         }
 
-        if (response?.data?.phone) {
-          commit('userCard/setPatientProperty', {property: 'phone', value: response.data.phone}, {root: true})
+        if (data?.phone) {
+          commit('userCard/setPatientProperty', {property: 'phone', value: data.phone}, {root: true})
         }
 
         return true;
@@ -120,8 +120,8 @@ export default {
 
     async changePatientsData({commit, dispatch}: AuthStore, {changedData, id}: {changedData: any; id: string}) {
       try {
-        const response: AxiosResponse<IUserCard.IUser> = await authResource.changePatientsData({changedData, id});
-        commit('userCard/setPropertyInStore', {name: 'patient', value: response.data}, {root: true})
+        const {data}: AxiosResponse<IUserCard.IUser> = await authResource.changePatientsData({changedData, id});
+        commit('userCard/setPropertyInStore', {name: 'patient', value: data}, {root: true})
 
       } catch (error) {
         if (error.errorData.message) {
@@ -132,8 +132,8 @@ export default {
 
     async changeCabinet({commit}: AuthStore, cabinetId: string) {
       try {
-        const response: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.changeCabinet(cabinetId);
-        commit('userCard/setPropertyInStore', {name: 'patient', value: response.data.patient}, {root: true})
+        const {data}: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.changeCabinet(cabinetId);
+        commit('userCard/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
       } catch (error) {
         console.error(error)
       }
