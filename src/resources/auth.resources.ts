@@ -1,6 +1,7 @@
 import {AppConfig} from '@/app.config';
 import Axios, {AxiosResponse} from 'axios';
 import {IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
+import {IUserCard} from '@/interfaces/user-card.interface';
 
 
 class AuthResource {
@@ -31,6 +32,18 @@ class AuthResource {
     return (Axios.post(`${AppConfig.apiUrl}auth/login-with-id/`, {
       ...data
     }) as Promise<AxiosResponse<IAuthApi.ILoginByIdResponse>>)
+  }
+
+  changePatientsData({changedData, id}: {changedData: any; id: string}): Promise<AxiosResponse<IUserCard.IUser>> {
+    return (Axios.patch(`${AppConfig.apiUrl}patients/${id}/`, {
+      ...changedData
+    }) as Promise<AxiosResponse<IUserCard.IUser>>)
+  }
+
+  changeCabinet(id: string): Promise<AxiosResponse<IAuthApi.IAuthResponse>> {
+    return (Axios.post(`${AppConfig.apiUrl}auth/change-cabinet/`, {
+      patient_id: id,
+    }) as Promise<AxiosResponse<IAuthApi.IAuthResponse>>)
   }
 }
 

@@ -9,6 +9,8 @@ export namespace IUserCardStore {
     phone: string | number;
     password: string;
     avatar: null | string;
+    id: string;
+    patient: IUserCard.IUser;
   }
 }
 

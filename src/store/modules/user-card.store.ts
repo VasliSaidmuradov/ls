@@ -17,19 +17,37 @@ export default {
     phone: '89529273591',
     password: '',
     avatar: null,
+    id: '',
+    patient: {
+      avatar: null,
+      created_at: '',
+      deleted_at: null,
+      email: '',
+      id: '',
+      is_deleted: false,
+      name: '',
+      password: null,
+      patronymic: '',
+      phone: '',
+      surname: '',
+      updated_at: '',
+      user_id: ''
+    }
   },
 
   mutations: {
     setPropertyInStore(state: IUserCardStore.IState, { name, value }: { name: any; value: any}) {
       Vue.set(state, name, value);
     },
+
+    setPatientProperty(state: IUserCardStore.IState, {property, value}: {property: keyof IUserCard.IUser; value: any}) {
+      Vue.set(state.patient, property, value);
+    }
   },
 
   actions: {
     setUser({commit}: UserCardStore, {data}: {data: IUserCard.IUser}) {
-      Object.keys(data).forEach((key: string) => {
-        commit('setPropertyInStore', {name: key, value: data[(key as keyof IUserCard.IUser)]})
-      })
+      commit('setPropertyInStore', {name: 'id', value: data.id});
     }
   }
 };

@@ -1,16 +1,37 @@
 <template>
   <div class="check-user check-user__login">
+
+    <div class="check-user__login-type">
+      <q-btn-toggle v-model="loginType"
+                    rounded
+                    class="check-user__login-type-btn"
+                    :options="loginTypeOptions"/>
+    </div>
     <div class="form-input form-input--bordered check-user__input">
-      <label for="phoneOrMail" class="form-label">Введите email или номер телефона</label>
-      <q-input
-          v-model="phoneOrMail"
-          :rules="tryEmail ? [...rules, inputRules.validEmail] : rules"
-          for="phoneOrMail"
-          :mask="tryEmail ? false : '###########'"
-          id="phoneOrMail"
-          ref="phoneOrMail"
-          placeholder="Начните вводить email или номер"
-      ></q-input>
+      <template v-if="loginTypes.PHONE === loginType">
+        <label for="phone" class="form-label">Введите номер телефона</label>
+        <q-input
+            v-model="phone"
+            :rules="rules"
+            for="phone"
+            mask="###########"
+            id="phone"
+            ref="phone"
+            placeholder="Начните вводить номер"
+        ></q-input>
+      </template>
+
+      <template v-if="loginTypes.EMAIL === loginType">
+        <label for="email" class="form-label">Введите номер email</label>
+        <q-input
+            v-model="email"
+            :rules="[...rules, inputRules.validEmail]"
+            for="email"
+            id="email"
+            ref="email"
+            placeholder="Начните вводить email"
+        ></q-input>
+      </template>
 
       <p v-if="!hasPassword && isLabstoryUser" class="check-user__input-desk">Авторизуясь, вы принимаете условия <a href="#">«Пользовательского соглашения»</a></p>
     </div>
@@ -49,7 +70,7 @@
       </span>
     </q-btn>
 
-    <button v-if="isLabstoryUser && !hasPassword" class="check-user__login-id-btn"
+    <button v-if="isLabstoryUser && !hasPassword" class="check-user__login-id-btn button1--simple-with-icon"
             @click.stop="loginById">
       <span class="icon"><icon name="next-icon"></icon></span>
       <span>Войти через ID</span>
@@ -70,21 +91,27 @@
 
 <script lang="ts">
 import {Component, Mixins, Prop} from 'vue-property-decorator';
-import {IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
+import {IAuth, IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
 import BaseFormMixins from '@/mixins/base-form-mixins';
 import AuthMixin from '@/mixins/auth-mixin';
 import {QInput} from 'quasar';
+import {IRouter} from '@/interfaces/router.interface';
 
 interface IRefs {
-  phoneOrMail: QInput;
+  email: QInput;
+  phone: QInput;
+  password: QInput;
 }
 
 @Component({})
 export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
+
   @Prop({required: true}) onCodeSend: Function;
   @Prop({default: false}) isLoginedById: boolean;
+  @Prop({required: true}) onHasDuplicate: Function;
 
-  phoneOrMail: string = '';
+  email: string = '';
+  phone: string = '';
   hasPassword: boolean = false;
   password: string = '';
   pwd: boolean = true;
@@ -92,6 +119,19 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
   tryEmail: boolean = false;
 
   $refs: IRefs & Vue['$refs'];
+  $route: IRouter.IAppRoute<{pageMode: IAuth.AuthMode}>
+
+  loginTypeOptions = [
+    {
+      label: 'Телефон',
+      value: IAuthApi.CheckUserParamsType.PHONE,
+    }, {
+      label: 'Почта',
+      value: IAuthApi.CheckUserParamsType.EMAIL,
+    }];
+
+  loginType = IAuthApi.CheckUserParamsType.PHONE;
+  loginTypes = IAuthApi.CheckUserParamsType;
 
   mounted() {
     this.rules.push(this.inputRules.required);
@@ -105,23 +145,37 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
     return this.$store.state.auth.userAccountInfo;
   }
 
+  get loginFiled(): string {
+    return this.loginType === this.loginTypes.EMAIL ? this.email : this.phone;
+  }
+
+  get authType(): IAuth.AuthMode {
+    return this.$route.query.pageMode;
+  }
+
   validate(): boolean {
     return [
-      this.$refs.phoneOrMail.validate(),
-      this.hasPassword ? (this.$refs.password as QInput).validate() : true
+      this.loginType === this.loginTypes.EMAIL ? this.$refs.email.validate() : this.$refs.phone.validate(),
+      this.hasPassword ? (this.$refs.password as QInput).validate() : true,
     ].includes(false)
   }
 
   checkUser() {
     if (this.validate()) return;
-
-    this.$store.dispatch('auth/checkUser', {value: this.phoneOrMail, type: this.getFiledType(this.phoneOrMail)})
+    this.$store.dispatch('auth/checkUser', {value: this.loginFiled, type: this.loginType})
       .then(() => this.afterCheckUser());
   }
 
   passwordLogin() {
-    return true;
-    // do login with password
+    if (this.validate()) return;
+    this.$store.dispatch('auth/authUser', {data: this.createLoginData(), authType: this.authType})
+  }
+
+  createLoginData(): IAuthApi.ILoginInputData {
+    return {
+      [this.loginType]: this.loginFiled,
+      password: this.password,
+    }
   }
 
   afterCheckUser() {
@@ -131,7 +185,7 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
       if (this.isLabstoryUser) {
         this.tryEmail = true;
       } else {
-        this.$store.dispatch('error/showErrorNotice', {message: 'Неверный email или номер телефона'})
+        this.$store.dispatch('error/showErrorNotice', {message: 'Такого аккаунта нет в системе'})
       }
     }
   }
@@ -145,16 +199,17 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
   }
 
   sendCode() {
-    this.$store.dispatch('auth/sendCheckCode', {value: this.phoneOrMail, type: this.getFiledType(this.phoneOrMail)})
+    this.$store.dispatch('auth/sendCheckCode', {value: this.loginFiled, type: this.loginType})
       .then((res: IAuthApi.ISendCodeResponse) => {
-        this.onCodeSend(this.convertSendData(res, this.phoneOrMail), this.isLoginedById)
+        if (res?.ttl) {
+          this.onCodeSend(this.convertSendData(res, this.loginFiled), this.isLoginedById)
+        }
       });
   }
 
   checkDuplicates() {
-    if (this.userAccountInfo.has_duplicates) {
-      // openDuplicateStep
-      this.checkPassword();
+    if (this.userAccountInfo.only_patient_id) {
+      this.onHasDuplicate();
     } else {
       this.checkPassword();
     }
@@ -212,28 +267,7 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
   }
 
   &__login-id-btn {
-    background-color: transparent;
-    border: none;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    outline: none;
-    font-size: 12px;
-    color: $black-02;
     margin-top: 25px;
-
-    .icon {
-      margin-right: 16px;
-      color: $accent-color;
-      display: flex;
-      align-items: center;
-      transform: rotate(180deg);
-
-      svg {
-        width: 4px;
-        height: 8px;
-      }
-    }
   }
 
   &__email-desk {
@@ -242,6 +276,42 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
     line-height: 20px;
     color: $black-02;
     margin-top: 30px;
+  }
+
+  &__login-type {
+    box-shadow: unset;
+    padding: 3px;
+    border: 1px solid $light-stroke;
+    border-radius: 22px;
+    width: fit-content;
+    margin-bottom: 20px;
+
+    /deep/ .q-btn {
+      text-transform: none !important;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 140%;
+      border-radius: 18px !important;
+      background-color: transparent;
+
+      .q-btn__wrapper {
+        padding: 12px 24px;
+        box-shadow: unset;
+        background-color: transparent;
+
+        &:before {
+          display: none;
+        }
+      }
+
+      &.bg-primary {
+        background: $accent-color !important;
+      }
+    }
+  }
+
+  &__login-type-btn {
+    box-shadow: none;
   }
 }
 

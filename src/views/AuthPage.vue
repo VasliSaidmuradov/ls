@@ -16,7 +16,7 @@
                       class="auth-page__content-page-mode-btn"
                       :options="changeModeOptions"
                       @input="onModeChange"/>
-      </div>
+        </div>
 
       <div class="auth-page__content-form">
         <AuthForm />
@@ -33,6 +33,8 @@ import ROUTE_NAME = IRouter.ROUTE_NAME;
 import AuthForm from '@/components/auth/AuthForm.vue';
 import AuthMixin from '@/mixins/auth-mixin';
 import IAppRoute = IRouter.IAppRoute;
+import Axios from 'axios';
+import {AppConfig} from '@/app.config';
 
 @Component({
   components: {
@@ -58,13 +60,16 @@ export default class AuthPage extends AuthMixin {
     this.pageMode ? void 0 : this.$router.replace({name: ROUTE_NAME.AUTH_PAGE, query: {pageMode: IAuth.AuthMode.REGISTRATION}});
   }
 
-
   get isLabstoryPatient(): boolean {
     return this.$store.state.auth.isLabstoryPatient;
   }
 
   set isLabstoryPatient(value: boolean) {
     this.$store.commit('auth/setPropertyInStore', {name: 'isLabstoryPatient', value});
+  }
+
+  get pageMode(): IAuth.AuthMode {
+    return this.$route.query.pageMode;
   }
 
   onModeChange(value: boolean | string) {
@@ -75,10 +80,6 @@ export default class AuthPage extends AuthMixin {
   clearStore() {
     this.$store.commit('auth/setPropertyInStore', {name: 'currentAuthStep', value: IAuthForOtherUser.RegistrationSteps.CHECK_USER});
     this.$store.commit('auth/setPropertyInStore', {name: 'userAccountInfo', value: null});
-  }
-
-  get pageMode(): IAuth.AuthMode {
-    return this.$route.query.pageMode;
   }
 
   setPageMode(value: boolean | string) {
@@ -127,7 +128,7 @@ export default class AuthPage extends AuthMixin {
   &__content-page-mode {
     margin-bottom: 35px;
     padding: 6px 8px;
-    border: 1px solid #E9E8FF;
+    border: 1px solid $light-stroke;
     border-radius: 22px;
     width: fit-content;
   }
