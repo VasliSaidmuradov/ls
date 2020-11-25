@@ -134,8 +134,8 @@
   import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator'
   import DialogModal from "@/components/modals/DialogModal.vue";
   import InputDate from "@/components/InputDate.vue";
-  import FileForm from "@/components/modals/AddFileModal/FileForm.vue";
-  import PreviewImg from "@/components/modals/AddFileModal/PreviewImg.vue";
+  import FileForm from "@/components/modals/addFileModal/FileForm.vue";
+  import PreviewImg from "@/components/modals/addFileModal/PreviewImg.vue";
 
   @Component({
     components: {PreviewImg, FileForm, InputDate, DialogModal}

@@ -23,8 +23,8 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import InfoBlock from "@/components/StorageSingleDocumentPage/InfoBlock.vue";
-  import FileItem from "@/components/StorageSingleDocumentPage/FileItem.vue";
+  import InfoBlock from "@/components/storageSingleDocumentPage/InfoBlock.vue";
+  import FileItem from "@/components/storageSingleDocumentPage/FileItem.vue";
 
   @Component({
     components: {FileItem, InfoBlock}

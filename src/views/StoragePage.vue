@@ -59,7 +59,7 @@
   import {Component, Vue} from 'vue-property-decorator';
   import DocumentItem from "@/components/storagePage/DocumentItem.vue";
   import {IStorage} from "@/interfaces/storage.interface";
-  import AddFileModal from "@/components/modals/AddFileModal/AddFileModal.vue";
+  import AddFileModal from "@/components/modals/addFileModal/AddFileModal.vue";
 
   @Component({
     components: {AddFileModal, DocumentItem}
