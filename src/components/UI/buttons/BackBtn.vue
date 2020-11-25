@@ -27,7 +27,6 @@
 </script>
 
 <style lang="scss" scoped>
-
   /*
   back-btn
   */
@@ -78,8 +77,8 @@
     }
   }
 
-  .back-btn-1:hover {
-    .back-btn__icon {
+  .back-btn-1:hover .back-btn {
+    &__text {
       color: $accent-color;
     }
   }
@@ -95,16 +94,16 @@
     }
   }
 
-  .back-btn-2:hover {
-    .back-btn__icon-wrapper {;
+  .back-btn-2:hover .back-btn {
+    &__icon-wrapper {;
       background-color: $accent-color;
     }
 
-    .back-btn__icon {
+    &__icon {
       color: $light-white;
     }
 
-    .back-btn__text {
+    &__text {
       color: $accent-color;
     }
   }

@@ -7,12 +7,19 @@
           и размером до 5мб.</span>
       </div>
 
-      <q-btn class="storage-page__header-btn" @click="toggleFileModal(true)">
-        <div class="storage-page__header-btn-icon-wrapper">
+      <main-btn
+          class="storage-page__header-btn"
+          :type="'primary'"
+          :text="'Загрузить документ'"
+          :border-color="'#7C74E9'"
+          :width="214"
+          :height="56"
+          @click-btn="clickBtnLoadDocument"
+      >
+        <template v-slot:icon>
           <icon name="add-icon" class="storage-page__header-btn-icon"/>
-        </div>
-        <span class="storage-page__header-btn-text">Загрузить документ</span>
-      </q-btn>
+        </template>
+      </main-btn>
     </div>
 
     <div class="storage-page__middle-block">
@@ -60,9 +67,10 @@
   import DocumentItem from "@/components/storagePage/DocumentItem.vue";
   import {IStorage} from "@/interfaces/storage.interface";
   import AddFileModal from "@/components/modals/addFileModal/AddFileModal.vue";
+  import MainBtn from "@/components/UI/buttons/MainBtn.vue";
 
   @Component({
-    components: {AddFileModal, DocumentItem}
+    components: {MainBtn, AddFileModal, DocumentItem}
   })
   export default class StoragePage extends Vue {
     isCheckboxValue = false
@@ -111,6 +119,10 @@
       },
     ]
 
+    clickBtnLoadDocument() {
+      this.toggleFileModal(true)
+    }
+
     toggleFileModal(val: boolean) {
       this.isFileModalOpen = val
     }
@@ -148,41 +160,15 @@
       }
 
       &-btn {
-        text-transform: none;
-        border-radius: 22px;
-        background-color: $accent-color;
-
-        /deep/ .q-btn__wrapper {
-          padding: 8px 20px 8px 8px;
-        }
-
         @include media-breakpoint-up($breakpoint-md) {
           margin-top: 20px;
         }
-      }
 
-      &-btn-icon-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 40px;
-        background-color: $light-white;
-        border-radius: 16px;
-      }
-
-      &-btn-icon {
-        width: 10px;
-        height: 10px;
-        color: $accent-color;
-      }
-
-      &-btn-text {
-        margin-left: 12px;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 140%;
-        color: $light-white;
+        &-icon {
+          width: 10px;
+          height: 10px;
+          color: $accent-color;
+        }
       }
     }
 

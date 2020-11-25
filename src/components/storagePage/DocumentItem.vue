@@ -44,9 +44,20 @@
         </div>
       </div>
 
-      <q-btn class="document-item__footer-btn" v-if="document.type === 1">
-        <icon name="next-icon" class="document-item__footer-btn-icon"/>
-      </q-btn>
+      <main-btn
+          class="document-item__footer-btn"
+          v-if="document.type === 1"
+          :type="'only-icon'"
+          :width="32"
+          :height="32"
+          :bcg-color="'#ffffff'"
+          :border-color="'#E9E8FF'"
+      >
+        <template v-slot:icon>
+          <icon name="next-icon" class="document-item__footer-btn-icon"/>
+        </template>
+      </main-btn>
+
       <icon name="download-icon" class="document-item__footer-download-icon" v-else/>
     </div>
 
@@ -78,10 +89,11 @@
   import EditDocumentModal from "@/components/modals/EditDocumentModal.vue";
   import {IRouter} from "@/interfaces/router.interface";
   import FileListSliderModal from "@/components/modals/FileListSliderModal.vue";
+  import MainBtn from "@/components/UI/buttons/MainBtn.vue";
   import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   @Component({
-    components: {FileListSliderModal, EditDocumentModal, DialogModal}
+    components: {MainBtn, FileListSliderModal, EditDocumentModal, DialogModal}
   })
   export default class DocumentItem extends Vue {
     @Prop() document: IStorage.IDocument
@@ -254,29 +266,11 @@
         color: $black-04;
       }
 
-      &-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: $accent-color;
-        border-radius: 10px;
-        width: 32px;
-        height: 32px;
-
-        /deep/ .q-btn__wrapper {
-          padding: 0 !important;
-
-          svg {
-            width: 4px;
-          }
-        }
-      }
-
       &-btn-icon {
         transform: rotate(180deg);
         width: 4px;
         height: 8px;
-        color: $light-white;
+        color: $accent-color;
       }
 
       &-download-icon {

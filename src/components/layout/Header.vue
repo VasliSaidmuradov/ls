@@ -3,14 +3,18 @@
     <BackBtn :type="2" @go-back="goBack"/>
 
     <div class="header__content-user">
-      <div class="header__content-user-research">
-        <q-btn class="header__content-user-research-btn">
-          <div class="header__content-user-append-icon">
-            <icon name="add-icon"></icon>
-          </div>
-        </q-btn>
-        <span class="header__content-user-research-text">Загрузить исследование</span>
-      </div>
+      <main-btn
+          class="header__content-user-research-btn"
+          :type="'secondary'"
+          :text="'Загрузить исследование'"
+          :height="56"
+          :bcg-color="'transparent'"
+      >
+        <template v-slot:icon>
+          <icon name="add-icon" class="header__content-user-research-btn-icon"/>
+        </template>
+      </main-btn>
+
       <div class="header__content-user-notice">
         <div class="header__content-user-notice-badge">
           +12
@@ -40,9 +44,11 @@
   import {IRouter} from '@/interfaces/router.interface';
   import BackBtn from '@/components/UI/buttons/BackBtn.vue';
   import ROUTE_NAME = IRouter.ROUTE_NAME;
+  import MainBtn from "@/components/UI/buttons/MainBtn.vue";
 
   @Component({
     components: {
+      MainBtn,
       UserCard,
       BackBtn
     }
@@ -86,47 +92,14 @@
       justify-content: center;
     }
 
-    &__content-user-research {
-      display: flex;
-      align-items: center;
+    &__content-user-research-btn {
       margin-right: 70px;
     }
 
-    &__content-user-research-btn {
-      &.q-btn {
-        .q-btn__wrapper {
-          padding: 0 !important;
-
-          &:before {
-            display: none;
-          }
-        }
-      }
-    }
-
-    &__content-user-append-icon {
-      width: 42px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: $accent-color;
+    &__content-user-research-btn-icon {
+      width: 10px;
+      height: 10px;
       color: $light-white;
-      border-radius: 16px;
-
-      svg {
-        width: 10px;
-        height: 10px;
-      }
-    }
-
-    &__content-user-research-text {
-      font-size: 12px;
-      line-height: 150%;
-      color: $black-02;
-      display: block;
-      white-space: nowrap;
-      margin-left: 12px;
     }
 
     &__content-user-picture {
