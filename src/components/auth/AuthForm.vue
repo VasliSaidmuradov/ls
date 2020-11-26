@@ -1,15 +1,17 @@
 <template>
   <div class="registration-form registration-form--other">
-    <q-form class="form-layout registration-form__form">
+    <q-form v-if="currentStep !== steps.HAS_LOGIN" class="form-layout registration-form__form">
       <template v-if="currentStep === steps.CHECK_USER">
         <CheckUserRegister v-if="pageMode === authType.REGISTER"
                            :onCodeSend="onCodeSend"/>
         <CheckUserLogin :isLoginedById="isLoginedById"
                         v-if="pageMode === authType.LOGIN"
+                        :onHasDuplicate="onHasDuplicate"
                         :onCodeSend="onCodeSend" />
       </template>
-      <LoginById v-if="currentStep === steps.LOGIN_BY_ID && isLabstoryUser"
-                 :onLogined="onLoginByUserIdSuccess"/>
+      <LoginById v-if="currentStep === steps.LOGIN_BY_ID"
+                 :onLogined="onLoginByUserIdSuccess"
+                  :hasDuplicate="hasDuplicate"/>
       <CheckAcceptCode
           :isLoginedById="isLoginedById"
           :checkedValue="checkedValue"
@@ -18,6 +20,7 @@
       <PasswordChange isCreatePassword
                       v-if="currentStep === steps.SET_PASSWORD"/>
     </q-form>
+    <HasLogin v-if="currentStep === steps.HAS_LOGIN" :onCodeSend="onCodeSend"/>
   </div>
 </template>
 
@@ -35,6 +38,7 @@ import LoginById from '@/components/auth/LoginById.vue';
 import AuthMixin from '@/mixins/auth-mixin';
 import {IRouter} from '@/interfaces/router.interface';
 import IAppRoute = IRouter.IAppRoute;
+import HasLogin from '@/components/auth/HasLogin.vue';
 
 
 @Component({
@@ -45,7 +49,8 @@ import IAppRoute = IRouter.IAppRoute;
     PasswordChange,
     CheckUserRegister,
     CheckUserLogin,
-    LoginById
+    LoginById,
+    HasLogin
   }
 })
 export default class AuthFormOtherUser extends Mixins(BaseFormMixins, AuthMixin) {
@@ -54,6 +59,7 @@ export default class AuthFormOtherUser extends Mixins(BaseFormMixins, AuthMixin)
   authType = IAuthApi.AuthType;
   checkedValue: string = '';
   isLoginedById: boolean | undefined = false;
+  hasDuplicate: boolean | undefined = false;
 
   $route: IAppRoute<{pageMode: IAuth.AuthMode}>
 
@@ -78,12 +84,18 @@ export default class AuthFormOtherUser extends Mixins(BaseFormMixins, AuthMixin)
 
   onLoginByUserIdSuccess() {
     this.isLoginedById = true;
-    this.changeStep(IAuthForOtherUser.RegistrationSteps.CHECK_USER)
+    this.changeStep(IAuthForOtherUser.RegistrationSteps.HAS_LOGIN)
+  }
+
+  onHasDuplicate() {
+    this.hasDuplicate = true;
+    this.changeStep(IAuthForOtherUser.RegistrationSteps.LOGIN_BY_ID);
   }
 
   @Watch('isLabstoryUser')
   onUserStatusChange() {
     this.isLoginedById = false;
+    this.hasDuplicate = false;
   }
 }
 </script>

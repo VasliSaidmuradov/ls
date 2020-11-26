@@ -26,6 +26,22 @@
   }
 }
 
+.auth-layout {
+  padding: 130px 300px;
+
+  @include media-breakpoint-up($breakpoint-lg) {
+    padding: 80px 150px;
+  }
+
+  @include media-breakpoint-up($breakpoint-md) {
+    padding: 30px;
+  }
+
+  @include media-breakpoint-up($breakpoint-xs) {
+    padding: 30px 20px;
+  }
+}
+
 .scrollable {
   &::-webkit-scrollbar {
     width: 8px;

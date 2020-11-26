@@ -4,6 +4,10 @@ import Vue from 'vue';
 import {cookeTokenKey, IAuthApi, IAuthForOtherUser, IAuthStore} from '@/interfaces/auth.interface';
 import {authResource} from '@/resources/auth.resources';
 import {AxiosResponse} from 'axios';
+import router from "@/router";
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
+import {IUserCard} from '@/interfaces/user-card.interface';
 
 type AuthStore = ActionContext<IAuthStore.IState, IAppState>;
 
@@ -16,6 +20,7 @@ export default {
     currentAuthStep: IAuthForOtherUser.RegistrationSteps.CHECK_USER,
     token: null,
     patientToken: '',
+    cabinets: [],
   },
 
   mutations: {
@@ -27,8 +32,8 @@ export default {
   actions: {
     async checkUser({commit, dispatch}: AuthStore, {value, type}: {value: string; type: IAuthApi.CheckUserParamsType}) {
       try {
-        const response: AxiosResponse<IAuthApi.ICheckUserResponse> = await authResource.checkUser(value, type);
-        commit('setPropertyInStore', {name: 'userAccountInfo', value: response.data})
+        const {data}: AxiosResponse<IAuthApi.ICheckUserResponse> = await authResource.checkUser(value, type);
+        commit('setPropertyInStore', {name: 'userAccountInfo', value: data})
         return true;
       } catch (error) {
         if (error.errorData.phone) {
@@ -40,8 +45,8 @@ export default {
 
     async sendCheckCode({dispatch}: AuthStore, {value, type}: {value: string; type: IAuthApi.CheckUserParamsType}) {
       try {
-        const response: AxiosResponse<IAuthApi.ISendCodeResponse> = await authResource.sendCheckCode(value, type);
-        return response.data;
+        const {data}: AxiosResponse<IAuthApi.ISendCodeResponse> = await authResource.sendCheckCode(value, type);
+        return data;
       } catch (error) {
         if (error.errorData.phone) {
           dispatch('error/showErrorNotice', {message: error.errorData.phone[0]},{root: true})
@@ -62,12 +67,19 @@ export default {
       }
     },
 
-    async authUser({commit, dispatch}: AuthStore, {data, authType}: {data: IAuthApi.IRegisterUserInputData | IAuthApi.ILoginUserInputData; authType: IAuthApi.AuthType}) {
+    async authUser({commit, dispatch}: AuthStore, {authData, authType}: {authData: IAuthApi.IRegisterUserInputData | IAuthApi.ILoginUserInputData; authType: IAuthApi.AuthType}) {
       try {
-        const response: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.authUser({data, authType});
-        commit('setPropertyInStore', {name: 'token', value: response.data.access});
-        dispatch('userCard/setUser', {data: response.data.patient}, {root: true})
-        return true;
+        const {data}: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.authUser({authData, authType});
+
+        commit('setPropertyInStore', {name: 'token', value: data.access});
+        commit('userCard/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
+
+        if (data?.cabinets) {
+          commit('setPropertyInStore', {name: 'cabinets', value: data.cabinets});
+          router.push({name: ROUTE_NAME.CHANGE_CABINETS});
+        } else {
+          return true;
+        }
       } catch(error) {
         if (error.errorData.message) {
           dispatch('error/showErrorNotice', {message: error.errorData.message}, {root: true})
@@ -76,10 +88,19 @@ export default {
       }
     },
 
-    async loginById({commit, dispatch}: AuthStore, data: IAuthApi.ILoginByIdInputData) {
+    async loginById({commit, dispatch}: AuthStore, loginData: IAuthApi.ILoginByIdInputData) {
       try {
-        const response = await authResource.loginById(data);
-        commit('setPropertyInStore', {name: 'patientToken', value: response.data.patient_token});
+        const {data}: AxiosResponse<IAuthApi.ILoginByIdResponse> = await authResource.loginById(loginData);
+        commit('setPropertyInStore', {name: 'patientToken', value: data.patient_token});
+
+        if (data?.email) {
+          commit('userCard/setPatientProperty', {property: 'email', value: data.email}, {root: true})
+        }
+
+        if (data?.phone) {
+          commit('userCard/setPatientProperty', {property: 'phone', value: data.phone}, {root: true})
+        }
+
         return true;
       } catch (error)  {
         if (error.errorData.message) {
@@ -92,6 +113,27 @@ export default {
     async updateAccessToken() {
       try {
 
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async changePatientsData({commit, dispatch}: AuthStore, {changedData, id}: {changedData: any; id: string}) {
+      try {
+        const {data}: AxiosResponse<IUserCard.IUser> = await authResource.changePatientsData({changedData, id});
+        commit('userCard/setPropertyInStore', {name: 'patient', value: data}, {root: true})
+
+      } catch (error) {
+        if (error.errorData.message) {
+          dispatch('error/showErrorNotice', {message: error.errorData.message}, {root: true})
+        }
+      }
+    },
+
+    async changeCabinet({commit}: AuthStore, cabinetId: string) {
+      try {
+        const {data}: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.changeCabinet(cabinetId);
+        commit('userCard/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
       } catch (error) {
         console.error(error)
       }

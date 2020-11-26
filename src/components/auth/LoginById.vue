@@ -1,6 +1,11 @@
 <template>
   <div class="login-by-id">
     <template v-if="!notFoundUser">
+
+      <div class="login-by-id__dubl-text" v-if="hasDuplicate">
+        В нашей базе есть несколько пользователей привязанных к этому e-mail. Для безопасности ваших данных и данных других пользователей, сейчас вы можете авторизоваться только с помощью ID пациента.
+      </div>
+
       <div class="form-input form-input--bordered" v-if="!checkResearchDate">
         <label for="userId" class="form-label">Введите ваш номер ID</label>
         <q-input
@@ -43,6 +48,22 @@
         </div>
       </div>
 
+      <div class="login-by-id__has-login" v-if="hasLogin">
+        <div class="login-by-id__has-login-desk">У вас есть login</div>
+        <q-btn padding="8px"
+               class="button1--bordered-with-icon button1"
+               @click="goToLoginAuth">
+        <span class="login-by-id__btn-icon icon">
+          <icon name="next-icon"></icon>
+        </span>
+          <span class="login-by-id__btn-text">
+        Войти с помощью login
+      </span>
+        </q-btn>
+
+        <q-btn class="not-found-user__actions-register" @click="loginWithResearchData">Остаться</q-btn>
+      </div>
+
       <q-btn padding="8px"
              class="button1--bordered-with-icon button1 login-by-id__btn"
              @click="checkResearchDate ? checkUserByResearchDate() : checkUserById()">
@@ -68,7 +89,7 @@
 
         <div class="not-found-user__actions">
           <q-btn padding="16px 20px" class="not-found-user__actions-contacts button1 button1--flooded">Контакты медцентров</q-btn>
-          <q-btn class="not-found-user__actions-register">Зарегистрироваться</q-btn>
+          <q-btn class="not-found-user__actions-register" @click="goToRegistration">Зарегистрироваться</q-btn>
         </div>
       </div>
     </template>
@@ -78,11 +99,13 @@
 <script lang="ts">
 import {Component, Mixins, Prop, Vue} from 'vue-property-decorator';
 import AuthMixin from '@/mixins/auth-mixin';
-import {IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
+import {IAuth, IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
 import InputDate from '@/components/InputDate.vue';
 import format from 'date-fns/format'
 import BaseFormMixins from '@/mixins/base-form-mixins';
 import {QInput} from 'quasar';
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
 
 interface IRefs {
   inputDate: InputDate;
@@ -98,6 +121,7 @@ interface IRefs {
 export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
 
   @Prop() onLogined: Function;
+  @Prop({default: false, type: Boolean}) hasDuplicate: boolean;
 
   userId = '';
   steps = IAuthForOtherUser.RegistrationSteps
@@ -105,7 +129,8 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   fio: string = ''
   researchDate: string | Date = new Date();
   rules: Function[] = [];
-  notFoundUser = true;
+  notFoundUser = false;
+  hasLogin = false;
 
   $refs: IRefs & Vue['$refs'];
 
@@ -161,12 +186,26 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
     }
   }
 
+  goToLoginAuth() {
+    this.changeStep(IAuthForOtherUser.RegistrationSteps.CHECK_USER)
+  }
+
+  loginWithResearchData() {
+    this.hasLogin = false;
+    this.checkResearchDate = true;
+  }
+
   checkHasLogin() {
     if (this.userAccountInfo.has_login) {
-      this.changeStep(IAuthForOtherUser.RegistrationSteps.CHECK_USER)
+      this.hasLogin = true;
     } else {
       this.checkResearchDate = true;
     }
+  }
+
+  goToRegistration() {
+    this.$router.replace({name: ROUTE_NAME.AUTH_PAGE, query: {pageMode: IAuth.AuthMode.REGISTRATION}});
+    this.changeStep(IAuthForOtherUser.RegistrationSteps.CHECK_USER);
   }
 }
 </script>
@@ -209,6 +248,25 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
     .date-input {
       margin-top: 30px;
     }
+  }
+
+  &__dubl-text {
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 20px;
+    color: $black;
+  }
+
+  &__has-login {
+    margin-top: 25px;
+  }
+
+  &__has-login-desk {
+    margin-bottom: 20px;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 130%;
+    color: $black-02;
   }
 }
 
