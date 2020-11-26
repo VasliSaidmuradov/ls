@@ -31,7 +31,7 @@
   back-btn
   */
   .back-btn {
-    /deep/ .q-btn__wrapper {
+    ::v-deep .q-btn__wrapper {
       padding: 0 !important;
 
       svg {

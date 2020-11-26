@@ -25,9 +25,7 @@
 }
 
 
-//btn
-.q-btn {
-  /deep/ .q-btn__wrapper:before {
-    box-shadow: none;
-  }
+//select-menu
+.q-menu {
+  box-shadow: none;
 }

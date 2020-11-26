@@ -93,11 +93,11 @@
         right: -35px;
       }
 
-      & /deep/ .q-btn__wrapper {
+      & ::v-deep .q-btn__wrapper {
         padding: 0;
       }
 
-      & /deep/ .q-btn__wrapper:before {
+      & ::v-deep .q-btn__wrapper:before {
         box-shadow: 0 4px 15px $shadow-color;
       }
 
@@ -109,7 +109,7 @@
     }
 
     &__close.q-hoverable:hover {
-      /deep/.q-focus-helper {
+      ::v-deep.q-focus-helper {
         background: $light-white;
       }
     }
@@ -190,7 +190,7 @@
         width: 32px;
         height: 32px;
 
-        /deep/ .q-btn__wrapper {
+        ::v-deep .q-btn__wrapper {
           padding: 0 !important;
 
           svg {

@@ -227,11 +227,11 @@
       width: 34px;
       height: 34px;
 
-      & /deep/ .q-btn__wrapper {
+      & ::v-deep .q-btn__wrapper {
         padding: 0;
       }
 
-      & /deep/ .q-btn__wrapper:before {
+      & ::v-deep .q-btn__wrapper:before {
         box-shadow: 0 4px 15px $shadow-color;
       }
 
@@ -243,7 +243,7 @@
     }
 
     &__close.q-hoverable:hover {
-      /deep/ .q-focus-helper {
+      ::v-deep .q-focus-helper {
         background: $light-white;
       }
     }
@@ -338,11 +338,11 @@
       margin-top: 34px;
       margin-bottom: 14px;
 
-      /deep/ .q-field__inner {
+      ::v-deep .q-field__inner {
         background: $light-background;
       }
 
-      /deep/ .q-field__append {
+      ::v-deep .q-field__append {
         padding-right: 5px;
       }
     }
@@ -363,7 +363,7 @@
       background-color: $accent-color;
       margin-top: 43px;
 
-      /deep/ .q-btn__wrapper {
+      ::v-deep .q-btn__wrapper {
         padding: 8px 20px 8px 8px;
       }
 

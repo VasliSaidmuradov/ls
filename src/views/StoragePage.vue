@@ -32,18 +32,17 @@
             v-model="isCheckboxValue"
         />
 
-        <div class="form-select storage-page__middle-block-select">
-          <q-select hide-dropdown-icon v-model="selectValue" :options="selectOptionList">
-            <template v-slot:prepend>
-              <icon name="sort-icon" class="storage-page__middle-block-select-prepend-icon"/>
-            </template>
-            <template v-slot:append>
-              <div class="select-icon">
-                <icon name="select-icon" class="storage-page__middle-block-select-append-icon"/>
-              </div>
-            </template>
-          </q-select>
-        </div>
+        <main-select
+            class="storage-page__middle-block-select"
+            :value="selectValue"
+            :options="selectOptionList"
+            :border-color="'#E9E8FF'"
+            @input-select="inputSelect"
+        >
+          <template v-slot:prepend>
+            <icon name="sort-icon" class="storage-page__middle-block-select-prepend-icon"/>
+          </template>
+        </main-select>
       </div>
     </div>
 
@@ -63,19 +62,20 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
-  import DocumentItem from "@/components/storagePage/DocumentItem.vue";
-  import {IStorage} from "@/interfaces/storage.interface";
-  import AddFileModal from "@/components/modals/addFileModal/AddFileModal.vue";
-  import MainBtn from "@/components/UI/buttons/MainBtn.vue";
+  import { Component, Vue } from 'vue-property-decorator';
+  import DocumentItem from '@/components/storagePage/DocumentItem.vue';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import AddFileModal from '@/components/modals/addFileModal/AddFileModal.vue';
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import MainSelect from '@/components/UI/MainSelect.vue';
 
   @Component({
-    components: {MainBtn, AddFileModal, DocumentItem}
+    components: { MainSelect, MainBtn, AddFileModal, DocumentItem },
   })
   export default class StoragePage extends Vue {
-    isCheckboxValue = false
-    isFileModalOpen = false
-    selectValue = 'Сортировать'
+    isCheckboxValue = false;
+    isFileModalOpen = false;
+    selectValue = 'Сортировать';
     selectOptionList: Array<string> = [
       'Сортировать',
       'По дате загрузки по убыванию',
@@ -84,8 +84,8 @@
       'По дате исследования по возрастанию',
       ' По типу исследования',
       'Сначала расшифрованные',
-      'Сначала нерасшифрованные'
-    ]
+      'Сначала нерасшифрованные',
+    ];
     documentList: IStorage.IDocument[] = [
       {
         name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
@@ -115,16 +115,20 @@
       {
         name: 'УЗИ живота',
         type: 2,
-        id: '6'
+        id: '6',
       },
-    ]
+    ];
+
+    inputSelect(val: string) {
+      this.selectValue = val;
+    }
 
     clickBtnLoadDocument() {
-      this.toggleFileModal(true)
+      this.toggleFileModal(true);
     }
 
     toggleFileModal(val: boolean) {
-      this.isFileModalOpen = val
+      this.isFileModalOpen = val;
     }
   }
 </script>
@@ -215,34 +219,9 @@
         }
       }
 
-      &-select {
-        /deep/ .q-field__inner {
-          width: 245px;
-          border: 1px solid $light-stroke;
-        }
-
-        /deep/ .q-field__prepend {
-          padding-left: 15px;
-          padding-right: 10px;
-        }
-
-        /deep/ .q-field__append {
-          padding-right: 5px;
-        }
-
-        /deep/ .q-field__native {
-          padding: 0;
-        }
-      }
-
       &-select-prepend-icon {
         width: 24px;
         height: 24px;
-      }
-
-      &-select-append-icon {
-        width: 12px;
-        height: 12px;
       }
     }
 

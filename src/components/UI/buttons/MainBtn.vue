@@ -47,7 +47,7 @@
   .main-btn {
     flex-shrink: 0;
 
-    /deep/ .q-btn__wrapper {
+    ::v-deep .q-btn__wrapper {
       padding: 0 !important;
 
       svg {
@@ -68,7 +68,7 @@
   }
 
   .main-btn.q-hoverable:hover {
-    /deep/ .q-focus-helper {
+    ::v-deep .q-focus-helper {
       background: $light-white;
     }
   }
@@ -98,7 +98,7 @@
   .main-btn-primary:hover .main-btn, .main-btn-primary:hover {
     background-color: $light-white !important;
 
-    /deep/ svg {
+    ::v-deep svg {
       color: $light-white;
     }
 
@@ -134,7 +134,7 @@
 
   .main-btn-secondary:hover .main-btn, .main-btn-secondary:hover {
 
-    /deep/ svg {
+    ::v-deep svg {
       color: $accent-color;
     }
 
@@ -181,7 +181,7 @@
   .main-btn-small-bg:hover .main-btn, .main-btn-small-bg:hover {
     background-color: transparent !important;
 
-    /deep/ svg {
+    ::v-deep svg {
       color: $accent-color;
     }
 
@@ -205,7 +205,7 @@
     background-color: $accent-color !important;
     border: 1px solid $accent-color !important;
 
-    /deep/ svg {
+    ::v-deep svg {
       color: $light-white;
     }
   }
@@ -214,7 +214,7 @@
     background-color: $light-white !important;
     border: 1px solid $light-stroke !important;
 
-    /deep/ svg {
+    ::v-deep svg {
       color: $light;
     }
   }

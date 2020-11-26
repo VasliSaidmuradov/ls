@@ -230,7 +230,7 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   }
 
   &__actions-contacts {
-  /deep/ &.q-btn {
+  ::v-deep &.q-btn {
       border-radius: 22px;
     }
   }
@@ -238,7 +238,7 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   &__actions-register {
     margin-left: 15px;
 
-    /deep/ &.q-btn {
+    ::v-deep &.q-btn {
       border-radius: 22px;
       text-transform: none;
       background: transparent;

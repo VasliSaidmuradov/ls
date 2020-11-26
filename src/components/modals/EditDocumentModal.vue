@@ -140,12 +140,12 @@
         margin-left: 0;
       }
 
-      /deep/ .q-field__inner {
+      ::v-deep .q-field__inner {
         width: 245px;
         border: 1px solid $light-stroke;
       }
 
-      /deep/ .q-field__append {
+      ::v-deep .q-field__append {
         padding-right: 5px;
       }
     }
@@ -170,7 +170,7 @@
     &__btn2 {
       margin-left: 30px;
 
-      /deep/ .q-btn__wrapper {
+      ::v-deep .q-btn__wrapper {
         min-height: initial;
         padding: 0;
       }
@@ -184,7 +184,7 @@
     }
 
     &__btn2.q-hoverable:hover {
-      /deep/.q-focus-helper {
+      ::v-deep.q-focus-helper {
         background: $light-white;
       }
     }

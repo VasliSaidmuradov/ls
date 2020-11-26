@@ -112,7 +112,7 @@
     &__btn2 {
       margin-left: 29px;
 
-      /deep/ .q-btn__wrapper {
+      ::v-deep .q-btn__wrapper {
         min-height: initial;
         padding: 0;
       }
@@ -126,7 +126,7 @@
     }
 
     &__btn2.q-hoverable:hover {
-      /deep/ .q-focus-helper {
+      ::v-deep .q-focus-helper {
         background: $light-white;
       }
     }
