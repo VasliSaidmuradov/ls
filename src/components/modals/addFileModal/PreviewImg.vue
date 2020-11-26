@@ -1,37 +1,38 @@
 <template>
   <img
       class="preview-img"
-      :src="imgSrc"
+      :src="imgSrc || pdfSvg"
       alt=""
   >
 </template>
 
 <script lang="ts">
-  import {Component, Prop, Vue, Watch} from 'vue-property-decorator'
+  import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 
   @Component({})
   export default class PreviewImg extends Vue {
-    @Prop() file: File
+    @Prop() file: File;
 
-    imgSrc: string | ArrayBuffer | null = ''
+    imgSrc: string | ArrayBuffer | null = '';
+    pdfSvg = require('@/assets/Pdf.svg');
 
     @Watch('file')
     fileChanged() {
-      this.readFile()
+      this.file.type !== 'application/pdf' && this.readFile();
     }
 
     mounted() {
-      this.readFile()
+      this.file.type !== 'application/pdf' && this.readFile();
     }
 
     readFile() {
-      const reader = new FileReader()
+      const reader = new FileReader();
 
       reader.onload = () => {
-        this.imgSrc = reader.result
-      }
+        this.imgSrc = reader.result;
+      };
 
-      reader.readAsDataURL(this.file)
+      reader.readAsDataURL(this.file);
     }
   }
 </script>
