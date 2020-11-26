@@ -10,7 +10,6 @@
         ref="file"
         class="file-form__file-input"
         @change="handleFileUpload"
-
     >
     <label
         class="file-form__file-block"
@@ -27,7 +26,7 @@
 </template>
 
 <script lang="ts">
-  import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
+  import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 
   interface IRefs {
     file: HTMLInputElement;
@@ -35,23 +34,23 @@
 
   @Component({})
   export default class FileForm extends Vue {
-    @Prop() type: number
-    @Prop({default: 'Перетяните или нажмите, чтобы добавить файл'}) title: string
+    @Prop() type: number;
+    @Prop({ default: 'Перетяните или нажмите, чтобы добавить файл' }) title: string;
 
     $refs: IRefs & Vue['$refs'];
 
     get countIcon() {
-      return this.type === 1 ? 'cloud-icon' : 'add-icon'
+      return this.type === 1 ? 'cloud-icon' : 'add-icon';
     }
 
     @Emit('add-files')
     handleFileUpload() {
-      return this.$refs.file?.files
+      return this.$refs.file?.files;
     }
 
     @Emit('add-files')
     handleFileDrop(e: DragEvent) {
-      return e.dataTransfer?.files
+      return e.dataTransfer?.files;
     }
   }
 </script>

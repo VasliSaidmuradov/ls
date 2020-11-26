@@ -62,13 +62,29 @@
     </div>
 
     <dialog-modal
-        :btn1-with-icon="true"
         :is-dialog-modal-open="isDialogModalOpen"
         :title="'Вы точно хотите удалить документ? '"
-        :btn1-text="'Удалить'"
         :btn2-text="'Отмена'"
         @close-modal="toggleDialogModal"
-    />
+    >
+      <template v-slot:btn1>
+        <main-btn
+            class="document-item__delete-document-modal-btn"
+            :type="'small-bg'"
+            :text="'Удалить'"
+            :width="105"
+            :height="42"
+            :bcg-color="'#FF7C7C'"
+        >
+          <template v-slot:icon>
+            <icon
+                name="delete-icon"
+                class="document-item__delete-document-modal-btn-icon"
+            />
+          </template>
+        </main-btn>
+      </template>
+    </dialog-modal>
 
     <edit-document-modal
         :is-edit-document-modal-open="isEditDocumentModalOpen"
@@ -83,40 +99,40 @@
 </template>
 
 <script lang="ts">
-  import {Component, Prop, Vue} from 'vue-property-decorator'
-  import {IStorage} from "@/interfaces/storage.interface";
-  import DialogModal from "@/components/modals/DialogModal.vue";
-  import EditDocumentModal from "@/components/modals/EditDocumentModal.vue";
-  import {IRouter} from "@/interfaces/router.interface";
-  import FileListSliderModal from "@/components/modals/FileListSliderModal.vue";
-  import MainBtn from "@/components/UI/buttons/MainBtn.vue";
+  import { Component, Prop, Vue } from 'vue-property-decorator';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import DialogModal from '@/components/modals/DialogModal.vue';
+  import EditDocumentModal from '@/components/modals/EditDocumentModal.vue';
+  import { IRouter } from '@/interfaces/router.interface';
+  import FileListSliderModal from '@/components/modals/FileListSliderModal.vue';
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   @Component({
-    components: {MainBtn, FileListSliderModal, EditDocumentModal, DialogModal}
+    components: { MainBtn, FileListSliderModal, EditDocumentModal, DialogModal },
   })
   export default class DocumentItem extends Vue {
-    @Prop() document: IStorage.IDocument
+    @Prop() document: IStorage.IDocument;
 
-    isDialogModalOpen = false
-    isEditDocumentModalOpen = false
-    isFileListSliderModalOpen = false
+    isDialogModalOpen = false;
+    isEditDocumentModalOpen = false;
+    isFileListSliderModalOpen = false;
 
     toggleDialogModal(val: boolean) {
-      this.isDialogModalOpen = val
+      this.isDialogModalOpen = val;
     }
 
     toggleEditDocumentModal(val: boolean) {
-      this.isEditDocumentModalOpen = val
+      this.isEditDocumentModalOpen = val;
     }
 
     toggleFileListSliderModal(val: boolean) {
-      this.isFileListSliderModalOpen = val
+      this.isFileListSliderModalOpen = val;
     }
 
     goToSingleDocumentPage() {
       if (this.document.type === 1) {
-        this.$router.push({name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: {id: this.document.id}})
+        this.$router.push({ name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: { id: this.document.id } });
       }
     }
   }
@@ -277,6 +293,14 @@
         align-self: flex-end;
         width: 24px;
         height: 24px;
+      }
+    }
+
+    &__delete-document-modal-btn {
+      &-icon {
+        width: 12px;
+        height: 14px;
+        color: $light-white;
       }
     }
   }
