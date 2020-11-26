@@ -61,7 +61,7 @@
     @Prop() maxWidth: number;
 
     isIconReverse = false;
-    id = Math.random();
+    id = Math.random()
 
     @Emit('input-select')
     inputSelect(value: number | string | object) {
