@@ -1,11 +1,21 @@
 <template>
-  <q-select
-      class="main-select"
-      hide-dropdown-icon
-      :value="value"
-      :options="options"
-      :disable="disabled"
-      :style="{
+  <div>
+    <label
+        class="main-select-label"
+        v-if="labelTitle"
+        :for="id"
+    >
+      {{labelTitle}}
+    </label>
+
+    <q-select
+        class="main-select"
+        hide-dropdown-icon
+        :id="id"
+        :value="value"
+        :options="options"
+        :disable="disabled"
+        :style="{
         backgroundColor: bcgColor,
         border: `1px solid ${borderColor}`,
         width: width + 'px',
@@ -13,24 +23,25 @@
         minWidth: minWidth + 'px',
         maxWidth: maxWidth + 'px'
       }"
-      @input="inputSelect"
-      @popup-show="isIconReverse = true"
-      @popup-hide="isIconReverse = false"
-  >
-    <template v-slot:prepend>
-      <slot name="prepend"/>
-    </template>
+        @input="inputSelect"
+        @popup-show="isIconReverse = true"
+        @popup-hide="isIconReverse = false"
+    >
+      <template v-slot:prepend>
+        <slot name="prepend"/>
+      </template>
 
-    <template v-slot:append>
-      <slot name="append">
-        <icon
-            name="select-icon"
-            class="main-select-append-icon"
-            :class="{'main-select-append-icon-reverse': isIconReverse}"
-        />
-      </slot>
-    </template>
-  </q-select>
+      <template v-slot:append>
+        <slot name="append">
+          <icon
+              name="select-icon"
+              class="main-select-append-icon"
+              :class="{'main-select-append-icon-reverse': isIconReverse}"
+          />
+        </slot>
+      </template>
+    </q-select>
+  </div>
 </template>
 
 <script lang="ts">
@@ -40,6 +51,7 @@
   export default class MainSelect extends Vue {
     @Prop({ required: true }) value: number | string | object;
     @Prop({ required: true }) options: Array<number> | Array<string> | Array<object>;
+    @Prop() labelTitle: string;
     @Prop() disabled: boolean;
     @Prop({ default: 'transparent' }) bcgColor: string;
     @Prop({ default: 'none' }) borderColor: string;
@@ -49,6 +61,7 @@
     @Prop() maxWidth: number;
 
     isIconReverse = false;
+    id = Math.random();
 
     @Emit('input-select')
     inputSelect(value: number | string | object) {
@@ -60,6 +73,14 @@
 <style lang="scss" scoped>
   .main-select {
     border-radius: 18px;
+
+    &-label {
+      display: block;
+      font-weight: 500;
+      font-size: 13px;
+      color: $black-02;
+      margin-bottom: 8px;
+    }
 
     ::v-deep .q-field__control {
       &:before {

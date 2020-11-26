@@ -9,6 +9,7 @@
   font-size: 12px !important;
   line-height: 150% !important;
   border-radius: 8px !important;
+
   &:before {
     content: '';
     position: absolute;
@@ -22,6 +23,12 @@
 .tooltip.q-tooltip {
   overflow-x: visible !important;
   overflow-y: visible !important;
+}
+
+//btn:hover
+
+body.desktop .q-hoverable:hover > .q-focus-helper {
+  background: none;
 }
 
 

@@ -96,6 +96,15 @@
     }
   }
 
+  .file-form:hover {
+    border: 1px solid $light-white;
+    background-color: $light-white;
+  }
+
+  /*
+  file-form-1
+  */
+
   .file-form-1 .file-form {
     &__file-block {
       padding: 60px 140px;
@@ -114,6 +123,10 @@
       color: $accent-color;
     }
   }
+
+  /*
+  file-form-2
+  */
 
   .file-form-2 .file-form {
     &__file-block {
