@@ -84,7 +84,7 @@
   }
 
   /*
-  back-btn-2
+  back-btn-2 (with background)
   */
   .back-btn-2 .back-btn {
     &__icon-wrapper {
