@@ -3,7 +3,6 @@
     <label
         class="main-select-label"
         v-if="labelTitle"
-        :for="id"
     >
       {{labelTitle}}
     </label>
@@ -11,7 +10,6 @@
     <q-select
         class="main-select"
         hide-dropdown-icon
-        :id="id"
         :value="value"
         :options="options"
         :disable="disabled"
@@ -61,7 +59,6 @@
     @Prop() maxWidth: number;
 
     isIconReverse = false;
-    id = Math.random()
 
     @Emit('input-select')
     inputSelect(value: number | string | object) {
