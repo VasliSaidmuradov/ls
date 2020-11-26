@@ -26,10 +26,11 @@
       <span class="storage-page__middle-block-title">Всего {{documentList.length}} документов:</span>
 
       <div class="storage-page__middle-block-right">
-        <q-checkbox
-            class="form-checkbox form-checkbox--with-label"
-            label="Только расшифрованные документы"
-            v-model="isCheckboxValue"
+        <checkbox-input
+            class="storage-page__middle-block-right-checkbox"
+            :value="isCheckboxValue"
+            :label="'Только расшифрованные документы'"
+            @change-value="toggleCheckboxValue"
         />
 
         <main-select
@@ -68,9 +69,10 @@
   import AddFileModal from '@/components/modals/addFileModal/AddFileModal.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import MainSelect from '@/components/UI/MainSelect.vue';
+  import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 
   @Component({
-    components: { MainSelect, MainBtn, AddFileModal, DocumentItem },
+    components: { CheckboxInput, MainSelect, MainBtn, AddFileModal, DocumentItem },
   })
   export default class StoragePage extends Vue {
     isCheckboxValue = false;
@@ -129,6 +131,10 @@
 
     toggleFileModal(val: boolean) {
       this.isFileModalOpen = val;
+    }
+
+    toggleCheckboxValue() {
+      this.isCheckboxValue = !this.isCheckboxValue
     }
   }
 </script>
@@ -208,7 +214,7 @@
           align-items: flex-start;
         }
 
-        .form-checkbox {
+        &-checkbox {
           margin-right: 30px;
 
           @include media-breakpoint-up($breakpoint-md) {
