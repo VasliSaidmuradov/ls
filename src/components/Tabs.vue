@@ -13,7 +13,7 @@
         class="tabs__body"
         animated>
       <q-tab-panel v-for="(tab, index) in data" :name="tab.name" :key="index">
-        <slot :name="tab.name"></slot>
+        <component v-bind:is="tab.componentName"></component>
       </q-tab-panel>
     </q-tab-panels>
   </div>

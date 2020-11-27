@@ -6,12 +6,7 @@
         <Tabs
             :data="tabsData"
             :activeTab="activeTab"
-            :onTabChange="onTabChange"
-        >
-          <template v-for="(item, index) in tabsData" v-slot:[item.name]>
-            <component :is="item.componentName" :key="index"/>
-          </template>
-        </Tabs>
+            :onTabChange="onTabChange"/>
       </div>
 
       <div class="personal-area__user-card">
