@@ -63,6 +63,7 @@ export default class FloatingActionBtn extends Vue {
 .actions-btn {
   display: flex;
   align-items: flex-end;
+  z-index: 999;
 
   &__fab-btn {
     &.q-fab {

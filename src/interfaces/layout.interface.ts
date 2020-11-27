@@ -10,6 +10,7 @@ export namespace ILayout {
 
   export enum Breakpoint {
     MOBILE = 767,
+    MOBILE_SMALL = 575
   }
 }
 
