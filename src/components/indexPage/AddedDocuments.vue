@@ -228,7 +228,7 @@ export default class AddedDocuments extends Vue {
     position: absolute;
     top: -9px;
     left: -9px;
-    z-index: 99;
+    z-index: 1;
   }
 
   &__exp-header-text-count {

@@ -43,11 +43,13 @@ export default class BenchmarksCard extends Vue {
   @Prop({required: true}) benchmark: IDashBoard.IBenchmarks;
 
   get ranges(): string {
-    return this.benchmark.ranges.min !== null && this.benchmark.ranges.max !== null
-        ? `${this.benchmark.ranges.min} - ${this.benchmark.ranges.max}`
-        : this.benchmark.ranges.min !== null
-            ? `${this.benchmark.ranges.min} >`
-            : `< ${this.benchmark.ranges.max}`
+    const {ranges} = this.benchmark;
+
+    return ranges.min !== null && ranges.max !== null
+        ? `${ranges.min} - ${ranges.max}`
+        : ranges.min !== null
+            ? `${ranges.min} >`
+            : `< ${ranges.max}`
   }
 }
 </script>
