@@ -41,7 +41,7 @@ export default class BiologicalSex extends Vue {
   }
 
   set biologicalSex(value: IMedicalCard.BiologicalSex) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'biologicalSex', value})
+    this.$store.commit('medicalCard/setPropertyInStore', {name: 'biologicalSex', value});
   }
 }
 </script>

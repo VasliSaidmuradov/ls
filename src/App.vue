@@ -17,7 +17,7 @@
       <q-page-container class="no-shadow">
         <q-page class="no-shadow">
           <router-view/>
-          <FloatingActionBtn v-if="activePattern === layoutPattern.MOBILE"/>
+          <FloatingActionBtn v-if="activePattern === layoutPattern.MOBILE" class="sticky-control"/>
         </q-page>
       </q-page-container>
 
@@ -110,6 +110,10 @@ import Breakpoint = ILayout.Breakpoint;
       @include media-breakpoint-up($breakpoint-sm) {
         display: none;
       }
+    }
+
+    .sticky-control {
+      z-index: 999;
     }
   }
 </style>
