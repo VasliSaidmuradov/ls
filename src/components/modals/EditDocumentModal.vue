@@ -27,53 +27,60 @@
             @change-value="changeDate"
         />
 
-        <div class="form-select modal__select">
-          <label class="form-label" for="eventName">Тип исследования</label>
-          <q-select hide-dropdown-icon id="eventName" v-model="selectValue" :options="selectOptionList">
-            <template v-slot:append>
-              <div class="select-icon">
-                <icon name="select-icon" class="modal__select-icon"/>
-              </div>
-            </template>
-          </q-select>
-        </div>
+        <main-select
+            class="modal__select"
+            :value="selectValue"
+            :options="selectOptionList"
+            :label-title="'Тип исследования'"
+            :border-color="'#E9E8FF'"
+            :max-width="310"
+        />
       </div>
 
       <div class="modal__btn-wrapper">
-        <q-btn class="modal__btn1">
-          <span class="modal__btn1-text">Сохранить</span>
-        </q-btn>
+        <main-btn
+            :width="91"
+            :height="42"
+            :type="'small-bg'"
+            :text="'Сохранить'"
+        />
 
-        <q-btn class="modal__btn2" flat v-close-popup>
-          <span class="modal__btn2-text">Пропустить</span>
-        </q-btn>
+        <main-btn
+            class="modal__btn2"
+            v-close-popup
+            :type="'small'"
+            :bcg-color="'#ffffff'"
+            :text="'Пропустить'"
+        />
       </div>
     </div>
   </q-dialog>
 </template>
 
 <script lang="ts">
-  import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
-  import InputDate from "@/components/InputDate.vue";
+  import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+  import InputDate from '@/components/InputDate.vue';
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import MainSelect from '@/components/UI/MainSelect.vue';
 
   @Component({
-    components: {InputDate}
+    components: { MainSelect, MainBtn, InputDate },
   })
   export default class DialogModal extends Vue {
-    @Prop({required: true}) isEditDocumentModalOpen: boolean
+    @Prop({ required: true }) isEditDocumentModalOpen: boolean;
 
-    date: Date | string = new Date()
-    selectValue = 'Узи'
-    selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса']
+    date: Date | string = new Date();
+    selectValue = 'Узи';
+    selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса'];
 
 
     @Emit('close-modal')
     closeModal() {
-      return false
+      return false;
     }
 
     changeDate(value: string) {
-      this.date = value
+      this.date = value;
     }
   }
 </script>
@@ -139,15 +146,6 @@
         margin-top: 20px;
         margin-left: 0;
       }
-
-      /deep/ .q-field__inner {
-        width: 245px;
-        border: 1px solid $light-stroke;
-      }
-
-      /deep/ .q-field__append {
-        padding-right: 5px;
-      }
     }
 
     &__btn-wrapper {
@@ -155,38 +153,8 @@
       margin-top: 20px;
     }
 
-    &__btn1 {
-      border-radius: 16px;
-      background-color: $accent-color;
-
-      &-text {
-        text-transform: none;
-        color: $light-white;
-        font-size: 12px;
-        line-height: 150%;
-      }
-    }
-
     &__btn2 {
       margin-left: 30px;
-
-      /deep/ .q-btn__wrapper {
-        min-height: initial;
-        padding: 0;
-      }
-
-      &-text {
-        text-transform: none;
-        cursor: pointer;
-        font-size: 12px;
-        line-height: 150%;
-      }
-    }
-
-    &__btn2.q-hoverable:hover {
-      /deep/.q-focus-helper {
-        background: $light-white;
-      }
     }
   }
 </style>

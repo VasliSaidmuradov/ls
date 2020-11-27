@@ -7,36 +7,43 @@
           и размером до 5мб.</span>
       </div>
 
-      <q-btn class="storage-page__header-btn" @click="toggleFileModal(true)">
-        <div class="storage-page__header-btn-icon-wrapper">
+      <main-btn
+          class="storage-page__header-btn"
+          :type="'primary'"
+          :text="'Загрузить документ'"
+          :border-color="'#7C74E9'"
+          :width="214"
+          :height="56"
+          @click-btn="clickBtnLoadDocument"
+      >
+        <template v-slot:icon>
           <icon name="add-icon" class="storage-page__header-btn-icon"/>
-        </div>
-        <span class="storage-page__header-btn-text">Загрузить документ</span>
-      </q-btn>
+        </template>
+      </main-btn>
     </div>
 
     <div class="storage-page__middle-block">
       <span class="storage-page__middle-block-title">Всего {{documentList.length}} документов:</span>
 
       <div class="storage-page__middle-block-right">
-        <q-checkbox
-            class="form-checkbox form-checkbox--with-label"
-            label="Только расшифрованные документы"
-            v-model="isCheckboxValue"
+        <checkbox-input
+            class="storage-page__middle-block-right-checkbox"
+            :value="isCheckboxValue"
+            :label="'Только расшифрованные документы'"
+            @change-value="toggleCheckboxValue"
         />
 
-        <div class="form-select storage-page__middle-block-select">
-          <q-select hide-dropdown-icon v-model="selectValue" :options="selectOptionList">
-            <template v-slot:prepend>
-              <icon name="sort-icon" class="storage-page__middle-block-select-prepend-icon"/>
-            </template>
-            <template v-slot:append>
-              <div class="select-icon">
-                <icon name="select-icon" class="storage-page__middle-block-select-append-icon"/>
-              </div>
-            </template>
-          </q-select>
-        </div>
+        <main-select
+            class="storage-page__middle-block-select"
+            :value="selectValue"
+            :options="selectOptionList"
+            :border-color="'#E9E8FF'"
+            @input-select="inputSelect"
+        >
+          <template v-slot:prepend>
+            <icon name="sort-icon" class="storage-page__middle-block-select-prepend-icon"/>
+          </template>
+        </main-select>
       </div>
     </div>
 
@@ -56,18 +63,21 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
-  import DocumentItem from "@/components/storagePage/DocumentItem.vue";
-  import {IStorage} from "@/interfaces/storage.interface";
-  import AddFileModal from "@/components/modals/AddFileModal/AddFileModal.vue";
+  import { Component, Vue } from 'vue-property-decorator';
+  import DocumentItem from '@/components/storagePage/DocumentItem.vue';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import AddFileModal from '@/components/modals/addFileModal/AddFileModal.vue';
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import MainSelect from '@/components/UI/MainSelect.vue';
+  import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 
   @Component({
-    components: {AddFileModal, DocumentItem}
+    components: { CheckboxInput, MainSelect, MainBtn, AddFileModal, DocumentItem },
   })
   export default class StoragePage extends Vue {
-    isCheckboxValue = false
-    isFileModalOpen = false
-    selectValue = 'Сортировать'
+    isCheckboxValue = false;
+    isFileModalOpen = false;
+    selectValue = 'Сортировать';
     selectOptionList: Array<string> = [
       'Сортировать',
       'По дате загрузки по убыванию',
@@ -76,8 +86,8 @@
       'По дате исследования по возрастанию',
       ' По типу исследования',
       'Сначала расшифрованные',
-      'Сначала нерасшифрованные'
-    ]
+      'Сначала нерасшифрованные',
+    ];
     documentList: IStorage.IDocument[] = [
       {
         name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
@@ -107,12 +117,24 @@
       {
         name: 'УЗИ живота',
         type: 2,
-        id: '6'
+        id: '6',
       },
-    ]
+    ];
+
+    inputSelect(val: string) {
+      this.selectValue = val;
+    }
+
+    clickBtnLoadDocument() {
+      this.toggleFileModal(true);
+    }
 
     toggleFileModal(val: boolean) {
-      this.isFileModalOpen = val
+      this.isFileModalOpen = val;
+    }
+
+    toggleCheckboxValue() {
+      this.isCheckboxValue = !this.isCheckboxValue
     }
   }
 </script>
@@ -148,41 +170,15 @@
       }
 
       &-btn {
-        text-transform: none;
-        border-radius: 22px;
-        background-color: $accent-color;
-
-        /deep/ .q-btn__wrapper {
-          padding: 8px 20px 8px 8px;
-        }
-
         @include media-breakpoint-up($breakpoint-md) {
           margin-top: 20px;
         }
-      }
 
-      &-btn-icon-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 40px;
-        background-color: $light-white;
-        border-radius: 16px;
-      }
-
-      &-btn-icon {
-        width: 10px;
-        height: 10px;
-        color: $accent-color;
-      }
-
-      &-btn-text {
-        margin-left: 12px;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 140%;
-        color: $light-white;
+        &-icon {
+          width: 10px;
+          height: 10px;
+          color: $accent-color;
+        }
       }
     }
 
@@ -218,7 +214,7 @@
           align-items: flex-start;
         }
 
-        .form-checkbox {
+        &-checkbox {
           margin-right: 30px;
 
           @include media-breakpoint-up($breakpoint-md) {
@@ -229,34 +225,9 @@
         }
       }
 
-      &-select {
-        /deep/ .q-field__inner {
-          width: 245px;
-          border: 1px solid $light-stroke;
-        }
-
-        /deep/ .q-field__prepend {
-          padding-left: 15px;
-          padding-right: 10px;
-        }
-
-        /deep/ .q-field__append {
-          padding-right: 5px;
-        }
-
-        /deep/ .q-field__native {
-          padding: 0;
-        }
-      }
-
       &-select-prepend-icon {
         width: 24px;
         height: 24px;
-      }
-
-      &-select-append-icon {
-        width: 12px;
-        height: 12px;
       }
     }
 

@@ -1,18 +1,25 @@
 <template>
   <q-dialog :value="isFileModalOpen" @hide="closeModal">
     <div class="modal">
-      <q-btn class="modal__close" v-close-popup>
-        <icon name="close-icon" class="modal__close-icon"/>
-      </q-btn>
 
-      <div
+      <main-btn
+          v-close-popup
+          class="modal__close-btn"
+          :type="'only-icon'"
+          :bcg-color="'#ffffff'"
+          :width="34"
+          :height="34"
+      >
+        <template v-slot:icon>
+          <icon name="close-icon" class="modal__close-btn-icon"/>
+        </template>
+      </main-btn>
+
+      <back-btn
           class="modal__back-btn"
           v-if="modalVisibleType === 2"
-          @click="toggleGoBackModal(true)"
-      >
-        <icon name="next-icon" class="modal__back-btn-icon"/>
-        <span class="modal__back-btn-text">Назад</span>
-      </div>
+          @go-back="toggleGoBackModal(true)"
+      />
 
       <span class="modal__title">
           При добавлении нескольких файлов, они будут считаться одним документом внутри приложения.
@@ -30,16 +37,17 @@
       />
 
       <div v-if="modalVisibleType === 2">
-        <div class="form-select modal__select">
-          <label class="form-label" for="eventName">Тип исследования</label>
-          <q-select hide-dropdown-icon id="eventName" v-model="selectValue" :options="selectOptionList">
-            <template v-slot:append>
-              <div class="select-icon">
-                <icon name="select-icon" class="modal__select-icon"/>
-              </div>
-            </template>
-          </q-select>
-        </div>
+
+        <main-select
+            class="modal__select"
+            :value="selectValue"
+            :options="selectOptionList"
+            :label-title="'Тип исследования'"
+            :border-color="'#E9E8FF'"
+            :bcg-color="'#F9F9FC'"
+            :max-width="310"
+            @input-select="inputSelect"
+        />
 
         <q-checkbox
             class="form-checkbox form-checkbox--with-label"
@@ -97,113 +105,156 @@
           />
         </div>
 
-
-        <q-btn class="modal__load-btn">
-          <div class="modal__load-btn-icon-wrapper">
+        <main-btn
+            class="modal__load-btn"
+            :type="'primary'"
+            :text="'Загрузить документ'"
+            :border-color="'#7C74E9'"
+            :width="214"
+            :height="56"
+        >
+          <template v-slot:icon>
             <icon name="cloud-icon" class="modal__load-btn-icon"/>
-          </div>
-          <span class="modal__load-btn-text">Загрузить документ</span>
-        </q-btn>
+          </template>
+        </main-btn>
       </div>
     </div>
 
     <dialog-modal
-        :btn1-with-icon="true"
         :is-dialog-modal-open="isGoBackModalOpen"
         :title="'Если вы вернетесь на шаг назад, то прикрепленные файлы удалятся. Вернуться? '"
-        :btn1-text="'Вернуться'"
         :btn2-text="'Остаться'"
-        :btn-confirm-color-type="'blue'"
-        @click-confirm-btn="goBack"
         @close-modal="toggleGoBackModal"
-    />
+    >
+      <template v-slot:btn1>
+        <main-btn
+            class="modal__back-modal-btn"
+            :type="'small-bg'"
+            :text="'Вернуться'"
+            :width="119"
+            :height="42"
+            :bcg-color="'#7C74E9'"
+            @click-btn="goBack"
+        >
+          <template v-slot:icon>
+            <icon
+                name="next-icon"
+                class="modal__back-modal-btn-icon"
+            />
+          </template>
+        </main-btn>
+      </template>
+    </dialog-modal>
 
     <dialog-modal
-        :btn1-with-icon="true"
         :is-dialog-modal-open="isDeleteFileModalOpen"
         :title="'Вы точно хотите удалить файл? '"
-        :btn1-text="'Удалить'"
         :btn2-text="'Отмена'"
-        @click-confirm-btn="deleteFile"
         @close-modal="toggleDeleteFileModal"
-    />
+    >
+      <template v-slot:btn1>
+        <main-btn
+            class="modal__delete-file-modal-btn"
+            :type="'small-bg'"
+            :text="'Удалить'"
+            :width="105"
+            :height="42"
+            :bcg-color="'#FF7C7C'"
+            @click-btn="deleteFile"
+        >
+          <template v-slot:icon>
+            <icon
+                name="delete-icon"
+                class="modal__delete-file-modal-btn-icon"
+            />
+          </template>
+        </main-btn>
+      </template>
+    </dialog-modal>
   </q-dialog>
 </template>
 
 <script lang="ts">
-  import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator'
-  import DialogModal from "@/components/modals/DialogModal.vue";
-  import InputDate from "@/components/InputDate.vue";
-  import FileForm from "@/components/modals/AddFileModal/FileForm.vue";
-  import PreviewImg from "@/components/modals/AddFileModal/PreviewImg.vue";
+  import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
+  import DialogModal from '@/components/modals/DialogModal.vue';
+  import InputDate from '@/components/InputDate.vue';
+  import FileForm from '@/components/modals/addFileModal/FileForm.vue';
+  import PreviewImg from '@/components/modals/addFileModal/PreviewImg.vue';
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import BackBtn from '@/components/UI/buttons/BackBtn.vue';
+  import MainSelect from '@/components/UI/MainSelect.vue';
 
   @Component({
-    components: {PreviewImg, FileForm, InputDate, DialogModal}
+    components: { MainSelect, BackBtn, MainBtn, PreviewImg, FileForm, InputDate, DialogModal },
   })
   export default class AddFileModal extends Vue {
-    @Prop({required: true}) isFileModalOpen: boolean
+    @Prop({ required: true }) isFileModalOpen: boolean;
 
-    isGoBackModalOpen = false
-    isDeleteFileModalOpen = false
-    deletedFileIndex: number
-    modalVisibleType = 1
-    date = ''
-    selectValue = 'Узи'
-    isCheckboxValue = false
-    selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса']
-    fileList: File[] = []
+    isGoBackModalOpen = false;
+    isDeleteFileModalOpen = false;
+    deletedFileIndex: number;
+    modalVisibleType = 1;
+    date = '';
+    selectValue = 'Узи';
+    isCheckboxValue = false;
+    selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса'];
+    fileList: File[] = [];
 
     @Watch('fileList')
     fileListChanged() {
       this.fileList.length
         ? this.modalVisibleType = 2
-        : this.modalVisibleType = 1
+        : this.modalVisibleType = 1;
     }
 
     addFiles(files: File[]) {
       files.forEach((file: File) => {
         this.validateFile(file)
           ? this.fileList.push(file)
-          : alert('Неверный формат файла')
-      })
+          : alert('Неверный формат файла');
+      });
     }
 
     validateFile(file: File): boolean {
       return file.type === 'image/png'
         || file.type === 'image/jpeg'
-        || file.type === 'application/pdf'
+        || file.type === 'application/pdf';
     }
 
     clickDeleteIcon(index: number) {
-      this.deletedFileIndex = index
-      this.toggleDeleteFileModal(true)
+      this.deletedFileIndex = index;
+      this.toggleDeleteFileModal(true);
     }
 
     deleteFile() {
-      this.fileList.splice(this.deletedFileIndex, 1)
-      this.toggleDeleteFileModal(false)
+      this.fileList.splice(this.deletedFileIndex, 1);
+      this.toggleDeleteFileModal(false);
     }
 
     changeDate(value: string) {
-      this.date = value
+      this.date = value;
     }
 
     toggleGoBackModal(val: boolean) {
-      this.isGoBackModalOpen = val
+      this.isGoBackModalOpen = val;
     }
 
     toggleDeleteFileModal(val: boolean) {
-      this.isDeleteFileModalOpen = val
+      this.isDeleteFileModalOpen = val;
     }
 
     goBack() {
-      this.toggleGoBackModal(false)
-      this.fileList = []
+      this.toggleGoBackModal(false);
+      this.fileList = [];
+    }
+
+    inputSelect(val: string) {
+      this.selectValue = val;
     }
 
     @Emit('close-modal')
     closeModal() {
-      return false
+      return false;
     }
   }
 </script>
@@ -220,18 +271,12 @@
       padding: 40px 25px;
     }
 
-    &__close {
+    &__close-btn {
       position: absolute;
       top: 12px;
       right: 12px;
-      width: 34px;
-      height: 34px;
 
-      & /deep/ .q-btn__wrapper {
-        padding: 0;
-      }
-
-      & /deep/ .q-btn__wrapper:before {
+      & ::v-deep .q-btn__wrapper:before {
         box-shadow: 0 4px 15px $shadow-color;
       }
 
@@ -242,29 +287,8 @@
       }
     }
 
-    &__close.q-hoverable:hover {
-      /deep/ .q-focus-helper {
-        background: $light-white;
-      }
-    }
-
     &__back-btn {
-      cursor: pointer;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-
-      &-icon {
-        width: 4px;
-        height: 8px;
-        color: $accent-color;
-      }
-
-      &-text {
-        margin-left: 16px;
-        font-size: 12px;
-        line-height: 150%;
-      }
+      margin-bottom: 10px;
     }
 
     &__title {
@@ -334,17 +358,8 @@
     }
 
     &__select {
-      max-width: 310px;
       margin-top: 34px;
       margin-bottom: 14px;
-
-      /deep/ .q-field__inner {
-        background: $light-background;
-      }
-
-      /deep/ .q-field__append {
-        padding-right: 5px;
-      }
     }
 
     &__bottom-text {
@@ -358,38 +373,12 @@
     }
 
     &__load-btn {
-      height: 56px;
-      border-radius: 22px;
-      background-color: $accent-color;
-      margin-top: 43px;
-
-      /deep/ .q-btn__wrapper {
-        padding: 8px 20px 8px 8px;
-      }
-
-      &-icon-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: $light-white;
-        border-radius: 16px;
-        width: 34px;
-        height: 40px;
-      }
+      margin-top: 40px;
 
       &-icon {
         width: 24px;
         height: 24px;
         color: $accent-color;
-      }
-
-      &-text {
-        margin-left: 12px;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 140%;
-        color: $light-white;
-        text-transform: none;
       }
     }
 
@@ -453,6 +442,22 @@
         cursor: pointer;
         margin-left: 6px;
         color: $red-color;
+      }
+    }
+
+    &__back-modal-btn {
+      &-icon {
+        width: 4px;
+        height: 8px;
+        color: $light-white;
+      }
+    }
+
+    &__delete-file-modal-btn {
+      &-icon {
+        width: 12px;
+        height: 14px;
+        color: $light-white;
       }
     }
   }

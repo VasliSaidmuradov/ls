@@ -208,7 +208,7 @@ export default class CheckAcceptCode extends AuthMixin {
   &__code-item {
     margin-right: 18px;
 
-   /deep/ .q-input {
+   ::v-deep .q-input {
       background: $light-background;
       border-radius: 16px;
       display: flex;

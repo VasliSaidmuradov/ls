@@ -1,9 +1,19 @@
 <template>
   <q-dialog :value="isFileListSliderModalOpen" @hide="closeModal">
     <div class="modal">
-      <q-btn class="modal__close" v-close-popup>
-        <icon name="close-icon" class="modal__close-icon"/>
-      </q-btn>
+
+      <main-btn
+          v-close-popup
+          class="modal__close-btn"
+          :type="'only-icon'"
+          :bcg-color="'#ffffff'"
+          :width="34"
+          :height="34"
+      >
+        <template v-slot:icon>
+          <icon name="close-icon" class="modal__close-btn-icon"/>
+        </template>
+      </main-btn>
 
       <img src="@/assets/file.jpg" class="modal__file-img" alt="" v-if="currentPage === 1">
 
@@ -19,26 +29,36 @@
 
       <div class="modal__action-block-wrapper">
         <div class="modal__action-block">
-          <q-btn
-              class="modal__action-block-btn"
-              @click="btnPrevClick"
-              :disable="currentPage === 1"
+          <main-btn
+            class="modal__action-block-btn"
+            :type="'only-icon'"
+            :disabled="currentPage === 1"
+            :width="32"
+            :height="32"
+            @click-btn="btnPrevClick"
           >
-            <icon name="next-icon" class="modal__action-block-btn-icon"/>
-          </q-btn>
+            <template v-slot:icon>
+              <icon name="next-icon" class="modal__action-block-btn-icon"/>
+            </template>
+          </main-btn>
 
           <div class="modal__action-block-middle-wrapper">
             <icon name="delete-icon" class="modal__action-block-delete-icon"/>
             <icon name="download-icon" class="modal__action-block-download-icon"/>
           </div>
 
-          <q-btn
+          <main-btn
               class="modal__action-block-btn"
-              @click="btnNextClick"
-              :disable="currentPage === countPages.length + 1"
+              :type="'only-icon'"
+              :disabled="currentPage === countPages.length + 1"
+              :width="32"
+              :height="32"
+              @click-btn="btnNextClick"
           >
-            <icon name="next-icon" class="modal__action-block-btn-icon modal__action-block-btn-icon--right"/>
-          </q-btn>
+            <template v-slot:icon>
+              <icon name="next-icon" class="modal__action-block-btn-icon modal__action-block-btn-icon-right"/>
+            </template>
+          </main-btn>
         </div>
       </div>
     </div>
@@ -47,8 +67,11 @@
 
 <script lang="ts">
   import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 
-  @Component({})
+  @Component({
+    components: { MainBtn }
+  })
   export default class FileListSliderModal extends Vue {
     @Prop({required: true}) isFileListSliderModalOpen: boolean
 
@@ -81,23 +104,15 @@
       max-width: 320px;
     }
 
-    &__close {
+    &__close-btn {
       position: absolute;
       top: 12px;
       right: -62px;
-      width: 34px;
-      height: 34px;
-      background-color: $light-white;
-
       @include media-breakpoint-up($breakpoint-sm) {
         right: -35px;
       }
 
-      & /deep/ .q-btn__wrapper {
-        padding: 0;
-      }
-
-      & /deep/ .q-btn__wrapper:before {
+      & ::v-deep .q-btn__wrapper:before {
         box-shadow: 0 4px 15px $shadow-color;
       }
 
@@ -105,12 +120,6 @@
         width: 8.28px;
         height: 8.28px;
         color: $accent-color;
-      }
-    }
-
-    &__close.q-hoverable:hover {
-      /deep/.q-focus-helper {
-        background: $light-white;
       }
     }
 
@@ -181,30 +190,12 @@
       background-color: $light-background;
       border-radius: 100px;
 
-      &-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: $accent-color;
-        border-radius: 10px;
-        width: 32px;
-        height: 32px;
-
-        /deep/ .q-btn__wrapper {
-          padding: 0 !important;
-
-          svg {
-            width: 4px;
-          }
-        }
-      }
-
       &-btn-icon {
         width: 4px;
         height: 8px;
         color: $light-white;
 
-        &--right {
+        &-right {
           transform: rotate(180deg);
         }
       }

@@ -9,6 +9,7 @@
   font-size: 12px !important;
   line-height: 150% !important;
   border-radius: 8px !important;
+
   &:before {
     content: '';
     position: absolute;
@@ -24,10 +25,14 @@
   overflow-y: visible !important;
 }
 
+//btn:hover btn:focus
 
-//btn
-.q-btn {
-  /deep/ .q-btn__wrapper:before {
-    box-shadow: none;
-  }
+body.desktop .q-hoverable:hover > .q-focus-helper {
+  background: none;
+}
+
+
+//select-menu
+.q-menu {
+  box-shadow: none;
 }

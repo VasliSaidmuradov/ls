@@ -1,7 +1,7 @@
 <template>
   <div class="base-page-header">
     <div class="base-page-header__back">
-      <BackBtn />
+      <BackBtn :type="2" @go-back="goBack"/>
     </div>
 
     <h4 class="base-page-header__title">{{title}}</h4>
@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import BackBtn from '@/components/BackBtn.vue';
+import BackBtn from '@/components/UI/buttons/BackBtn.vue';
 
 @Component({
   components: {
@@ -19,6 +19,10 @@ import BackBtn from '@/components/BackBtn.vue';
 })
 export default class BasePageHeader extends Vue {
 @Prop() title: string;
+
+  goBack() {
+    this.$router.go(-1)
+  }
 
 }
 </script>

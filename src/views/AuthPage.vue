@@ -136,7 +136,7 @@ export default class AuthPage extends AuthMixin {
   &__content-page-mode-btn {
     box-shadow: unset;
 
-    /deep/ .q-btn {
+    ::v-deep .q-btn {
       text-transform: none !important;
       font-weight: 500;
       font-size: 14px;
