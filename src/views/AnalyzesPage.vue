@@ -1,8 +1,8 @@
 <template>
   <div class="analyzes-page layout">
     <chart-component
-        :x-data="xData"
         :main-data="mainData"
+        :date-range="dateRange"
     />
   </div>
 </template>
@@ -15,11 +15,12 @@
     components: { ChartComponent },
   })
   export default class AnalyzesPage extends Vue {
+    dateRange = [new Date(2020, 3, 1), new Date(2020, 7, 30)]
     mainData = {
       'name': 'Аполипопротеид В', // Название биомаркера
       'results': [
         {
-          'date': '2020-04-12', // Дата сдачи
+          'date': '2020-04-12', // Дата сдачи  //12 апреля 2020
           'value': 0.1, // Результат анализа
           'analyzer': { // Аппарат на котором проводилось исследование
             'name': 'AU 680',
@@ -34,7 +35,7 @@
           },
         },
         {
-          'date': '2020-05-18',
+          'date': '2020-05-18',//18 мая 2020
           'value': 0.56,
           'analyzer': {
             'name': 'AU 680',
@@ -49,7 +50,7 @@
           },
         },
         {
-          'date': '2020-06-25',
+          'date': '2020-06-25',//25 июня 2020
           'value': 0.78,
           'analyzer': { // Тут пример, когда анализ сдавался в другой лаборатори и в ней использовался другой аппарат с другими реф. зонами
             'name': 'GTX 1080',
@@ -64,7 +65,7 @@
           },
         },
         {
-          'date': '2020-07-28',
+          'date': '2020-07-28',//28 июля 2020
           'value': 1.07,
           'analyzer': {
             'name': 'AU 680',
@@ -79,7 +80,7 @@
           },
         },
         {
-          'date': '2020-08-16',
+          'date': '2020-08-16',//16 августа 2020
           'value': 1.02,
           'analyzer': {
             'name': 'AU 680',
@@ -95,11 +96,11 @@
         },
       ],
     };
-    xData: Array<string> = [];
 
-    mounted() {
-      this.xData = ['Апрель', 'Май', 'Июнь', 'Июль.', 'Авг.', 'Сент.'];
-    }
+    // mounted() {
+    //
+    // }
+
   }
 </script>
 
