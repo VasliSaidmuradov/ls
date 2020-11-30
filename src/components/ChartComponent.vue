@@ -1,27 +1,5 @@
 <template>
-  <div :style="styleObj" ref="wrapper">
-    <!--   <svg width="500" height="500">-->
-    <!--     <rect fill="#8ab200" x="0" y="350" height="150" width="100"></rect>-->
-    <!--     <rect fill="#8ab200" x="100" y="450" height="50" width="100"></rect>-->
-    <!--     <rect fill="#8ab200" x="200" y="470" height="30" width="100"></rect>-->
-    <!--     <rect fill="#8ab200" x="300" y="380" height="120" width="100"></rect>-->
-    <!--     <rect fill="#8ab200" x="400" y="20" height="480" width="100"></rect>-->
-    <!--   </svg>-->
-
-    <!--    <svg :width="width" :height="height">-->
-    <!--      <g transform="translate(50, 50)">-->
-    <!--        <rect-->
-    <!--            v-for="(s, idx) in series"-->
-    <!--            :fill="`#8a${Number(255 / series.length * (idx + 1)).toString(16)}00`"-->
-    <!--            :key="idx"-->
-    <!--            :x="idx * innerWidth / series.length"-->
-    <!--            :y="innerHeight - s"-->
-    <!--            :height="s"-->
-    <!--            :width="innerWidth / series.length"-->
-    <!--            :style="'transition: all 1s ease'"-->
-    <!--        />-->
-    <!--      </g>-->
-    <!--    </svg>-->
+  <div ref="wrapper">
   </div>
 </template>
 
@@ -44,14 +22,11 @@
 
   @Component({})
   export default class ChartComponent extends Vue {
-    @Prop() styleObj: object;
-
     $refs: IRefs & Vue['$refs'];
 
-    width = 500;
-    height = 500;
-    innerWidth = 400;
-    innerHeight = 400;
+    @Prop() mainData: Array<any>
+    @Prop() xData: Array<any>
+
     series: Array<any> = [];
     intervalId: any;
 
@@ -102,10 +77,6 @@
       const indexes: number[] = Array.from({ length: currentData.length }, (el, index) => index);
       const x = d3ScaleBand().range([0, innerWidth]).domain(indexes);
       const y = d3ScaleLinear().range([innerHeight, 0]).domain([0, maxValue]);
-      const xColor = d3ScaleLinear()
-        .domain([indexes[0], indexes[indexes.length - 1]])
-        .interpolate(d3InterpolateRgb)
-        .range(['#8a0000', '#8ab200']);
 
       // ПУНКТИРНЫЕ ЛИНИИ
       gEnter.append('g')
@@ -128,7 +99,7 @@
 
       const rectEnter = rectData.enter()
         .append('rect')
-        .attr('fill', (d: any, idx: any) => xColor(idx))
+        .attr('fill', '#63C58A')
         .attr('x', (d: any, idx: any) => x(idx))
         .attr('y', (d: any) => y(d))
         .attr('width', innerWidth / currentData.length)
