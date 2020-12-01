@@ -50,10 +50,13 @@ export default class LatestResults extends Vue {
 <style lang="scss" scoped>
 .latest-result {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 24px;
 
   @include media-breakpoint-up($breakpoint-pre-md) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @include media-breakpoint-up($breakpoint-sm) {
     grid-template-columns: 1fr;
   }
 }

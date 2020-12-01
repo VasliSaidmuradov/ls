@@ -61,7 +61,7 @@ import 'vue-phone-number-input/dist/vue-phone-number-input.css';
 import Name from '@/components/userSetting/Name.vue';
 import Mail from '@/components/userSetting/Mail.vue';
 import Surname from '@/components/userSetting/Surname.vue';
-import Patronym from '@/components/medicalCard/Patronym.vue';
+import Patronym from '@/components/userSetting/Patronym.vue';
 import Oms from '@/components/userSetting/Oms.vue';
 import Dms from '@/components/userSetting/Dms.vue';
 import Password from '@/components/userSetting/Password.vue';
@@ -95,11 +95,11 @@ import LegalInformation from '@/components/userSetting/LegalInformation.vue';
     }
 
     get phone(): string {
-      return this.$store.state.userCard.phone;
+      return this.$store.state.personalArea.patient.phone;
     }
 
     set phone(value: string) {
-      this.$store.commit('userCard/setPropertyInStore', {name: 'phone', value});
+      this.$store.commit('personalArea/setPatientProperty', {name: 'phone', value});
     }
 
     get isProfilePage(): boolean {

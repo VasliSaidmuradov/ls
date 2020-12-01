@@ -78,7 +78,6 @@ export default class HasLogin extends Mixins(AuthMixin, BaseFormMixins) {
   }
 
   setNewPhone() {
-    console.log('dad')
     this.showNewPhoneInput = true;
   }
 }

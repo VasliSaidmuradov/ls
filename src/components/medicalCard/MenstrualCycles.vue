@@ -10,6 +10,8 @@
         <label class="form-label" for="firstMenstruation">Возраст первой менструации</label>
         <q-select type="number" id="firstMenstruation"
                   for="firstMenstruation"
+                  option-label="description"
+                  map-options
                   :options="optionsFirstMenstruation"
                   class="form-select" v-model="firstMenstruation"/>
       </div>
@@ -19,7 +21,9 @@
         <q-select type="number"
                   class="form-select"
                   :options="optionsDuration"
+                  option-label="description"
                   id="durationMenstruation"
+                  map-options
                   for="durationMenstruation"
                   v-model="durationMenstruation"/>
       </div>
@@ -29,6 +33,8 @@
         <q-select class="form-select"
                   v-model="cycleDuration"
                   :options="optionsСycle"
+                  map-options
+                  option-label="description"
                   id="cycleDuration"
                   for="cycleDuration"
                   type="number" />
@@ -39,48 +45,45 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {IMedicalCard, IMedicalCardStore} from '@/interfaces/medical-card.interface';
+import {IMedicalCard, IPersonalArea} from '@/interfaces/personal-area.interface';
 
 @Component({})
 export default class MenstrualCycles extends Vue {
 
-  optionsFirstMenstruation: IMedicalCard.FirstMenstruation[] = [
-    IMedicalCard.FirstMenstruation.ELEVEN,
-    IMedicalCard.FirstMenstruation.TEN
-  ];
-
-  optionsDuration: IMedicalCard.DurationMenstruation[] = [
-    IMedicalCard.DurationMenstruation.ELEVEN,
-    IMedicalCard.DurationMenstruation.TEN
-  ];
-
-  optionsСycle: IMedicalCard.CycleDuration[] = [
-    IMedicalCard.CycleDuration.TEN,
-    IMedicalCard.CycleDuration.ELEVEN
-  ];
-
-  get firstMenstruation(): number {
-    return this.$store.state.medicalCard.firstMenstruation;
+  get optionsСycle(): IPersonalArea.ISelectOptionsItem[] {
+    return this.$store.state.personalArea.selectOptions.menstruation_cycles;
   }
 
-  set firstMenstruation(value: number) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'firstMenstruation', value})
+  get optionsDuration(): IPersonalArea.ISelectOptionsItem[] {
+    return this.$store.state.personalArea.selectOptions.menstruation_durations;
   }
 
-  get durationMenstruation(): number {
-    return this.$store.state.medicalCard.durationMenstruation;
+  get optionsFirstMenstruation(): IPersonalArea.ISelectOptionsItem[] {
+    return this.$store.state.personalArea.selectOptions.menstruation_starts;
   }
 
-  set durationMenstruation(value: number) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'durationMenstruation', value})
+  get firstMenstruation(): IPersonalArea.ISelectOptionsItem {
+    return this.$store.state.personalArea.medicalCard.menstruation_start;
   }
 
-  get cycleDuration(): number {
-    return this.$store.state.medicalCard.cycleDuration;
+  set firstMenstruation({value}: IPersonalArea.ISelectOptionsItem) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {menstruation_start: value})
   }
 
-  set cycleDuration(value: number) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'cycleDuration', value})
+  get durationMenstruation(): IPersonalArea.ISelectOptionsItem {
+    return this.$store.state.personalArea.medicalCard.menstruation_duration;
+  }
+
+  set durationMenstruation({value}: IPersonalArea.ISelectOptionsItem) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {menstruation_duration: value})
+  }
+
+  get cycleDuration(): IPersonalArea.ISelectOptionsItem {
+    return this.$store.state.personalArea.medicalCard.menstruation_cycle;
+  }
+
+  set cycleDuration({value}: IPersonalArea.ISelectOptionsItem) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {menstruation_cycle: value})
   }
 
 }

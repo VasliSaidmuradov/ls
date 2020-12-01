@@ -4,27 +4,22 @@
     <div class="" v-for="item in value" :key="item.id">
       <div class="reaction__item">
         <div class="form-input reaction__item-input">
-          <q-input v-model="item.name" :class="{'form-input--empty': !item.name}" :placeholder="data.inputPlaceholder">
+          <q-input v-model="item.title" :class="{'form-input--empty': !item.name}" :placeholder="data.inputPlaceholder">
             <q-btn class="reaction__item-delete" @click="deleteField(item.id)">
               <icon v-slot:prepend name="delete-icon"></icon>
             </q-btn>
+
+            <SaveFieldBtn v-if="item.title && item.reaction && checkOldValue(item.id, item.title, item.reaction)" v-slot:append @save="save(item.id)"/>
           </q-input>
         </div>
-        <template v-if="item.reaction.length">
-          <div class="reaction__item-area form-input form-input--area" v-for="(reaction, index) in item.reaction" :key="index">
-            <q-input type="textarea" v-model="reaction.value" :class="{'form-input--empty': !reaction.value}" :placeholder="data.areaPlaceholder">
-              <q-btn class="reaction__item-delete" @click="deleteReactions(item.id, index)">
-                <icon name="delete-icon" v-slot:prepend></icon>
-              </q-btn>
-            </q-input>
+          <div class="reaction__item-area form-input form-input--area">
+            <q-input :rules="rules"
+                     type="textarea"
+                     v-model="item.reaction"
+                     :class="{'form-input--empty': !item.reaction}"
+                     ref="reaction"
+                     :placeholder="data.areaPlaceholder" />
           </div>
-        </template>
-        <q-btn class="reaction__add reaction__add--reaction" @click="addReaction(item.id)">
-           <span class="reaction__add-icon">
-            <icon name="add-icon"></icon>
-          </span>
-          <span class="reaction__add-text">{{data.addReactionBtnText}}</span>
-        </q-btn>
       </div>
     </div>
     <q-btn class="reaction__add reaction__add--drug" @click="addField">
@@ -37,50 +32,61 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
-import {IMedicalCardStore, IMedicalCard} from '@/interfaces/medical-card.interface';
-import IAddReactionsFiledData = IMedicalCard.IAddReactionsFiledData;
-import IReaction = IMedicalCard.IReaction;
+import { Component, Prop } from 'vue-property-decorator';
+import {IMedicalCard} from '@/interfaces/personal-area.interface';
+import SaveFieldBtn from '@/components/SaveField.vue';
+import BaseFormMixins from '@/mixins/base-form-mixins';
 
-@Component({})
-export default class ComponentWithAddReaction extends Vue {
+@Component({
+  components: {
+    SaveFieldBtn
+  }
+})
+export default class ComponentWithAddReaction extends BaseFormMixins {
 
-  @Prop() data: IAddReactionsFiledData;
-  @Prop() value: IReaction[];
+  @Prop() data: IMedicalCard.IAddReactionsFiledData;
+  @Prop() value: IMedicalCard.IReaction[];
 
-  addReaction(id: string) {
-    this.$store.commit('medicalCard/addReaction', {id, reactionValue: {value: ''}, property: this.data.property})
+  rules: Function[] = [];
+
+  oldValue: IMedicalCard.IReaction[] = [];
+
+  checkOldValue(id: string, title: string, reaction: string) {
+    const data = this.oldValue.find((item: IMedicalCard.IReaction) => item.id === id)
+    return data?.title !== title || data?.reaction !== reaction;
+  }
+
+  mounted() {
+    this.rules.push(this.inputRules.required);
+    this.oldValue = this.value.map((item: IMedicalCard.IReaction) => Object.assign({}, item));
   }
 
   addField() {
-    const items = this.value;
-    items.push({
-      id: `f${(~~(Math.random()*1e8)).toString(16)}`,
-      name: '',
-      reaction: [],
-    });
-
-    this.$store.commit('medicalCard/setPropertyInStore', {name: this.data.property, value: items})
+    this.$store.dispatch('personalArea/addReactionItem', {endpoint: this.data.endPoint, reactionsData: this.getReactionsData()})
   }
 
-  deleteReactions(fieldId: string, index: number) {
-    const fieldIndex: number | undefined = this.value.findIndex(item => item.id === fieldId);
-
-    if (fieldIndex !== -1) {
-      const items = this.value;
-      items[fieldIndex].reaction.splice(index, 1);
-      this.$store.commit('medicalCard/setPropertyInStore', {name: this.data.property, value: items})
+  getReactionsData(): {title: string; reaction: string} {
+    return {
+      title: '',
+      reaction: '',
     }
   }
 
+  save(id: string) {
+    this.$store.dispatch('personalArea/updateReactionsItem', {id, endpoint: this.data.endPoint, item: this.getItemById(id)})
+  }
+
+  getItemById(id: string): IMedicalCard.IReaction | undefined {
+    return this.value.find((item: IMedicalCard.IReaction) => item.id === id);
+  }
+
   deleteField(id: string) {
-    const items = this.value.filter(item => item.id !== id);
-    this.$store.commit('medicalCard/setPropertyInStore', {name: this.data.property, value: items})
+    this.$store.dispatch('personalArea/deleteReactionItem', {id, endpoint: this.data.endPoint})
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .reaction {
     &__title {
       font-weight: 500;
@@ -90,11 +96,16 @@ export default class ComponentWithAddReaction extends Vue {
 
     &__item-input, &__item-area {
       margin-bottom: 15px;
+    }
 
+    &__item-input {
+      ::v-deep.save-field {
+        right: 40px !important;
+      }
     }
 
     &__item-delete {
-      &.q-btn {
+      &::v-deep.q-btn {
         background-color: transparent;
         color: #FBD4D6;
         height: 20px;
@@ -120,7 +131,7 @@ export default class ComponentWithAddReaction extends Vue {
     &__add {
       margin-top: 15px;
 
-      &.q-btn {
+      &::v-deep.q-btn {
         background-color: transparent;
         color: $accent-color;
         display: flex;

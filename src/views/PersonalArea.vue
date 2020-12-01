@@ -1,6 +1,6 @@
 <template>
   <div class="personal-area layout">
-    <div class="personal-area__content">
+    <div class="personal-area__content" v-if="!isLoading">
       <div class="personal-area__tabs">
         <h4 class="personal-area__title">Добрый день, Роман!</h4>
         <Tabs
@@ -39,6 +39,12 @@
         </div>
       </div>
     </div>
+    <q-spinner
+        v-else
+        color="primary"
+        size="3em"
+        :thickness="2"
+    />
   </div>
 </template>
 
@@ -77,13 +83,19 @@ export default class PersonalArea extends Vue {
     },
   ];
 
+  isLoading = false;
+
   activeTab: string = IPersonalArea.TabsName.USER_SETTINGS;
 
   mobileMenuData = PERSONAL_AREA_MENU;
 
   $route: IAppRoute<{activeTab: IPersonalArea.TabsName | string}>
 
-  mounted() {
+  async mounted() {
+    this.isLoading = true;
+    await this.$store.dispatch('personalArea/init');
+    this.isLoading = false;
+
     this.onQueryChange();
   }
 

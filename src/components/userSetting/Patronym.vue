@@ -37,11 +37,11 @@ export default class Patronym extends BaseFormMixins {
   }
 
   get patronym(): string {
-    return this.$store.state.userCard.patronym;
+    return this.$store.state.personalArea.patient.patronymic;
   }
 
   set patronym(value: string) {
-    this.$store.commit('userCard/setPropertyInStore', {name: 'patronym', value: this.checkInputValueByRegExp(this.onlyLetters, value)});
+    this.$store.commit('personalArea/setPatientProperty', {name: 'patronymic', value: this.checkInputValueByRegExp(this.onlyLetters, value)});
   }
 
 }

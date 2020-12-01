@@ -2,7 +2,7 @@
   <div class="race-select">
       <div class="medical-card__select form-select">
         <label for="race" class="form-label" @click="showSelectOptions($refs.race)">Раса</label>
-        <q-select for="race" id="race" hide-dropdown-icon v-model="race" :options="options" ref="race">
+        <q-select for="race" id="race" map-options option-label="description" hide-dropdown-icon v-model="race" :options="options" ref="race">
             <div class="select-icon">
               <icon name="select-icon" v-slot:appennd></icon>
             </div>
@@ -13,25 +13,24 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {IMedicalCard} from '@/interfaces/medical-card.interface';
 import BaseFormMixins from '@/mixins/base-form-mixins';
+import {IPersonalArea} from '@/interfaces/personal-area.interface';
 
 @Component({
   mixins: [BaseFormMixins],
 })
 export default class Race extends Vue {
 
-  options: IMedicalCard.Race[] = [
-    IMedicalCard.Race.CAUCASIAN,
-    IMedicalCard.Race.NEGROID
-  ];
-
-  get race(): IMedicalCard.Race {
-    return this.$store.state.medicalCard.race;
+  get options(): IPersonalArea.ISelectOptionsItem[] {
+    return this.$store.state.personalArea.selectOptions.races;
   }
 
-  set race(value: IMedicalCard.Race) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'race', value});
+  get race(): IPersonalArea.ISelectOptionsItem {
+    return this.$store.state.personalArea.medicalCard.race;
+  }
+
+  set race({value}: IPersonalArea.ISelectOptionsItem) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {race: value});
   }
 
 }

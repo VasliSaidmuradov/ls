@@ -13,7 +13,7 @@
             name="biologicalSex"
             v-model="biologicalSex"
             padding="13px 25px"
-            :options="options"
+            :options="genders"
         />
       </div>
     </div>
@@ -22,26 +22,28 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {IMedicalCard} from '@/interfaces/medical-card.interface';
+import {IMedicalCard, IPersonalArea, IPersonalAreaStore} from '@/interfaces/personal-area.interface';
+import BaseFormMixins from '@/mixins/base-form-mixins';
 
 @Component({})
-export default class BiologicalSex extends Vue {
+export default class BiologicalSex extends BaseFormMixins {
 
-  options = [{
-    label: 'Мужской',
-    value: IMedicalCard.BiologicalSex.MAN,
-  },{
-    label: 'Женский',
-    value: IMedicalCard.BiologicalSex.WOMAN,
-  }];
-
-
-  get biologicalSex(): IMedicalCard.BiologicalSex {
-    return this.$store.state.medicalCard.biologicalSex;
+  get genders() {
+    return this.$store.state.personalArea.selectOptions?.genders
+        ?.map((item: IPersonalArea.ISelectOptionsItem) => {
+          return {
+            label: item.description,
+            value: item.value
+          }
+        })
   }
 
-  set biologicalSex(value: IMedicalCard.BiologicalSex) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'biologicalSex', value});
+  get biologicalSex(): number {
+    return this.$store.state.personalArea.medicalCard.gender;
+  }
+
+  set biologicalSex(value: number) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {gender: value})
   }
 }
 </script>

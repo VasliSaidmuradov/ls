@@ -1,7 +1,14 @@
 <template>
   <div class="nationality-select form-select">
     <label for="nationality" class="form-label" @click="showSelectOptions($refs.nationality)">Национальность (выберите страну)</label>
-    <q-select id="nationality" for="nationality" v-model="nationality" hide-dropdown-icon :options="options" ref="nationality">
+    <q-select id="nationality"
+              option-label="description"
+              for="nationality"
+              v-model="nationality"
+              map-options
+              hide-dropdown-icon
+              :options="options"
+              ref="nationality">
       <div class="select-icon">
         <icon name="select-icon" v-slot:appennd ></icon>
       </div>
@@ -11,24 +18,29 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {IMedicalCard} from '@/interfaces/medical-card.interface';
 import BaseFormMixins from '@/mixins/base-form-mixins';
+import {QInput} from 'quasar';
+import {IPersonalArea, IPersonalAreaStore} from '@/interfaces/personal-area.interface';
+
+export interface IRefs {
+  nationality: QInput;
+}
 
 @Component({
   mixins: [BaseFormMixins],
 })
 export default class Nationality extends Vue {
-  options: IMedicalCard.Nationality[] = [
-    IMedicalCard.Nationality.BELARUS,
-    IMedicalCard.Nationality.UKRAINE,
-  ]
 
-  get nationality(): IMedicalCard.Nationality {
-    return this.$store.state.medicalCard.nationality;
+  get options(): IPersonalArea.ISelectOptionsItem[] {
+    return this.$store.state.personalArea.selectOptions.countries;
   }
 
-  set nationality(value: IMedicalCard.Nationality) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'nationality', value});
+  get nationality(): IPersonalArea.ISelectOptionsItem {
+    return this.$store.state.personalArea.medicalCard.country;
+  }
+
+  set nationality({value}: IPersonalArea.ISelectOptionsItem) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {country: value})
   }
 }
 </script>

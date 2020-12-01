@@ -16,6 +16,8 @@
           inputFontStyle="14px inter"
           suffixPosition="left"
       />
+
+      <SaveFieldBtn v-if="oldValue !== height && !checkError($refs.height)" @save="saveData" v-slot:append />
     </q-input>
   </div>
 </template>
@@ -24,24 +26,43 @@
 import { Component, Vue } from 'vue-property-decorator';
 import InputSuffix from '@/components/InputSuffix.vue';
 import BaseFormMixins from '@/mixins/base-form-mixins';
+import {QInput} from 'quasar';
+import SaveFieldBtn from '@/components/SaveField.vue';
+
+export interface IRefs {
+  height: QInput;
+}
 
 @Component({
   components: {
-    InputSuffix
+    InputSuffix,
+    SaveFieldBtn
   },
 })
 export default class Height extends BaseFormMixins {
 
   rules: Function[] = []
 
+  $refs: IRefs & Vue['$refs'];
 
-  get height() {
+  oldValue: number = 0;
+
+  mounted() {
+    this.oldValue = this.height;
     this.rules.push(this.inputRules.required)
-    return this.$store.state.medicalCard.height;
   }
 
-  set height (value: any) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'height',value: this.checkInputValueByRegExp(this.onlyNumber, value)});
+  get height(): number {
+    return this.$store.state.personalArea.medicalCard.height;
+  }
+
+  set height (value: number) {
+    this.$store.commit('personalArea/setMedicalCardProperty', {name: 'height',value: this.checkInputValueByRegExp(this.onlyNumber, value.toString())});
+  }
+
+  saveData() {
+    if (!this.$refs.height.validate()) return;
+    this.$store.dispatch('personalArea/updateMedicalCardData', {height: this.height})
   }
 
 }
