@@ -17,6 +17,8 @@
     timeFormatDefaultLocale as d3TimeFormatDefaultLocale,
   } from 'd3';
   import parse from 'date-fns/parse';
+  import format from 'date-fns/format';
+  import RU from 'date-fns/locale/ru';
 
   interface IRefs {
     wrapper: HTMLElement;
@@ -203,7 +205,7 @@
 
       // RECT INTERACTIVE
       rectEnter
-        .on('mouseenter', function(d: any) {
+        .on('mouseenter', function(e: any, d: any) {
           d3Select(this)
             .attr('opacity', 0.5)
             .attr('cursor', 'pointer');
@@ -212,9 +214,14 @@
             .duration(200)
             .style('opacity', 0.9);
 
+          tooltip.html(`
+                      <span class="tooltip-text">${d.value} ${d.laboratory.units}</span>
+                      <span class="tooltip-text">${format(prettyDate(d.date), 'd MMMM yyyy', { locale: RU })}</span>
+          `);
+
           tooltip
-            .style("left", d3Select(this).attr("x") + "px")
-            .style("top", d3Select(this).attr("y") + "px");
+            .style('left', +d3Select(this).attr('x') - 20 + 'px')
+            .style('top', +d3Select(this).attr('y') + 110 + 'px');
         })
         .on('mouseleave', function() {
           d3Select(this)
@@ -310,13 +317,19 @@
 
   ::v-deep div.chart-tooltip {
     position: absolute;
-    text-align: center;
-    width: 60px;
-    height: 28px;
-    padding: 2px;
-    font: 12px sans-serif;
-    background: lightsteelblue;
+    width: 116px;
+    height: 44px;
+    padding: 7px 8px;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 15px;
+    color: $light-white;
+    background: $accent-color;
     border-radius: 8px;
     pointer-events: none;
+  }
+
+  ::v-deep span.tooltip-text {
+    display: block;
   }
 </style>
