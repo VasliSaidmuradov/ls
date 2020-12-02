@@ -131,7 +131,7 @@ export default class CheckAcceptCode extends AuthMixin {
 
 
   authUser(authType: IAuth.AuthMode) {
-    this.$store.dispatch('auth/authUser', {data: this.setAuthData(), authType})
+    this.$store.dispatch('auth/authUser', {authData: this.setAuthData(), authType})
       .then((status: boolean) => this.afterCodeConfirm(status))
   }
 
@@ -147,8 +147,8 @@ export default class CheckAcceptCode extends AuthMixin {
     }
 
     if (this.authType === IAuth.AuthMode.REGISTRATION) {
-      data.name = this.$store.state.userCard.name;
-      data.surname = this.$store.state.userCard.surname;
+      data.name = this.$store.state.personalArea.patient.name;
+      data.surname = this.$store.state.personalArea.patient.surname;
     }
 
     return data;

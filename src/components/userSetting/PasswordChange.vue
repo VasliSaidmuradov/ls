@@ -99,10 +99,10 @@
 
 <script lang="ts">
   import { Component, Prop, Vue } from 'vue-property-decorator';
-  import { IUserCard } from '../../interfaces/user-card.interface';
   import passwordMeter from 'vue-simple-password-meter';
   import BaseFormMixins from '@/mixins/base-form-mixins';
   import { QInput } from 'quasar';
+  import {IUserCard} from '@/interfaces/personal-area.interface';
 
   interface IRefs {
     newPassword: QInput;
@@ -153,9 +153,8 @@
     }
 
     set password(value: string) {
-      this.$store.commit('userCard/setPropertyInStore', { name: 'password', value });
+      this.$store.commit('personalArea/setPatientProperty', { name: 'password', value });
     }
-
 
     onScore({ score, strength }: { score: number; strength: string }) {
       if (Object.keys(this.passwordStrengthText).includes(strength)) this.passwordStrength = strength;

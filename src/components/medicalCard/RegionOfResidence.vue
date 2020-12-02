@@ -6,7 +6,7 @@
           name="regionOfResidence"
           v-model="regionOfResidence"
           padding="13px 25px"
-          :options="options"
+          :options="regionTypes"
       />
     </div>
   </div>
@@ -14,25 +14,27 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {IMedicalCard} from '@/interfaces/medical-card.interface';
+import {IMedicalCard, IPersonalArea} from '@/interfaces/personal-area.interface';
 
 @Component({})
 export default class RegionOfResidence extends Vue {
 
-  options: IMedicalCard.IBaseFormOptions<IMedicalCard.RegionOfResidence>[] = [{
-    label: 'Городская местность',
-    value: IMedicalCard.RegionOfResidence.URBAN,
-  },{
-    label: 'Сельская',
-    value: IMedicalCard.RegionOfResidence.RURAL,
-  }]
-
-  get regionOfResidence(): IMedicalCard.RegionOfResidence {
-    return this.$store.state.medicalCard.regionOfResidence;
+  get regionTypes(): {label: string; value: string | number}[] {
+    return this.$store.state.personalArea.selectOptions?.region_types
+        ?.map((item: IPersonalArea.ISelectOptionsItem) => {
+          return {
+            label: item.description,
+            value: item.value,
+          }
+        })
   }
 
-  set regionOfResidence(value: IMedicalCard.RegionOfResidence) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'regionOfResidence', value});
+  get regionOfResidence(): number {
+    return this.$store.state.personalArea.medicalCard.region_type;
+  }
+
+  set regionOfResidence(value: number) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {region_type: value});
   }
 
 }

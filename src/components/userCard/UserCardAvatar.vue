@@ -28,8 +28,14 @@ export default class UserCardAvatar extends Vue {
     this.$refs.uploader.click();
   }
 
+  get avatar(): string {
+    return this.$store.state.personalArea.patient.avatar || 'https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg';
+  }
+
   onFileGet(fileList: FileList) {
-    this.url = URL.createObjectURL(fileList[0]);
+    const formData = new FormData();
+    formData.append('avatar', fileList[0], fileList[0].name);
+    this.$store.dispatch('personalArea/changeAvatar', formData);
   }
 }
 </script>

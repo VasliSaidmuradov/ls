@@ -47,11 +47,11 @@ export default class Name extends BaseFormMixins {
 
 
   get name(): string {
-    return this.$store.state.userCard.name;
+    return this.$store.state.personalArea.patient.name;
   }
 
   set name(value: string) {
-    this.$store.commit('userCard/setPropertyInStore', {name: 'name', value: this.checkInputValueByRegExp(this.onlyLetters, value)});
+    this.$store.commit('personalArea/setPatientProperty', {name: 'name', value: this.checkInputValueByRegExp(this.onlyLetters, value)});
   }
 
   validate(): Promise<boolean> | boolean {

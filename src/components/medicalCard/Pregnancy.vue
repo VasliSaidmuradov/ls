@@ -21,6 +21,9 @@
               type="number"
               for="pregnantCount"
               id="pregnantCount"
+              :rules="rules"
+              ref="pregnantCount"
+              @blur="savePregnantCount"
               v-model.number="pregnantCount"
           />
         </div>
@@ -59,18 +62,11 @@
 
           <div class="pregnancy__footer-content" v-if="isPregnantNow">
             <div class="pregnancy__footer-date">
-              <label class="form-label" @click="showPopup = true">Дата последней менструации</label>
-              <q-input class="form-input"
-                       @click="showPopup = !showPopup"
-                       :class="{'form-input--empty': !lastMenstruation}"
-                       :value="lastMenstruation ? $date(new Date(lastMenstruation),'dd MMMM yyyy'): ''"/>
-                <q-dialog
-                    @keydown.enter="birthdayPopup = false"
-                    @hide="onClose"
-                    v-model="showPopup"
-                    ref="lastMenstruation">
-                  <q-date v-model="lastMenstruation"></q-date>
-                </q-dialog>
+              <InputDate
+                  :value="lastMenstruation"
+                  label="Дата последней менструации"
+                  placeholder="введие дату"
+                  @change-value="lastMenstruationChange"/>
             <div class="pregnancy__footer-desk">
               Эта информация нужна для определения триместров беременности, которые в свою очередь влияют на анализы и референсные зоны
             </div>
@@ -83,88 +79,114 @@
 
 <script lang="ts">
 import { Component, Vue, } from 'vue-property-decorator';
-import {IMedicalCard} from '@/interfaces/medical-card.interface';
+import BaseFormMixins from '@/mixins/base-form-mixins';
+import {QInput} from 'quasar';
+import {format} from 'date-fns';
+import {serverDateFormat} from '@/interfaces/api.interface';
+import InputDate from '@/components/InputDate.vue';
 
-@Component({})
-export default class Pregnancy extends Vue {
+export interface IRefs {
+  pregnantCount: QInput;
+}
+
+@Component({
+  components: {
+    InputDate
+  }
+})
+export default class Pregnancy extends BaseFormMixins {
   showPopup = false;
   wasPregnantOptions = [
     {
       label: 'Нет',
-      value: IMedicalCard.WasPregnant.NO,
+      value: false,
     },
     {
       label: 'Беременность была',
-      value: IMedicalCard.WasPregnant.YES,
+      value: true,
     },
-  ]
+  ];
 
-  get wasPregnant(): IMedicalCard.WasPregnant {
-    return this.$store.state.medicalCard.wasPregnant;
+  rules: Function[] = [];
+
+  $refs: IRefs & Vue['$refs'];
+
+  mounted() {
+    this.rules.push(this.inputRules.required);
   }
 
-  set wasPregnant(value: IMedicalCard.WasPregnant) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'wasPregnant', value});
+  get wasPregnant(): boolean {
+    return this.$store.state.personalArea.medicalCard.is_pregnancies;
+  }
+
+  set wasPregnant(value: boolean) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {is_pregnancies: value})
   }
 
   get pregnantCount(): number {
-    return this.$store.state.medicalCard.pregnantCount;
+    return this.$store.state.personalArea.medicalCard.pregnancies_count;
   }
 
   set pregnantCount(value) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'pregnantCount', value});
+    this.$store.commit('personalArea/setMedicalCardProperty', {name: 'pregnancies_count', value});
+  }
+
+  savePregnantCount() {
+    if (!this.$refs.pregnantCount.validate()) return;
+
+    this.$store.dispatch('personalArea/updateMedicalCardData', {pregnancies_count: this.pregnantCount});
   }
 
   get iswWasPregnant(): boolean {
-    return this.wasPregnant === 1;
+    return this.wasPregnant;
   }
 
   get childbirthIsSuccess(): boolean {
-    return this.$store.state.medicalCard.childbirthIsSuccess;
+    return this.$store.state.personalArea.medicalCard.all_pregnancies_success;
   }
 
   set childbirthIsSuccess(value: boolean) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'childbirthIsSuccess', value})
+    this.$store.dispatch('personalArea/updateMedicalCardData', {all_pregnancies_success: value});
   }
 
   get abortiont(): boolean {
-    return this.$store.state.medicalCard.abortiont;
+    return this.$store.state.personalArea.medicalCard.is_abortion;
   }
 
   set abortiont(value: boolean) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'abortiont', value})
+    this.$store.dispatch('personalArea/updateMedicalCardData', {is_abortion: value});
   }
 
   get miscarriages(): boolean {
-    return this.$store.state.medicalCard.miscarriages;
+    return this.$store.state.personalArea.medicalCard.is_miscarriages;
   }
 
   set miscarriages(value: boolean) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'miscarriages', value})
+    this.$store.dispatch('personalArea/updateMedicalCardData', {is_miscarriages: value});
   }
 
   get nonDeveloping(): boolean {
-    return this.$store.state.medicalCard.nonDeveloping;
+    return this.$store.state.personalArea.medicalCard.is_undeveloped_pregnancy;
   }
 
   set nonDeveloping(value: boolean) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'nonDeveloping', value})
+    this.$store.dispatch('personalArea/updateMedicalCardData', {is_undeveloped_pregnancy: value});
   }
 
   get isPregnantNow(): boolean {
-    return this.$store.state.medicalCard.isPregnantNow;
+    return this.$store.state.personalArea.medicalCard.is_pregnant_now;
   }
 
   set isPregnantNow(value: boolean) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'isPregnantNow', value})
+    this.$store.dispatch('personalArea/updateMedicalCardData', {is_pregnant_now: value});
   }
 
   get lastMenstruation(): string {
-    return this.$store.state.medicalCard.lastMenstruation;
+    return this.$store.state.personalArea.medicalCard.last_menstruation_date;
   }
 
-  set lastMenstruation(value: string) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'lastMenstruation', value})
+  lastMenstruationChange(value: string) {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {last_menstruation_date: format(new Date(value), serverDateFormat)})
   }
 
   onClose() {

@@ -130,7 +130,7 @@ export default class IndexPage extends Vue {
   }
 
   &__content-bottom-tabs {
-    width: 65%;
+    width: 100%;
 
     /deep/.q-tab-panel {
       padding: 0;

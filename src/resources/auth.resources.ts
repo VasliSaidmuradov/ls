@@ -1,7 +1,7 @@
 import {AppConfig} from '@/app.config';
 import Axios, {AxiosResponse} from 'axios';
 import {IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
-import {IUserCard} from '@/interfaces/user-card.interface';
+import {IUserCard} from '@/interfaces/personal-area.interface';
 
 
 class AuthResource {
@@ -44,6 +44,12 @@ class AuthResource {
     return (Axios.post(`${AppConfig.apiUrl}auth/change-cabinet/`, {
       patient_id: id,
     }) as Promise<AxiosResponse<IAuthApi.IAuthResponse>>)
+  }
+
+  updateToken(refresh: string) {
+    return (Axios.post(`${AppConfig.apiUrl}auth/refresh-tokens/`, {
+      refresh
+    }))
   }
 }
 

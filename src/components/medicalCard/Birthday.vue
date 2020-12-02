@@ -11,18 +11,22 @@
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import InputDate from "@/components/InputDate.vue";
+  import {format} from 'date-fns';
+  import {serverDateFormat} from '@/interfaces/api.interface';
 
   @Component({
     components: {InputDate}
   })
   export default class Birthday extends Vue {
+
     get birthday(): string {
-      return this.$store.state.medicalCard.birthday;
+      return this.$store.state.personalArea.medicalCard.birth_date;
     }
 
     changeBirthday(value: string) {
-      this.$store.commit('medicalCard/setPropertyInStore', {name: 'birthday', value});
+      this.$store.dispatch('personalArea/updateMedicalCardData', {birth_date: format(new Date(value), serverDateFormat)})
     }
+
   }
 </script>
 

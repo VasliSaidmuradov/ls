@@ -1,6 +1,5 @@
 import { Component, Vue } from 'vue-property-decorator';
 import {QInput, QSelect} from 'quasar';
-import {IMedicalCard} from '@/interfaces/medical-card.interface';
 
 
 @Component({})
@@ -12,7 +11,7 @@ export default class BaseFormMixins extends Vue {
 
   public inputRules = {
     maxMinlength: (val: string) => val.length > 2 && val.length <= 20 || 'Please type something',
-    required: (val: string) => val.length || 'обязательно к заполнению',
+    required: (val: string) => val.toString()?.length || 'обязательно к заполнению',
     validEmail: (val: string) => this.emailPattern.test(val) || 'Invalid email',
   };
 

@@ -13,7 +13,7 @@
         @hide="toggleDateModal(false)"
         v-model="isDateModalOpen"
     >
-      <q-date :value="value" @input="changeValue"></q-date>
+      <q-date :value="$date(new Date(value), 'yyyy/MM/dd')" @input="changeValue"></q-date>
     </q-dialog>
   </div>
 </template>
