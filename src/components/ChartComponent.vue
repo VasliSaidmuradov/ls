@@ -2,9 +2,7 @@
   <div ref="wrapper" class="chart__wrapper"
        :style="{maxWidth: width + 'px', border: '1px solid black'}"
   >
-    <svg
-        :viewBox="viewBox"
-    >
+    <svg :viewBox="viewBox">
       <g class="bars-chart" :transform="`translate(${margin.left}, ${margin.top})`">
         <!--HORIZONTAL-LINES-->
         <g class="y-horizontal"></g>
@@ -39,8 +37,25 @@
           </line>
         </g>
 
+        <!--AXIS X-->
+        <g class="x" :transform="`translate(0, ${innerHeight})`"></g>
+
+        <!--FILTER(:HOVER EFFECT)-->
+        <filter id="dropshadow" height="120%" width="200%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="1"/> <!-- stdDeviation is how much to blur -->
+          <feOffset dx="0" dy="-1" result="offsetblur"/> <!-- how much to offset -->
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.5"/> <!-- slope is the opacity of the shadow -->
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode/> <!-- this contains the offset blurred image -->
+            <feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
+          </feMerge>
+        </filter>
+
         <!--RECT-->
         <rect
+            class="rect"
             v-for="(d, idx) in data.results"
             :key="idx"
             :x="x(prettyDate(d.date))"
@@ -60,9 +75,6 @@
             <span class="tooltip-text">{{countTooltipDate(d)}}</span>
           </q-tooltip>
         </rect>
-
-        <!--AXIS X-->
-        <g class="x" :transform="`translate(0, ${innerHeight})`"></g>
 
         <!--CIRCLE ON RECT-->
         <g class="g-circle">
@@ -168,11 +180,11 @@
       return valueArray;
     }
 
-    get maxValue() {
-      return d3Max(this.valueArray);
+    get maxValue(): number {
+      return d3Max(this.valueArray) || 0;
     }
 
-    get YMaxValue() {
+    get YMaxValue(): number {
       return this.maxValue + this.maxValue / 100 * 20;
     }
 
@@ -185,6 +197,8 @@
     }
 
     get x() {
+      this.setLocale();
+
       return d3ScaleTime()
         .rangeRound(this.rangeX)
         .domain(this.domainX);
@@ -208,7 +222,7 @@
       return d3Symbol().type(d3SymbolStar).size(40)();
     }
 
-    countTooltipDate(d: any) {
+    countTooltipDate(d: any): string {
       return format(this.prettyDate(d.date), 'd MMMM yyyy', { locale: RU });
     }
 
@@ -282,7 +296,6 @@
     init() {
       this.initAxisX();
       this.initHorizontalLines();
-      this.setLocale();
     }
 
     @Watch('data', { deep: true })
@@ -314,5 +327,14 @@
     font-size: 12px;
     line-height: 15px;
     color: $light-white;
+  }
+
+  ::v-deep.rect {
+    cursor: pointer;
+
+    &:hover {
+      transition: all 0.2s ease;
+      filter: url(#dropshadow)
+    }
   }
 </style>
