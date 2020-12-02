@@ -1,6 +1,6 @@
 import {AppConfig} from '@/app.config';
 import Axios, {AxiosResponse} from 'axios';
-import {IMedicalCard, IPersonalArea} from '@/interfaces/personal-area.interface';
+import {IMedicalCard, IPersonalArea, IUserCard} from '@/interfaces/personal-area.interface';
 
 class PersonalAreaResources {
   getSelectOptions(): Promise<AxiosResponse<IPersonalArea.ISelectOptions>> {
@@ -25,6 +25,10 @@ class PersonalAreaResources {
 
   updateReactionsItem({endpoint, id, item}: {endpoint: string; id: string; item: IMedicalCard.IReaction}): Promise<AxiosResponse<IMedicalCard.IReaction>> {
     return (Axios.patch(`${AppConfig.apiUrl}medcard/${endpoint}/${id}/`, item) as Promise<AxiosResponse<IMedicalCard.IReaction>>);
+  }
+
+  changeAvatar(formData: FormData): Promise<AxiosResponse<IUserCard.IUser>> {
+    return (Axios.patch(`${AppConfig.apiUrl}patients/`, formData) as Promise<AxiosResponse<IUserCard.IUser>>)
   }
 }
 

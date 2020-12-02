@@ -150,6 +150,15 @@ export default {
       } catch (error) {
         dispatch('error/defaultErrorHandler', {error}, {root: true})
       }
+    },
+
+    async changeAvatar({commit, dispatch}: PersonalAreaStore, fromData: FormData) {
+      try {
+        const {data}: AxiosResponse<IUserCard.IUser> = await personalAreaResources.changeAvatar(fromData);
+        await dispatch('setUser', {data});
+      } catch(error) {
+        await dispatch('error/defaultErrorHandler', {error}, {root: true})
+      }
     }
   }
 };
