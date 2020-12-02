@@ -20,35 +20,35 @@
         <!--HORIZONTAL-LINES-->
         <g class="y-horizontal"></g>
 
-<!--                &lt;!&ndash;REF-ZONE-MAX&ndash;&gt;-->
-<!--                <g class="ref-zone-max">-->
-<!--                  <line-->
-<!--                      v-for="(d, idx) in data.results"-->
-<!--                      :key="idx"-->
-<!--                      :x1="countRefX1(idx)"-->
-<!--                      :x2="x(prettyDate(d.date))"-->
-<!--                      :y1="y(d.analyzer.ranges.max)"-->
-<!--                      :y2="y(d.analyzer.ranges.max)"-->
-<!--                      stroke="#63C58A"-->
-<!--                      stroke-dasharray="2, 2"-->
-<!--                  >-->
-<!--                  </line>-->
-<!--                </g>-->
+        <!--REF-ZONE-MAX-->
+        <g class="ref-zone-max">
+          <line
+              v-for="(d, idx) in data.results"
+              :key="idx"
+              :x1="countRefX1(idx)"
+              :x2="x(prettyDate(d.date))"
+              :y1="y(d.analyzer.ranges.max)"
+              :y2="y(d.analyzer.ranges.max)"
+              stroke="#63C58A"
+              stroke-dasharray="2, 2"
+          >
+          </line>
+        </g>
 
-<!--                &lt;!&ndash;REF-ZONE-MIN&ndash;&gt;-->
-<!--                <g class="ref-zone-min">-->
-<!--                  <line-->
-<!--                      v-for="(d, idx) in data.results"-->
-<!--                      :key="idx"-->
-<!--                      :x1="countRefX1(idx)"-->
-<!--                      :x2="x(prettyDate(d.date))"-->
-<!--                      :y1="y(d.analyzer.ranges.min)"-->
-<!--                      :y2="y(d.analyzer.ranges.min)"-->
-<!--                      stroke="#63C58A"-->
-<!--                      stroke-dasharray="2, 2"-->
-<!--                  >-->
-<!--                  </line>-->
-<!--                </g>-->
+        <!--REF-ZONE-MIN-->
+        <g class="ref-zone-min">
+          <line
+              v-for="(d, idx) in data.results"
+              :key="idx"
+              :x1="countRefX1(idx)"
+              :x2="x(prettyDate(d.date))"
+              :y1="y(d.analyzer.ranges.min)"
+              :y2="y(d.analyzer.ranges.min)"
+              stroke="#63C58A"
+              stroke-dasharray="2, 2"
+          >
+          </line>
+        </g>
 
         <!--RECT-->
         <rect
@@ -142,8 +142,8 @@
     };
     scales = {
       x: null,
-      y: null
-    }
+      y: null,
+    };
 
     @Prop() data: Array<any>;
     @Prop() dateRange: Array<any>;
@@ -190,7 +190,6 @@
     }
 
     get x() {
-      console.log();
       return d3ScaleTime()
         .rangeRound(this.rangeX)
         .domain(this.domainX);
@@ -217,6 +216,8 @@
     countRefX1(idx: number) {
       if (this.data.results[idx + 1]) {
         return this.x(this.prettyDate(this.data.results[idx + 1].date));
+      } else {
+        return this.x(this.prettyDate(this.data.results[idx].date));
       }
     }
 
