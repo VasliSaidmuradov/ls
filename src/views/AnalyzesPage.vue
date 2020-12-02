@@ -1,7 +1,7 @@
 <template>
   <div class="analyzes-page layout">
     <chart-component
-        :main-data="mainData"
+        :data="mainData"
         :date-range="dateRange"
     />
 
@@ -116,10 +116,6 @@
       ],
     };
 
-    // mounted() {
-    //
-    // }
-
     clickBtn1() {
       this.dateRange = [new Date(2020, 3, 1), new Date(2020, 7, 30)];
       this.mainData = {
@@ -221,12 +217,12 @@
     }
 
     clickBtn2() {
-      this.dateRange = [new Date(2020, 3, 1), new Date(2020, 7, 30)];
+      this.dateRange = [new Date(2020, 2, 1), new Date(2020, 2, 30)];
       this.mainData = {
         'name': 'Аполипопротеид В', // Название биомаркера
         'results': [
           {
-            'date': '2020-03-01', // Дата сдачи  //1 марта 2020
+            'date': '2020-03-12', // Дата сдачи  //1 марта 2020
             'value': 0.1, // Результат анализа
             'analyzer': { // Аппарат на котором проводилось исследование
               'name': 'AU 680',

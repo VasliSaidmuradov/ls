@@ -20,35 +20,35 @@
         <!--HORIZONTAL-LINES-->
         <g class="y-horizontal"></g>
 
-<!--        &lt;!&ndash;REF-ZONE-MAX&ndash;&gt;-->
-<!--        <g class="ref-zone-max">-->
-<!--          <line-->
-<!--              v-for="(d, idx) in data.results"-->
-<!--              :key="idx"-->
-<!--              :x1="countRefX1(idx)"-->
-<!--              :x2="x(prettyDate(d.date))"-->
-<!--              :y1="y(d.analyzer.ranges.max)"-->
-<!--              :y2="y(d.analyzer.ranges.max)"-->
-<!--              stroke="#63C58A"-->
-<!--              stroke-dasharray="2, 2"-->
-<!--          >-->
-<!--          </line>-->
-<!--        </g>-->
+<!--                &lt;!&ndash;REF-ZONE-MAX&ndash;&gt;-->
+<!--                <g class="ref-zone-max">-->
+<!--                  <line-->
+<!--                      v-for="(d, idx) in data.results"-->
+<!--                      :key="idx"-->
+<!--                      :x1="countRefX1(idx)"-->
+<!--                      :x2="x(prettyDate(d.date))"-->
+<!--                      :y1="y(d.analyzer.ranges.max)"-->
+<!--                      :y2="y(d.analyzer.ranges.max)"-->
+<!--                      stroke="#63C58A"-->
+<!--                      stroke-dasharray="2, 2"-->
+<!--                  >-->
+<!--                  </line>-->
+<!--                </g>-->
 
-<!--        &lt;!&ndash;REF-ZONE-MIN&ndash;&gt;-->
-<!--        <g class="ref-zone-min">-->
-<!--          <line-->
-<!--              v-for="(d, idx) in data.results"-->
-<!--              :key="idx"-->
-<!--              :x1="countRefX1(idx)"-->
-<!--              :x2="x(prettyDate(d.date))"-->
-<!--              :y1="y(d.analyzer.ranges.min)"-->
-<!--              :y2="y(d.analyzer.ranges.min)"-->
-<!--              stroke="#63C58A"-->
-<!--              stroke-dasharray="2, 2"-->
-<!--          >-->
-<!--          </line>-->
-<!--        </g>-->
+<!--                &lt;!&ndash;REF-ZONE-MIN&ndash;&gt;-->
+<!--                <g class="ref-zone-min">-->
+<!--                  <line-->
+<!--                      v-for="(d, idx) in data.results"-->
+<!--                      :key="idx"-->
+<!--                      :x1="countRefX1(idx)"-->
+<!--                      :x2="x(prettyDate(d.date))"-->
+<!--                      :y1="y(d.analyzer.ranges.min)"-->
+<!--                      :y2="y(d.analyzer.ranges.min)"-->
+<!--                      stroke="#63C58A"-->
+<!--                      stroke-dasharray="2, 2"-->
+<!--                  >-->
+<!--                  </line>-->
+<!--                </g>-->
 
         <!--RECT-->
         <rect
@@ -140,9 +140,12 @@
       bottom: 40,
       top: 0,
     };
-    data: Array<any> = [];
+    scales = {
+      x: null,
+      y: null
+    }
 
-    @Prop() mainData: Array<any>;
+    @Prop() data: Array<any>;
     @Prop() dateRange: Array<any>;
     @Prop({ default: 722 }) width: number;
     @Prop({ default: 350 }) height: number;
@@ -187,6 +190,7 @@
     }
 
     get x() {
+      console.log();
       return d3ScaleTime()
         .rangeRound(this.rangeX)
         .domain(this.domainX);
@@ -280,17 +284,21 @@
       this.initHorizontalLines();
     }
 
-    @Watch('mainData', { deep: true })
-    refreshChart(data: any) {
+    @Watch('data', { deep: true })
+    refreshChart() {
       this.setLocale();
-      this.data = data;
+      this.init();
+    }
+
+    @Watch('dateRange', { deep: true })
+    updateChart() {
+      this.setLocale();
       this.init();
     }
 
     mounted() {
-      this.setLocale();
-      this.data = this.mainData;
       this.init();
+      this.setLocale();
     }
 
     // RECT INTERACTIVE
