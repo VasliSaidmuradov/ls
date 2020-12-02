@@ -2,17 +2,6 @@
   <div ref="wrapper" class="chart__wrapper"
        :style="{maxWidth: width + 'px', border: '1px solid black'}"
   >
-    <!--    <div class="chart-tooltip"-->
-    <!--         :style="{-->
-    <!--            opacity: 1,-->
-    <!--            left: +d3Select(this).attr('x') - 20 + 'px',-->
-    <!--            top :+d3Select(this).attr('y') + 110 + 'px'-->
-    <!--         }"-->
-    <!--    >-->
-    <!--      <span class="tooltip-text">{{d.value}} {{d.laboratory.units}}</span>-->
-    <!--      <span class="tooltip-text">{{format(prettyDate(d.date), 'd MMMM yyyy', { locale: RU })}}</span>-->
-    <!--    </div>-->
-
     <svg
         :viewBox="viewBox"
     >
@@ -60,7 +49,17 @@
             :width="5"
             :height="innerHeight - y(d.value) - 5"
             :rx="3"
-        ></rect>
+        >
+          <q-tooltip
+              content-class="rect-tooltip"
+              anchor="center right"
+              self="center left"
+              :max-width="'116px'"
+          >
+            <span class="tooltip-text">{{d.value}} {{d.laboratory.units}}</span>
+            <span class="tooltip-text">{{countTooltipDate(d)}}</span>
+          </q-tooltip>
+        </rect>
 
         <!--AXIS X-->
         <g class="x" :transform="`translate(0, ${innerHeight})`"></g>
@@ -123,8 +122,8 @@
     timeFormatDefaultLocale as d3TimeFormatDefaultLocale,
   } from 'd3';
   import parse from 'date-fns/parse';
-  // import format from 'date-fns/format';
-  // import RU from 'date-fns/locale/ru';
+  import format from 'date-fns/format';
+  import RU from 'date-fns/locale/ru';
 
   interface IRefs {
     wrapper: HTMLElement;
@@ -139,10 +138,6 @@
       right: 30,
       bottom: 40,
       top: 0,
-    };
-    scales = {
-      x: null,
-      y: null,
     };
 
     @Prop() data: Array<any>;
@@ -211,6 +206,10 @@
 
     get countDStar() {
       return d3Symbol().type(d3SymbolStar).size(40)();
+    }
+
+    countTooltipDate(d: any) {
+      return format(this.prettyDate(d.date), 'd MMMM yyyy', { locale: RU });
     }
 
     countRefX1(idx: number) {
@@ -283,53 +282,22 @@
     init() {
       this.initAxisX();
       this.initHorizontalLines();
+      this.setLocale();
     }
 
     @Watch('data', { deep: true })
     refreshChart() {
-      this.setLocale();
       this.init();
     }
 
     @Watch('dateRange', { deep: true })
     updateChart() {
-      this.setLocale();
       this.init();
     }
 
     mounted() {
       this.init();
-      this.setLocale();
     }
-
-    // RECT INTERACTIVE
-    // rectEnter
-    //   .on('mouseenter', function(e: any, d: any) {
-    //     d3Select(this)
-    //       .attr('opacity', 0.5)
-    //       .attr('cursor', 'pointer');
-    //
-    //     tooltip.transition()
-    //       .duration(200)
-    //       .style('opacity', 0.9);
-    //
-    //     tooltip.html(`
-    //                 <span class="tooltip-text">${d.value} ${d.laboratory.units}</span>
-    //                 <span class="tooltip-text">${format(prettyDate(d.date), 'd MMMM yyyy', { locale: RU })}</span>
-    //     `);
-    //
-    //     tooltip
-    //       .style('left', +d3Select(this).attr('x') - 20 + 'px')
-    //       .style('top', +d3Select(this).attr('y') + 110 + 'px');
-    //   })
-    //   .on('mouseleave', function() {
-    //     d3Select(this)
-    //       .attr('opacity', 1);
-    //
-    //     tooltip.transition()
-    //       .duration(500)
-    //       .style('opacity', 0);
-    //   });
   }
 </script>
 
@@ -340,21 +308,11 @@
     line-height: 15px;
   }
 
-  ::v-deep div.chart-tooltip {
-    position: absolute;
-    width: 116px;
-    height: 44px;
-    padding: 7px 8px;
+  .tooltip-text {
+    display: block;
     font-weight: 500;
     font-size: 12px;
     line-height: 15px;
     color: $light-white;
-    background: $accent-color;
-    border-radius: 8px;
-    pointer-events: none;
-  }
-
-  ::v-deep span.tooltip-text {
-    display: block;
   }
 </style>
