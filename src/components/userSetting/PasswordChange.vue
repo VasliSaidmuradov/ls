@@ -185,7 +185,6 @@
       if (this.validate()) return;
       this.$store.dispatch('auth/changePatientsData', {
         changedData: { password: this.newPassword },
-        id: this.$store.state.personalArea.patient.id,
       })
       .then((status: boolean) => {
         if (status) {

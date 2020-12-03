@@ -34,8 +34,8 @@ class AuthResource {
     }) as Promise<AxiosResponse<IAuthApi.ILoginByIdResponse>>)
   }
 
-  changePatientsData({changedData, id}: {changedData: any; id: string}): Promise<AxiosResponse<IUserCard.IUser>> {
-    return (Axios.patch(`${AppConfig.apiUrl}patients/${id}/`, {
+  changePatientsData({changedData}: {changedData: any}): Promise<AxiosResponse<IUserCard.IUser>> {
+    return (Axios.patch(`${AppConfig.apiUrl}patient/`, {
       ...changedData
     }) as Promise<AxiosResponse<IUserCard.IUser>>)
   }

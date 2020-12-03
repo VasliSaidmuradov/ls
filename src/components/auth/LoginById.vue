@@ -48,22 +48,6 @@
         </div>
       </div>
 
-      <div class="login-by-id__has-login" v-if="hasLogin">
-        <div class="login-by-id__has-login-desk">У вас есть login</div>
-        <q-btn padding="8px"
-               class="button1--bordered-with-icon button1"
-               @click="goToLoginAuth">
-        <span class="login-by-id__btn-icon icon">
-          <icon name="next-icon"></icon>
-        </span>
-          <span class="login-by-id__btn-text">
-        Войти с помощью login
-      </span>
-        </q-btn>
-
-        <q-btn class="not-found-user__actions-register" @click="loginWithResearchData">Остаться</q-btn>
-      </div>
-
       <q-btn padding="8px"
              class="button1--bordered-with-icon button1 login-by-id__btn"
              @click="checkResearchDate ? checkUserByResearchDate() : checkUserById()">
@@ -130,7 +114,6 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   researchDate: string | Date = new Date();
   rules: Function[] = [];
   notFoundUser = false;
-  hasLogin = false;
 
   $refs: IRefs & Vue['$refs'];
 
@@ -186,18 +169,9 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
     }
   }
 
-  goToLoginAuth() {
-    this.changeStep(IAuthForOtherUser.RegistrationSteps.CHECK_USER)
-  }
-
-  loginWithResearchData() {
-    this.hasLogin = false;
-    this.checkResearchDate = true;
-  }
-
   checkHasLogin() {
     if (this.userAccountInfo.has_login && !this.userAccountInfo.only_patient_id) {
-      this.hasLogin = true;
+      this.changeStep(IAuthForOtherUser.RegistrationSteps.CHECK_USER)
     } else {
       this.checkResearchDate = true;
     }
