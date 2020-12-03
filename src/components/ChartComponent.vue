@@ -69,8 +69,8 @@
         >
           <q-tooltip
               content-class="rect-tooltip"
-              anchor="center right"
-              self="center left"
+              anchor="top left"
+              self="top right"
               :max-width="'116px'"
           >
             <span class="tooltip-text">{{d.value}} {{d.laboratory.units}}</span>
