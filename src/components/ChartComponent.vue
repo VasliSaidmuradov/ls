@@ -315,7 +315,7 @@
       const resultItem = results[idx];
       const prevResultItem = results[idx - 1];
 
-      if (results[idx - 1]) {
+      if (prevResultItem) {
         if (resultItem.analyzer.ranges.max !== prevResultItem.analyzer.ranges.max
           || resultItem.analyzer.ranges.min !== prevResultItem.analyzer.ranges.min
         ) {
