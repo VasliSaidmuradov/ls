@@ -42,6 +42,7 @@ export default new Router({
     path: ROUTE_PATH[ROUTE_NAME.INDEX_PAGE],
     name: ROUTE_NAME.INDEX_PAGE,
     component: () => import('@/views/IndexPage.vue'),
+    props: (route: Route) => ({query: route.query.showPasswordNotice}),
   }, {
     path: ROUTE_PATH[ROUTE_NAME.ANALYZES_PAGE],
     name: ROUTE_NAME.ANALYZES_PAGE,

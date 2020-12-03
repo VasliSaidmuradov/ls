@@ -51,6 +51,8 @@ import {QInput} from 'quasar';
 import {IAuth, IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
 import AuthMixin from '@/mixins/auth-mixin';
 import StatusIndicator from '@/components/StatusIndicator.vue';
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
 
 @Component({
   components: {
@@ -136,8 +138,15 @@ export default class CheckAcceptCode extends AuthMixin {
   }
 
   afterCodeConfirm(status: boolean) {
-    if (status) this.changeStep(this.steps.SET_PASSWORD);
-    else this.showError = true;
+    if (status) {
+      if (this.authType === IAuth.AuthMode.REGISTRATION) {
+        this.changeStep(this.steps.SET_PASSWORD)
+      } else {
+        this.$router.push({name: ROUTE_NAME.INDEX_PAGE, query: {showPasswordNotice: true}});
+      }
+    } else {
+      this.showError = true;
+    }
   }
 
   setAuthData(): IAuthApi.IRegisterUserInputData | IAuthApi.ILoginUserInputData {

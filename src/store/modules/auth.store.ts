@@ -144,9 +144,9 @@ export default {
       }
     },
 
-    async changePatientsData({commit, dispatch}: AuthStore, {changedData, id}: {changedData: any; id: string}) {
+    async changePatientsData({commit, dispatch}: AuthStore, {changedData}: {changedData: any}) {
       try {
-        const {data}: AxiosResponse<IUserCard.IUser> = await authResource.changePatientsData({changedData, id});
+        const {data}: AxiosResponse<IUserCard.IUser> = await authResource.changePatientsData({changedData});
         commit('personalArea/setPropertyInStore', {name: 'patient', value: data}, {root: true});
 
         return true;
