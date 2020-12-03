@@ -1,7 +1,7 @@
 import {AppConfig} from '@/app.config';
 import Axios, {AxiosResponse} from 'axios';
 import {IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
-import {IUserCard} from '@/interfaces/user-card.interface';
+import {IUserCard} from '@/interfaces/personal-area.interface';
 
 
 class AuthResource {
@@ -34,16 +34,22 @@ class AuthResource {
     }) as Promise<AxiosResponse<IAuthApi.ILoginByIdResponse>>)
   }
 
-  changePatientsData({changedData, id}: {changedData: any; id: string}): Promise<AxiosResponse<IUserCard.IUser>> {
-    return (Axios.patch(`${AppConfig.apiUrl}patients/${id}/`, {
+  changePatientsData({changedData}: {changedData: any}): Promise<AxiosResponse<IUserCard.IUser>> {
+    return (Axios.patch(`${AppConfig.apiUrl}patient/`, {
       ...changedData
     }) as Promise<AxiosResponse<IUserCard.IUser>>)
   }
 
   changeCabinet(id: string): Promise<AxiosResponse<IAuthApi.IAuthResponse>> {
     return (Axios.post(`${AppConfig.apiUrl}auth/change-cabinet/`, {
-      patient_id: id,
+      user_id: id,
     }) as Promise<AxiosResponse<IAuthApi.IAuthResponse>>)
+  }
+
+  updateToken(refresh: string) {
+    return (Axios.post(`${AppConfig.apiUrl}auth/refresh-tokens/`, {
+      refresh
+    }))
   }
 }
 

@@ -1,14 +1,13 @@
 import { IAppState } from '@/interfaces/app-state.interface';
-import {ActionContext} from 'vuex';
+import {ActionContext, Store} from 'vuex';
 import Vue from 'vue';
 import {cookeTokenKey, IAuthApi, IAuthForOtherUser, IAuthStore} from '@/interfaces/auth.interface';
 import {authResource} from '@/resources/auth.resources';
-import {AxiosResponse} from 'axios';
+import Axios, {AxiosResponse} from 'axios';
 import router from "@/router";
 import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
-import {IUserCard} from '@/interfaces/user-card.interface';
-
+import {IUserCard} from '@/interfaces/personal-area.interface';
 type AuthStore = ActionContext<IAuthStore.IState, IAppState>;
 
 export default {
@@ -21,12 +20,21 @@ export default {
     token: null,
     patientToken: '',
     cabinets: [],
+    isRefreshing: false,
+    refreshingCall: null,
   },
 
   mutations: {
     setPropertyInStore(state: IAuthStore.IState, { name, value }: { name: string; value: any}) {
       Vue.set(state, name, value);
     },
+
+    setTokens(state: IAuthStore.IState, {access, refresh}: {access: string; refresh?: string}) {
+      state.token = access;
+      if (refresh) {
+        Vue.$cookies.set(cookeTokenKey, refresh)
+      }
+    }
   },
 
   actions: {
@@ -71,17 +79,21 @@ export default {
       try {
         const {data}: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.authUser({authData, authType});
 
-        commit('setPropertyInStore', {name: 'token', value: data.access});
-        commit('userCard/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
+        commit('setTokens', {...data})
+
+        if (data.patient) {
+          commit('personalArea/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
+        }
 
         if (data?.cabinets) {
           commit('setPropertyInStore', {name: 'cabinets', value: data.cabinets});
           router.push({name: ROUTE_NAME.CHANGE_CABINETS});
-        } else {
-          return true;
         }
+
+        return true;
+
       } catch(error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           dispatch('error/showErrorNotice', {message: error.errorData.message}, {root: true})
         }
         return false;
@@ -94,11 +106,11 @@ export default {
         commit('setPropertyInStore', {name: 'patientToken', value: data.patient_token});
 
         if (data?.email) {
-          commit('userCard/setPatientProperty', {property: 'email', value: data.email}, {root: true})
+          commit('personalArea/setPatientProperty', {name: 'email', value: data.email}, {root: true})
         }
 
         if (data?.phone) {
-          commit('userCard/setPatientProperty', {property: 'phone', value: data.phone}, {root: true})
+          commit('personalArea/setPatientProperty', {name: 'phone', value: data.phone}, {root: true})
         }
 
         return true;
@@ -110,18 +122,34 @@ export default {
       }
     },
 
-    async updateAccessToken() {
-      try {
+    async updateAccessToken({commit}: AuthStore) {
+      const refresh = Vue.$cookies.get(cookeTokenKey);
+      const infinityResponse: Promise<AxiosResponse<any>> = new Promise(() => {});
 
-      } catch (error) {
-        console.error(error)
+      if (refresh) {
+        const refreshingCall = authResource.updateToken(refresh)
+          .then(({data}) => {
+            commit('setTokens', {...data});
+            return Promise.resolve();
+          })
+          .catch(() => {
+            router.push({name: ROUTE_NAME.AUTH_PAGE});
+            return infinityResponse;
+          })
+
+        return refreshingCall;
+      } else {
+        router.push({name: ROUTE_NAME.AUTH_PAGE});
+        return infinityResponse;
       }
     },
 
-    async changePatientsData({commit, dispatch}: AuthStore, {changedData, id}: {changedData: any; id: string}) {
+    async changePatientsData({commit, dispatch}: AuthStore, {changedData}: {changedData: any}) {
       try {
-        const {data}: AxiosResponse<IUserCard.IUser> = await authResource.changePatientsData({changedData, id});
-        commit('userCard/setPropertyInStore', {name: 'patient', value: data}, {root: true})
+        const {data}: AxiosResponse<IUserCard.IUser> = await authResource.changePatientsData({changedData});
+        commit('personalArea/setPropertyInStore', {name: 'patient', value: data}, {root: true});
+
+        return true;
 
       } catch (error) {
         if (error.errorData.message) {
@@ -133,7 +161,13 @@ export default {
     async changeCabinet({commit}: AuthStore, cabinetId: string) {
       try {
         const {data}: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.changeCabinet(cabinetId);
-        commit('userCard/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
+        commit('setTokens', {...data})
+
+        if (data.patient) {
+          commit('personalArea/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
+        }
+
+        router.push({name: ROUTE_NAME.INDEX_PAGE})
       } catch (error) {
         console.error(error)
       }

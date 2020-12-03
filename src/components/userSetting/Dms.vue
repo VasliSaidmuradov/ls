@@ -39,11 +39,11 @@ export default class Dms extends BaseFormMixins {
   }
 
   get dms(): string {
-    return this.$store.state.userCard.dms;
+    return this.$store.state.personalArea.dms;
   }
 
   set dms(value: string) {
-    this.$store.commit('userCard/setPropertyInStore', {name: 'dms', value});
+    this.$store.commit('personalArea/setPropertyInStore', {name: 'dms', value});
   }
 
 }

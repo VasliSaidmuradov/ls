@@ -51,6 +51,8 @@ import {QInput} from 'quasar';
 import {IAuth, IAuthApi, IAuthForOtherUser} from '@/interfaces/auth.interface';
 import AuthMixin from '@/mixins/auth-mixin';
 import StatusIndicator from '@/components/StatusIndicator.vue';
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
 
 @Component({
   components: {
@@ -131,13 +133,25 @@ export default class CheckAcceptCode extends AuthMixin {
 
 
   authUser(authType: IAuth.AuthMode) {
-    this.$store.dispatch('auth/authUser', {data: this.setAuthData(), authType})
+    this.$store.dispatch('auth/authUser', {authData: this.setAuthData(), authType})
       .then((status: boolean) => this.afterCodeConfirm(status))
   }
 
   afterCodeConfirm(status: boolean) {
-    if (status) this.changeStep(this.steps.SET_PASSWORD);
-    else this.showError = true;
+    if (status) {
+      if (this.authType === IAuth.AuthMode.REGISTRATION) {
+        this.changeStep(this.steps.SET_PASSWORD)
+      } else {
+        this.$router.push({name: ROUTE_NAME.INDEX_PAGE})
+        .then(() => {
+          this.$q.notify({
+            message: 'pls set password'
+          });
+        })
+      }
+    } else {
+      this.showError = true;
+    }
   }
 
   setAuthData(): IAuthApi.IRegisterUserInputData | IAuthApi.ILoginUserInputData {
@@ -147,8 +161,8 @@ export default class CheckAcceptCode extends AuthMixin {
     }
 
     if (this.authType === IAuth.AuthMode.REGISTRATION) {
-      data.name = this.$store.state.userCard.name;
-      data.surname = this.$store.state.userCard.surname;
+      data.name = this.$store.state.personalArea.patient.name;
+      data.surname = this.$store.state.personalArea.patient.surname;
     }
 
     return data;

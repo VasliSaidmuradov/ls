@@ -40,11 +40,11 @@ export default class Mail extends BaseFormMixins {
   }
 
   get mail(): string {
-    return this.$store.state.userCard.mail;
+    return this.$store.state.personalArea.patient.email;
   }
 
   set mail(value: string) {
-    this.$store.commit('userCard/setPropertyInStore', {name: 'mail', value});
+    this.$store.commit('personalArea/setPatientProperty', {name: 'email', value});
   }
 
 }

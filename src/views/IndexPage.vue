@@ -33,6 +33,7 @@ import {IDashBoard} from '@/interfaces/dashboard.interface';
 import {ITabs} from '@/interfaces/tabs.interface';
 import LatestResults from '@/components/indexPage/LatestResults.vue';
 import Benchmarks from '@/components/indexPage/Benchmarks.vue';
+import {IRouter} from '@/interfaces/router.interface';
 
 
 @Component({
@@ -130,7 +131,7 @@ export default class IndexPage extends Vue {
   }
 
   &__content-bottom-tabs {
-    width: 65%;
+    width: 100%;
 
     /deep/.q-tab-panel {
       padding: 0;

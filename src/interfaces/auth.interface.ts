@@ -1,4 +1,4 @@
-import {IUserCard} from '@/interfaces/user-card.interface';
+import {IUserCard} from '@/interfaces/personal-area.interface';
 
 export namespace IAuthStore {
 
@@ -8,6 +8,9 @@ export namespace IAuthStore {
     token: string | null;
     currentAuthStep: IAuthForOtherUser.RegistrationSteps;
     cabinets: IAuth.IUserCabinet[];
+    isRefreshing: boolean;
+    refreshingCall: null | Function;
+    patientToken: string;
   }
 }
 
@@ -33,6 +36,7 @@ export namespace IAuth {
     fio: string;
     patient_id: string;
     role: string;
+    user_id?: string;
   }
 }
 
@@ -110,4 +114,4 @@ export namespace IAuthApi {
 }
 
 
-export const cookeTokenKey = 'refreshToken'
+export const cookeTokenKey = 'refreshToken';

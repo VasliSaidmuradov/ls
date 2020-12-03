@@ -9,7 +9,7 @@
       <span class="cabinets-card__btn-icon icon">
         <icon name="exit-icon"></icon>
       </span>
-      <span class="cabinets-card__btn-text" @click="checkCabinet(cabinet.patient_id)">Войти</span>
+      <span class="cabinets-card__btn-text" @click="checkCabinet(cabinet.user_id)">Войти</span>
     </q-btn>
   </div>
 </template>
@@ -24,7 +24,7 @@ export default class CabinetsCard extends Vue {
   @Prop() cabinet: IAuth.IUserCabinet;
 
   get currentUserId(): string {
-    return this.$store.state.userCard.patient.id;
+    return this.$store.state.personalArea.patient.user_id;
   }
 
   checkCabinet(id: string) {

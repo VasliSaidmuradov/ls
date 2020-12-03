@@ -92,11 +92,11 @@ export default class AddResearch extends Vue {
     align-items: center;
     justify-content: center;
 
-    /deep/.q-btn__wrapper {
+    ::v-deep.q-btn__wrapper {
       padding: 8px;
     }
 
-    /deep/ &.q-btn {
+    &::v-deep.q-btn {
       border: none;
       background: $light-white;
       box-shadow: 0px 4px 15px $shadow-color;
@@ -110,11 +110,11 @@ export default class AddResearch extends Vue {
     border-radius: 22px;
 
 
-    /deep/.q-focus-helper {
+    ::v-deep.q-focus-helper {
       display: none;
     }
 
-    /deep/.q-item__section {
+    ::v-deep.q-item__section {
       color: $accent-orange;
       padding: 0;
       margin-left: 15px;
@@ -124,8 +124,20 @@ export default class AddResearch extends Vue {
       }
     }
 
-    /deep/.q-item {
+    ::v-deep.q-item {
       padding: 8px;
+    }
+
+
+    ::v-deep.q-expansion-item__content {
+      position: absolute;
+      z-index: 1;
+      width: 100%;
+      background-color: $light-white;
+    }
+
+    &::v-deep.q-expansion-item--expanded {
+      border-radius: 22px 22px 0px 0px !important;
     }
   }
 

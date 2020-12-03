@@ -61,12 +61,10 @@ import Height from '@/components/medicalCard/Height.vue';
 import BloodType from '@/components/medicalCard/BloodType.vue';
 import Weight from '@/components/medicalCard/Weight.vue';
 import Birthday from '@/components/medicalCard/Birthday.vue';
-import {IMedicalCard} from '@/interfaces/medical-card.interface';
-import IAddReactionsFiledData = IMedicalCard.IAddReactionsFiledData;
-import IReaction = IMedicalCard.IReaction;
 import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
 import BasePageHeader from '@/components/BasePageHeader.vue';
+import {IMedicalCard} from '@/interfaces/personal-area.interface';
 
   @Component({
     components: {
@@ -85,30 +83,32 @@ import BasePageHeader from '@/components/BasePageHeader.vue';
     }
   })
   export default class MedicalCard extends Vue {
-    hormonalDrugsData: IAddReactionsFiledData = {
+    hormonalDrugsData: IMedicalCard.IAddReactionsFiledData = {
       title: 'Прием гормональных препаратов',
       inputPlaceholder: 'Какой препарат принимаете?',
       areaPlaceholder: 'Какой препарат принимаете?',
       property: 'hormonalDrugs',
       addFilesBtnText: 'Добавить препарат',
       addReactionBtnText: 'Добавить реакцию',
+      endPoint: 'hormonal_drugs',
     };
 
-    allergicReaction: IAddReactionsFiledData = {
+    allergicReaction: IMedicalCard.IAddReactionsFiledData = {
       title: 'Аллергические реакции',
       inputPlaceholder: 'Какой препарат принимаете?',
       areaPlaceholder: 'Какой препарат принимаете?',
       property: 'allergicReactions',
       addFilesBtnText: 'Добавить аллергию',
       addReactionBtnText: 'Опишите реакцию',
+      endPoint: 'allergies',
     }
 
-    get hormonalDrugs(): IReaction[] {
-      return this.$store.state.medicalCard.hormonalDrugs
+    get hormonalDrugs(): IMedicalCard.IReaction[] {
+      return this.$store.state.personalArea.medicalCard.hormonal_drugs
     }
 
-    get allergicReactions(): IReaction[] {
-      return this.$store.state.medicalCard.allergicReactions
+    get allergicReactions(): IMedicalCard.IReaction[] {
+      return this.$store.state.personalArea.medicalCard.allergies
     }
 
     get isMedicalCardPage(): boolean {

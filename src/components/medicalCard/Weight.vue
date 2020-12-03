@@ -5,7 +5,8 @@
              id="weight"
              :rules="rules"
              maxlength="10"
-             v-model="weight" :class="{'form-input--empty': !weight}"
+             v-model="weight"
+             :class="{'form-input--empty': !weight}"
              ref="weight">
         <InputSuffix
             v-slot:prepend
@@ -15,7 +16,7 @@
             inputFontStyle="14px inter"
             suffixPosition="left"
         />
-      <SaveFieldBtn v-if="oldValue !== weight && !checkError($refs.weight)" v-slot:append />
+      <SaveFieldBtn v-if="oldValue !== weight && !checkError($refs.weight)" @save="save" v-slot:append />
     </q-input >
   </div>
 </template>
@@ -44,12 +45,16 @@ export default class Weight extends BaseFormMixins {
     this.oldValue = this.weight;
   }
 
-  get weight() {
-    return this.$store.state.medicalCard.weight;
+  get weight(): number {
+    return this.$store.state.personalArea.medicalCard.weight;
   }
 
-  set weight (value: any) {
-    this.$store.commit('medicalCard/setPropertyInStore', {name: 'weight', value: this.checkInputValueByRegExp(this.onlyNumber, value)});
+  set weight (value: number) {
+    this.$store.commit('personalArea/setMedicalCardProperty', {name: 'weight', value: this.checkInputValueByRegExp(this.onlyNumber, value.toString())});
+  }
+
+  save() {
+    this.$store.dispatch('personalArea/updateMedicalCardData', {weight: this.weight})
   }
 
 

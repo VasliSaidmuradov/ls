@@ -70,7 +70,7 @@ export default class AnalyzesCard extends Vue {
     },
   ]
 
-  fullStatistic = true;
+  fullStatistic = false;
 
   showFullStatistic() {
     this.fullStatistic = !this.fullStatistic
@@ -314,7 +314,7 @@ export default class AnalyzesCard extends Vue {
     color: $black;
 
     @include media-breakpoint-up($breakpoint-xs) {
-      font-size: 10px;
+      font-size: 13px;
     }
   }
 

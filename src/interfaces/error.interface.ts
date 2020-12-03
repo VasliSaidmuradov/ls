@@ -17,4 +17,8 @@ export namespace IError {
     closeBtn: boolean | string;
     onDismiss?: Function; // on close cb
   }
+
+  export enum ErrorCodes {
+    TOKEN_NOT_VALID = 'token_not_valid'
+  }
 }

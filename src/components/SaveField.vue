@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Emit } from 'vue-property-decorator';
 
 @Component({})
 export default class SaveFieldBtn extends Vue {
@@ -19,8 +19,11 @@ export default class SaveFieldBtn extends Vue {
   @Prop({default: 'right'}) position: string;
   @Prop({default: '#63C58A'}) color: string;
 
+
+
+  @Emit('save')
   save() {
-    this.onSave();
+    return true;
   }
 }
 </script>

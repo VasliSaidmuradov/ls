@@ -61,7 +61,7 @@ export default class HasLogin extends Mixins(AuthMixin, BaseFormMixins) {
   @Prop() onCodeSend: Function;
 
   get patientLogin(): string {
-    return this.$store.state.userCard.patient.email || this.$store.state.userCard.patient.phone;
+    return this.$store.state.personalArea.patient.email || this.$store.state.personalArea.patient.phone;
   }
 
   mounted() {
@@ -78,7 +78,6 @@ export default class HasLogin extends Mixins(AuthMixin, BaseFormMixins) {
   }
 
   setNewPhone() {
-    console.log('dad')
     this.showNewPhoneInput = true;
   }
 }

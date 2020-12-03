@@ -40,11 +40,11 @@ export default class Oms extends BaseFormMixins {
   }
 
   get oms(): string {
-    return this.$store.state.userCard.oms;
+    return this.$store.state.personalArea.oms;
   }
 
   set oms(value: string) {
-    this.$store.commit('userCard/setPropertyInStore', {name: 'oms', value});
+    this.$store.commit('personalArea/setPropertyInStore', {name: 'oms', value});
   }
 
 }

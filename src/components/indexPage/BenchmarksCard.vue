@@ -87,13 +87,13 @@ export default class BenchmarksCard extends Vue {
   }
 
   &__content-name {
-    min-width: 280px;
-    max-width: 280px;
+    min-width: calc(100% - (180px + 120px));
+    max-width: calc(100% - (180px + 120px));
     margin-right: 40px;
 
     @include media-breakpoint-up($breakpoint-lg) {
-      min-width: 200px;
-      max-width: 200px;
+      min-width: calc(100% - (120px + 120px));
+      max-width: calc(100% - (120px + 120px));
       margin-right: 20px;
     }
 
@@ -283,6 +283,7 @@ export default class BenchmarksCard extends Vue {
     flex-direction: column;
     align-items: flex-start;
     padding: 11px 13px;
+    margin-right: 0;
   }
 }
 
