@@ -41,7 +41,7 @@
         <g class="value-ref-zones">
           <text
               v-for="(val, idx) in 4"
-              :key="idx"
+              :key="val"
               :x="countXTextRefZone(idx)"
               :y="countYTextRefZone(idx)"
               fill="#63C58A"
@@ -136,6 +136,7 @@
   import parse from 'date-fns/parse';
   import format from 'date-fns/format';
   import RU from 'date-fns/locale/ru';
+  import { IChart } from '@/interfaces/chart.interface';
 
   interface IRefs {
     wrapper: HTMLElement;
@@ -152,8 +153,8 @@
       top: 0,
     };
 
-    @Prop() data: Array<any>;
-    @Prop() dateRange: Array<any>;
+    @Prop() data: IChart.IChart;
+    @Prop() dateRange: Date[];
     @Prop({ default: 722 }) width: number;
     @Prop({ default: 350 }) height: number;
 
@@ -172,7 +173,7 @@
     get valueArray() {
       const valueArray: number[] = [];
 
-      this.data.results.forEach((item: any) => {
+      this.data.results.forEach((item: IChart.IChartItem) => {
         valueArray.push(item.value);
         valueArray.push(item.analyzer.ranges.max);
       });
@@ -222,7 +223,7 @@
       return d3Symbol().type(d3SymbolStar).size(40)();
     }
 
-    countTooltipDate(d: any): string {
+    countTooltipDate(d: IChart.IChartItem): string {
       return format(this.prettyDate(d.date), 'd MMMM yyyy', { locale: RU });
     }
 
@@ -321,24 +322,21 @@
       gYHorizontal.select('.domain').remove();
     }
 
-    countColor(d: any): string {
+    countColor(d: IChart.IChartItem): string {
       const green = '#63C58A';
       const red = '#FF7C7C';
       const yellow = '#FFDE79';
       const value = d.value;
       const min = d.analyzer.ranges.min;
       const max = d.analyzer.ranges.max;
-      let returnColor = '';
 
       if (value < min || value > max) {
-        returnColor = red;
+        return red;
       } else if (value < (min + (min / 100 * 10)) || value > (max - (max / 100 * 10))) {
-        returnColor = yellow;
+        return yellow;
       } else {
-        returnColor = green;
+        return green;
       }
-
-      return returnColor;
     }
 
     prettyDate(date: string): Date {
