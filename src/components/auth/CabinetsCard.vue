@@ -24,12 +24,10 @@ export default class CabinetsCard extends Vue {
   @Prop() cabinet: IAuth.IUserCabinet;
 
   get currentUserId(): string {
-    console.log(this.$store.state.personalArea.patient)
     return this.$store.state.personalArea.patient.user_id;
   }
 
   checkCabinet(id: string) {
-    console.log(id)
     if (id !== this.currentUserId) {
       this.$store.dispatch('auth/changeCabinet', id);
     }
