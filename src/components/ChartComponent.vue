@@ -1,6 +1,6 @@
 <template>
   <div ref="wrapper" class="chart__wrapper"
-       :style="{maxWidth: width + 'px', border: '1px solid black'}"
+       :style="{width: width + 'px'}"
   >
     <svg :viewBox="viewBox">
       <g class="bars-chart" :transform="`translate(${margin.left}, ${margin.top})`">
