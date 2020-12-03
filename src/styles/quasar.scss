@@ -25,8 +25,28 @@
   overflow-y: visible !important;
 }
 
-//btn:hover btn:focus
+//rect tooltip
+.rect-tooltip {
+  padding: 7px 8px !important;
+  background: $accent-color !important;
+  border-radius: 8px !important;
 
+  &:before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 40%;
+    border: 5px solid transparent;
+    border-right: 5px solid $accent-color;
+  }
+}
+
+.rect-tooltip.q-tooltip {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+//btn:hover btn:focus
 body.desktop .q-hoverable:hover > .q-focus-helper {
   background: none;
 }
