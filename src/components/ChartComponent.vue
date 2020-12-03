@@ -293,14 +293,16 @@
 
     countRefX1(idx: number) {
       const results = this.data.results;
+      const resultItem = results[idx];
+      const nextResultItem = results[idx + 1];
 
-      if (results[idx + 1]) {
-        if (results[idx].analyzer.ranges.max !== results[idx + 1].analyzer.ranges.max
-          || results[idx].analyzer.ranges.min !== results[idx + 1].analyzer.ranges.min
+      if (nextResultItem) {
+        if (resultItem.analyzer.ranges.max !== nextResultItem.analyzer.ranges.max
+          || resultItem.analyzer.ranges.min !== nextResultItem.analyzer.ranges.min
         ) {
-          return this.x(this.prettyDate(results[idx + 1].date)) - 10;
+          return this.x(this.prettyDate(nextResultItem.date)) - 10;
         } else {
-          return this.x(this.prettyDate(results[idx + 1].date));
+          return this.x(this.prettyDate(nextResultItem.date));
         }
       } else {
         // last elem
@@ -310,14 +312,16 @@
 
     countRefX2(idx: number) {
       const results = this.data.results;
+      const resultItem = results[idx];
+      const prevResultItem = results[idx - 1];
 
       if (results[idx - 1]) {
-        if (results[idx].analyzer.ranges.max !== results[idx - 1].analyzer.ranges.max
-          || results[idx].analyzer.ranges.min !== results[idx - 1].analyzer.ranges.min
+        if (resultItem.analyzer.ranges.max !== prevResultItem.analyzer.ranges.max
+          || resultItem.analyzer.ranges.min !== prevResultItem.analyzer.ranges.min
         ) {
-          return this.x(this.prettyDate(results[idx].date)) - 10;
+          return this.x(this.prettyDate(resultItem.date)) - 10;
         } else {
-          return this.x(this.prettyDate(results[idx].date));
+          return this.x(this.prettyDate(resultItem.date));
         }
       } else {
         // first elem
