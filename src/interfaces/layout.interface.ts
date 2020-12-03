@@ -12,6 +12,11 @@ export namespace ILayout {
     MOBILE = 767,
     MOBILE_SMALL = 575
   }
+
+  export enum LayoutType {
+    AUTH = 'authLayout',
+    DEFAULT = 'defaultLayout',
+  }
 }
 
 

@@ -82,17 +82,21 @@
       <span class="password-change__btn-text">Сохранить новый пароль</span>
     </q-btn>
 
-    <q-btn
-        v-if="isCreatePassword"
-        padding="8px"
-        @click="createNewPassword"
-        class="password-change__create-btn button1 button1--bordered-with-icon">
+    <div class="password-change__create-new" v-if="isCreatePassword">
+      <q-btn
+          v-if="isCreatePassword"
+          padding="8px"
+          @click="createNewPassword"
+          class="password-change__create-btn button1 button1--bordered-with-icon">
 
       <span class="password-change__create-btn-icon icon">
         <icon name="exit-icon"></icon>
       </span>
-      <span class="password-change__create-btn-text">Войти</span>
-    </q-btn>
+        <span class="password-change__create-btn-text">Войти</span>
+      </q-btn>
+
+      <span @click="skipStep" class="password-change__create-new-skip">Пропустить</span>
+    </div>
   </div>
 
 </template>
@@ -103,6 +107,8 @@
   import BaseFormMixins from '@/mixins/base-form-mixins';
   import { QInput } from 'quasar';
   import {IUserCard} from '@/interfaces/personal-area.interface';
+  import {IRouter} from '@/interfaces/router.interface';
+  import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   interface IRefs {
     newPassword: QInput;
@@ -144,12 +150,16 @@
       this.rules.push(this.inputRules.required);
     }
 
+    skipStep() {
+      this.$router.push({name: ROUTE_NAME.INDEX_PAGE});
+    }
+
     newPasswordValidate(val: string) {
       return val === this.repeatPassword || 'Пароли не совпадают';
     }
 
     get password(): string {
-      return this.$store.state.userCard.password;
+      return this.$store.state.personalArea.patient.password;
     }
 
     set password(value: string) {
@@ -175,8 +185,13 @@
       if (this.validate()) return;
       this.$store.dispatch('auth/changePatientsData', {
         changedData: { password: this.newPassword },
-        id: this.$store.state.userCard.patient.id,
-      });
+        id: this.$store.state.personalArea.patient.id,
+      })
+      .then((status: boolean) => {
+        if (status) {
+          this.$router.push({name: ROUTE_NAME.INDEX_PAGE});
+        }
+      })
     }
   }
 </script>
@@ -295,6 +310,18 @@
       font-size: 16px;
       line-height: 130%;
       color: $gray-01;
+    }
+
+    &__create-new {
+      display: flex;
+      align-items: center;
+    }
+
+    &__create-new-skip {
+      margin-left: 20px;
+      font-size: 14px;
+      color: $black-02;
+      cursor: pointer;
     }
   }
 

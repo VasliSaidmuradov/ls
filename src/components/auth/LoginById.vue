@@ -196,7 +196,7 @@ export default class LoginById extends Mixins(AuthMixin, BaseFormMixins) {
   }
 
   checkHasLogin() {
-    if (this.userAccountInfo.has_login) {
+    if (this.userAccountInfo.has_login && !this.userAccountInfo.only_patient_id) {
       this.hasLogin = true;
     } else {
       this.checkResearchDate = true;

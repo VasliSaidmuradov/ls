@@ -36,6 +36,7 @@ export namespace IAuth {
     fio: string;
     patient_id: string;
     role: string;
+    user_id?: string;
   }
 }
 

@@ -42,7 +42,7 @@ class AuthResource {
 
   changeCabinet(id: string): Promise<AxiosResponse<IAuthApi.IAuthResponse>> {
     return (Axios.post(`${AppConfig.apiUrl}auth/change-cabinet/`, {
-      patient_id: id,
+      user_id: id,
     }) as Promise<AxiosResponse<IAuthApi.IAuthResponse>>)
   }
 

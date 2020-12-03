@@ -96,6 +96,7 @@ import BaseFormMixins from '@/mixins/base-form-mixins';
 import AuthMixin from '@/mixins/auth-mixin';
 import {QInput} from 'quasar';
 import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
 
 interface IRefs {
   email: QInput;
@@ -168,7 +169,12 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
 
   passwordLogin() {
     if (this.validate()) return;
-    this.$store.dispatch('auth/authUser', {data: this.createLoginData(), authType: this.authType})
+    this.$store.dispatch('auth/authUser', {authData: this.createLoginData(), authType: this.authType})
+    .then((status) => {
+      if (status) {
+        this.$router.push({name: ROUTE_NAME.INDEX_PAGE})
+      }
+    })
   }
 
   createLoginData(): IAuthApi.ILoginInputData {
