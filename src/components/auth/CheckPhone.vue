@@ -142,7 +142,12 @@ export default class CheckAcceptCode extends AuthMixin {
       if (this.authType === IAuth.AuthMode.REGISTRATION) {
         this.changeStep(this.steps.SET_PASSWORD)
       } else {
-        this.$router.push({name: ROUTE_NAME.INDEX_PAGE, query: {showPasswordNotice: true}});
+        this.$router.push({name: ROUTE_NAME.INDEX_PAGE})
+        .then(() => {
+          this.$q.notify({
+            message: 'pls set password'
+          });
+        })
       }
     } else {
       this.showError = true;

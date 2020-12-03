@@ -60,22 +60,6 @@ export default class IndexPage extends Vue {
 
   activeTab = IDashBoard.TabsName.BENCHMARKS;
 
-  $route: IRouter.IAppRoute<{showPasswordNotice: boolean}>
-
-  get showPasswordNotice(): boolean {
-    return this.$route.query.showPasswordNotice;
-  }
-
-  mounted() {
-    console.log(this.$route.query)
-    if (this.showPasswordNotice) {
-      this.$q.notify({
-        message: 'pls set password'
-      });
-      delete this.$route.query.showPasswordNotice;
-    }
-  }
-
   onTabChange(value: IDashBoard.TabsName) {
     this.activeTab = value;
   }
