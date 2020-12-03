@@ -125,14 +125,13 @@
 <script lang="ts">
   import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
   import {
+    areaRadial as d3AreaRadial,
     axisBottom as d3AxisBottom,
     axisRight as d3AxisRight,
     max as d3Max,
     scaleLinear as d3ScaleLinear,
     scaleTime as d3ScaleTime,
     select as d3Select,
-    symbol as d3Symbol,
-    symbolStar as d3SymbolStar,
     timeFormatDefaultLocale as d3TimeFormatDefaultLocale,
   } from 'd3';
   import parse from 'date-fns/parse';
@@ -225,7 +224,27 @@
     }
 
     get countDStar() {
-      return d3Symbol().type(d3SymbolStar).size(40)();
+      const radialAreaGenerator = d3AreaRadial()
+        .angle(d => {
+          return d.angle;
+        })
+        .outerRadius(d => {
+          return d.r1;
+        });
+
+      const points = [
+        { angle: 0, r1: 5 },
+        { angle: Math.PI * 0.25, r1: 2.5 },
+        { angle: Math.PI * 0.5, r1: 5 },
+        { angle: Math.PI * 0.75, r1: 2.5 },
+        { angle: Math.PI, r1: 5 },
+        { angle: Math.PI * 1.25, r1: 2.5 },
+        { angle: Math.PI * 1.5, r1: 5 },
+        { angle: Math.PI * 1.75, r1: 2.5 },
+        { angle: Math.PI * 2, r1: 5 },
+      ];
+
+      return radialAreaGenerator(points);
     }
 
     countTooltipDate(d: IChart.IChartItem): string {
