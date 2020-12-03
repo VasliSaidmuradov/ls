@@ -155,7 +155,7 @@
       top: 0,
     };
 
-    @Prop() data: IChart.IChart;
+    @Prop({}) data: IChart.IChart;
     @Prop() dateRange: Date[];
     @Prop({ default: 722 }) width: number;
     @Prop({ default: 350 }) height: number;
@@ -248,6 +248,10 @@
     countYTextRefZone(idx: number) {
       const results: IChart.IChartItem[] = this.data.results;
 
+      if (!results.length) {
+        return 0;
+      }
+
       switch (idx) {
         case 0:
           return results[0].analyzer.ranges.max === null
@@ -270,6 +274,10 @@
 
     countTextRefZone(idx: number) {
       const results = this.data.results;
+
+      if (!results.length) {
+        return '';
+      }
 
       switch (idx) {
         case 0:
