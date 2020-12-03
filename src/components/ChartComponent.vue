@@ -4,54 +4,54 @@
   >
     <svg :viewBox="viewBox">
       <g class="bars-chart" :transform="`translate(${margin.left}, ${margin.top})`">
-        <!--HORIZONTAL-LINES-->
+        <!--HORIZONTAL LINES-->
         <g class="y-horizontal"></g>
 
-        <!--REF-ZONE-MAX-->
+        <!--REF ZONE MAX-->
         <g class="ref-zone-max">
           <line
               v-for="(d, idx) in data.results"
               :key="idx"
               :x1="countRefX1(idx)"
-              :x2="x(prettyDate(d.date))"
+              :x2="countRefX2(idx)"
               :y1="y(d.analyzer.ranges.max)"
               :y2="y(d.analyzer.ranges.max)"
               stroke="#63C58A"
-              stroke-dasharray="2, 2"
+              stroke-dasharray="5, 5"
           >
           </line>
         </g>
 
-        <!--REF-ZONE-MIN-->
+        <!--REF ZONE MIN-->
         <g class="ref-zone-min">
           <line
               v-for="(d, idx) in data.results"
               :key="idx"
               :x1="countRefX1(idx)"
-              :x2="x(prettyDate(d.date))"
+              :x2="countRefX2(idx)"
               :y1="y(d.analyzer.ranges.min)"
               :y2="y(d.analyzer.ranges.min)"
               stroke="#63C58A"
-              stroke-dasharray="2, 2"
+              stroke-dasharray="5, 5"
           >
           </line>
         </g>
 
+        <!--TEXT VALUE REF ZONE-->
+        <g class="value-ref-zones">
+          <text
+              v-for="(val, idx) in 4"
+              :key="idx"
+              :x="countXTextRefZone(idx)"
+              :y="countYTextRefZone(idx)"
+              fill="#63C58A"
+          >
+            {{countTextRefZone(idx)}}
+          </text>
+        </g>
+
         <!--AXIS X-->
         <g class="x" :transform="`translate(0, ${innerHeight})`"></g>
-
-        <!--FILTER(:HOVER EFFECT)-->
-        <filter id="dropshadow" height="120%" width="200%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="1"/> <!-- stdDeviation is how much to blur -->
-          <feOffset dx="0" dy="-1" result="offsetblur"/> <!-- how much to offset -->
-          <feComponentTransfer>
-            <feFuncA type="linear" slope="0.5"/> <!-- slope is the opacity of the shadow -->
-          </feComponentTransfer>
-          <feMerge>
-            <feMergeNode/> <!-- this contains the offset blurred image -->
-            <feMergeNode in="SourceGraphic"/> <!-- this contains the element that the filter is applied to -->
-          </feMerge>
-        </filter>
 
         <!--RECT-->
         <rect
@@ -226,11 +226,80 @@
       return format(this.prettyDate(d.date), 'd MMMM yyyy', { locale: RU });
     }
 
+    countXTextRefZone(idx: number) {
+      switch (idx) {
+        case 0:
+          return -20;
+        case 1:
+          return this.innerWidth + 5;
+        case 2:
+          return -20;
+        case 3:
+          return this.innerWidth + 5;
+      }
+    }
+
+    countYTextRefZone(idx: number) {
+      const results = this.data.results;
+
+      switch (idx) {
+        case 0:
+          return this.y(results[0].analyzer.ranges.max) + 3;
+        case 1:
+          return this.y(results[0].analyzer.ranges.max) + 3;
+        case 2:
+          return this.y(results[0].analyzer.ranges.min) + 3;
+        case 3:
+          return this.y(results[0].analyzer.ranges.min) + 3;
+      }
+    }
+
+    countTextRefZone(idx: number) {
+      const results = this.data.results;
+
+      switch (idx) {
+        case 0:
+          return results[0].analyzer.ranges.max;
+        case 1:
+          return results[results.length - 1].analyzer.ranges.max;
+        case 2:
+          return results[0].analyzer.ranges.min;
+        case 3:
+          return results[results.length - 1].analyzer.ranges.min;
+      }
+    }
+
     countRefX1(idx: number) {
-      if (this.data.results[idx + 1]) {
-        return this.x(this.prettyDate(this.data.results[idx + 1].date));
+      const results = this.data.results;
+
+      if (results[idx + 1]) {
+        if (results[idx].analyzer.ranges.max !== results[idx + 1].analyzer.ranges.max
+          || results[idx].analyzer.ranges.min !== results[idx + 1].analyzer.ranges.min
+        ) {
+          return this.x(this.prettyDate(results[idx + 1].date)) - 10;
+        } else {
+          return this.x(this.prettyDate(results[idx + 1].date));
+        }
       } else {
-        return this.x(this.prettyDate(this.data.results[idx].date));
+        // last elem
+        return this.innerWidth;
+      }
+    }
+
+    countRefX2(idx: number) {
+      const results = this.data.results;
+
+      if (results[idx - 1]) {
+        if (results[idx].analyzer.ranges.max !== results[idx - 1].analyzer.ranges.max
+          || results[idx].analyzer.ranges.min !== results[idx - 1].analyzer.ranges.min
+        ) {
+          return this.x(this.prettyDate(results[idx].date)) - 10;
+        } else {
+          return this.x(this.prettyDate(results[idx].date));
+        }
+      } else {
+        // first elem
+        return 0;
       }
     }
 
@@ -334,7 +403,7 @@
 
     &:hover {
       transition: all 0.2s ease;
-      filter: url(#dropshadow)
+      opacity: 0.6;
     }
   }
 </style>
