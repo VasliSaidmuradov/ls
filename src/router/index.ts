@@ -67,9 +67,15 @@ export default new Router({
     name: ROUTE_NAME.AUTH_PAGE,
     component: () => import('@/views/AuthPage.vue'),
     props: (route: Route) => ({query: route.query.pageMode}),
+    meta: {
+      layout: ILayout.LayoutType.AUTH,
+    }
   }, {
     path: ROUTE_PATH[ROUTE_NAME.CHANGE_CABINETS],
     name: ROUTE_NAME.CHANGE_CABINETS,
     component: () => import('@/views/ChangeCabinets.vue'),
+    meta: {
+      layout: ILayout.LayoutType.AUTH,
+    }
   }]
 });

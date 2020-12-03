@@ -106,11 +106,11 @@ export default {
         commit('setPropertyInStore', {name: 'patientToken', value: data.patient_token});
 
         if (data?.email) {
-          commit('userCard/setPatientProperty', {property: 'email', value: data.email}, {root: true})
+          commit('personalArea/setPatientProperty', {name: 'email', value: data.email}, {root: true})
         }
 
         if (data?.phone) {
-          commit('userCard/setPatientProperty', {property: 'phone', value: data.phone}, {root: true})
+          commit('personalArea/setPatientProperty', {name: 'phone', value: data.phone}, {root: true})
         }
 
         return true;
@@ -147,7 +147,9 @@ export default {
     async changePatientsData({commit, dispatch}: AuthStore, {changedData, id}: {changedData: any; id: string}) {
       try {
         const {data}: AxiosResponse<IUserCard.IUser> = await authResource.changePatientsData({changedData, id});
-        commit('personalArea/setPropertyInStore', {name: 'patient', value: data}, {root: true})
+        commit('personalArea/setPropertyInStore', {name: 'patient', value: data}, {root: true});
+
+        return true;
 
       } catch (error) {
         if (error.errorData.message) {
@@ -159,7 +161,13 @@ export default {
     async changeCabinet({commit}: AuthStore, cabinetId: string) {
       try {
         const {data}: AxiosResponse<IAuthApi.IAuthResponse> = await authResource.changeCabinet(cabinetId);
-        commit('personalArea/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
+        commit('setTokens', {...data})
+
+        if (data.patient) {
+          commit('personalArea/setPropertyInStore', {name: 'patient', value: data.patient}, {root: true})
+        }
+
+        router.push({name: ROUTE_NAME.INDEX_PAGE})
       } catch (error) {
         console.error(error)
       }
