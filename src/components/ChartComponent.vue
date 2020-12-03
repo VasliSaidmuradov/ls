@@ -18,6 +18,7 @@
               :y2="y(d.analyzer.ranges.max)"
               stroke="#63C58A"
               stroke-dasharray="5, 5"
+              :opacity="d.analyzer.ranges.max === null ? 0 : 1"
           >
           </line>
         </g>
@@ -33,6 +34,7 @@
               :y2="y(d.analyzer.ranges.min)"
               stroke="#63C58A"
               stroke-dasharray="5, 5"
+              :opacity="d.analyzer.ranges.min === null ? 0 : 1"
           >
           </line>
         </g>
@@ -175,7 +177,10 @@
 
       this.data.results.forEach((item: IChart.IChartItem) => {
         valueArray.push(item.value);
-        valueArray.push(item.analyzer.ranges.max);
+
+        if (item.analyzer.ranges.max !== null) {
+          valueArray.push(item.analyzer.ranges.max);
+        }
       });
 
       return valueArray;
@@ -241,17 +246,25 @@
     }
 
     countYTextRefZone(idx: number) {
-      const results = this.data.results;
+      const results: IChart.IChartItem[] = this.data.results;
 
       switch (idx) {
         case 0:
-          return this.y(results[0].analyzer.ranges.max) + 3;
+          return results[0].analyzer.ranges.max === null
+            ? 0
+            : this.y(results[0].analyzer.ranges.max) + 3;
         case 1:
-          return this.y(results[0].analyzer.ranges.max) + 3;
+          return results[results.length - 1].analyzer.ranges.max === null
+            ? 0
+            : this.y(results[results.length - 1].analyzer.ranges.max) + 3;
         case 2:
-          return this.y(results[0].analyzer.ranges.min) + 3;
+          return results[0].analyzer.ranges.min === null
+            ? 0
+            : this.y(results[0].analyzer.ranges.min) + 3;
         case 3:
-          return this.y(results[0].analyzer.ranges.min) + 3;
+          return results[results.length - 1].analyzer.ranges.min === null
+            ? 0
+            : this.y(results[results.length - 1].analyzer.ranges.min) + 3;
       }
     }
 
@@ -314,7 +327,11 @@
 
     initHorizontalLines() {
       const gYHorizontal = d3Select('.y-horizontal')
-        .call(d3AxisRight(this.y).ticks(3).tickSizeOuter(0).tickSizeInner(this.innerWidth));
+        .call(d3AxisRight(this.y)
+          .ticks(3)
+          .tickSizeOuter(0)
+          .tickSizeInner(this.innerWidth),
+        );
 
       gYHorizontal.selectAll('line')
         .attr('stroke', '#E9E8FF');
@@ -327,8 +344,8 @@
       const red = '#FF7C7C';
       const yellow = '#FFDE79';
       const value = d.value;
-      const min = d.analyzer.ranges.min;
-      const max = d.analyzer.ranges.max;
+      const min = d.analyzer.ranges.min || 0;
+      const max = d.analyzer.ranges.max || 0;
 
       if (value < min || value > max) {
         return red;

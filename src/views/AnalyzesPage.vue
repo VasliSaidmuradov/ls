@@ -45,7 +45,7 @@
             'name': 'AU 680',
             'ranges': {
               'min': 0.6,
-              'max': 1.4,
+              'max': 2,
             },
           },
           'laboratory': {
@@ -55,21 +55,6 @@
         },
         {
           'date': '2020-06-25',
-          'value': 0.78,
-          'analyzer': {
-            'name': 'GTX 1080',
-            'ranges': {
-              'min': 0.7,
-              'max': 1.5,
-            },
-          },
-          'laboratory': {
-            'name': 'Helex',
-            'units': 'г/л',
-          },
-        },
-        {
-          'date': '2020-06-30',
           'value': 0.78,
           'analyzer': {
             'name': 'GTX 1080',
