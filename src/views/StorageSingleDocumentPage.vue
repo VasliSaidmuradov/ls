@@ -8,7 +8,7 @@
       </div>
 
       <div class="document-page__header-wrapper">
-        <icon name="process-icon" class="document-page__header-icon"/>
+        <icon name="doc-process-icon" class="document-page__header-icon"/>
         <span class="document-page__header-status-text">Документ загружается</span>
       </div>
     </div>

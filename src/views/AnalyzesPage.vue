@@ -1,19 +1,25 @@
 <template>
   <div class="analyzes-page layout">
+    <info-header/>
+
     <chart-component
         :data="mainData"
         :date-range="dateRange"
     />
+
+    <last-analyzes :results="mainData.results"/>
   </div>
 </template>
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator';
+  import InfoHeader from '@/components/analyzesPage/InfoHeader.vue';
   import ChartComponent from '@/components/ChartComponent.vue';
   import { IChart } from '@/interfaces/chart.interface';
+  import LastAnalyzes from '@/components/analyzesPage/LastAnalyzes.vue';
 
   @Component({
-    components: { ChartComponent },
+    components: { LastAnalyzes, InfoHeader, ChartComponent },
   })
   export default class AnalyzesPage extends Vue {
     dateRange: Date[] = [new Date(2020, 3, 1), new Date(2020, 7, 30)];
@@ -116,7 +122,6 @@
   }
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
 
 </style>

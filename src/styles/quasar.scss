@@ -46,9 +46,34 @@
   overflow-y: visible !important;
 }
 
+//analyzes tooltip
+.analyzes-tooltip {
+  padding: 20px 25px !important;
+  background: $accent-color !important;
+  border-radius: 15px !important;
+  color: $light-background !important;
+  font-weight: normal !important;
+  font-size: 14px !important;
+  line-height: 130% !important;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 8%;
+    border: 5px solid transparent;
+    border-right: 5px solid $accent-color;
+  }
+}
+
+.analyzes-tooltip.q-tooltip {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
 //btn:hover btn:focus
 body.desktop .q-hoverable:hover > .q-focus-helper {
-  background: none;
+  background: inherit;
 }
 
 

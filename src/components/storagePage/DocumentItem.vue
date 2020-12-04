@@ -15,7 +15,7 @@
         >
           Произошла ошибка. Некоторые страницы из документы не получилось расшифровать
         </q-tooltip>
-        <icon name="cancel-icon" class="document-item__header-status-icon"/>
+        <icon name="doc-error-icon" class="document-item__header-status-icon"/>
       </div>
 
       <icon name="delete-icon" class="document-item__header-delete-icon" v-else @click="toggleDialogModal(true)"/>

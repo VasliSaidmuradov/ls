@@ -3,7 +3,7 @@
     <div class="file__wrapper">
       <div class="file__img-wrapper">
         <img src="@/assets/Doc.jpg" width="60px" height="88px" alt="" class="file__img">
-        <icon name="process-icon"  class="file__img-wrapper-icon"/>
+        <icon name="doc-process-icon"  class="file__img-wrapper-icon"/>
       </div>
 
       <div class="file__actions">
