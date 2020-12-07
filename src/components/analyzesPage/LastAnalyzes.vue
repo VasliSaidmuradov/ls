@@ -2,31 +2,50 @@
   <div class="analyzes-page-last-analyzes">
     <span class="title">Последние анализы </span>
 
-    <table class="table">
-      <tr class="table__header">
-        <th class="table__header-item">Значение, ед.и.</th>
-        <th class="table__header-item">Реф. значения</th>
-        <th class="table__header-item">Лаборатория</th>
-        <th class="table__header-item">Дата сдачи</th>
-      </tr>
+    <div class="main-wrapper">
+      <table class="table">
+        <tr class="table__header">
+          <th class="table__header-item">Значение, ед.и.</th>
+          <th class="table__header-item">Реф. значения</th>
+          <th class="table__header-item">Лаборатория</th>
+          <th class="table__header-item">Дата сдачи</th>
+        </tr>
 
-      <tr class="table__tr" v-for="(result, index) in results" :key="index">
-        <td class="table__value">{{result.value}}, {{result.laboratory.units}}</td>
-        <td colspan="table__ref">{{result.analyzer.ranges.max}}{{result.analyzer.ranges.min}}</td>
-        <td class="table__laboratory">{{result.laboratory.name}}</td>
-        <td class="table__date">{{result.date}}</td>
-      </tr>
-    </table>
+        <tr class="table__tr" v-for="(result, index) in results" :key="index">
+          <td class="table__value">{{result.value}}, {{result.laboratory.units}}</td>
+          <td colspan="table__ref">{{result.analyzer.ranges.max}}{{result.analyzer.ranges.min}}</td>
+          <td class="table__laboratory">{{result.laboratory.name}}</td>
+          <td class="table__date">{{$date(new Date(result.date), 'd MMMM yyyy')}}</td>
+        </tr>
+      </table>
+
+      <div class="right-wrapper">
+        <main-btn
+            class="right-wrapper__btn"
+            :type="'primary'"
+            :text="'Экспортировать таблицу'"
+            :width="247"
+            :height="56"
+            :border-color="'#7C74E9'"
+        >
+          <template v-slot:icon>
+            <icon name="download-icon" class="right-wrapper__btn-icon"/>
+          </template>
+        </main-btn>
+
+        <span class="right-wrapper__text">Экспорт в формат .pdf</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
   import { Component, Prop, Vue } from 'vue-property-decorator';
   import { IChart } from '@/interfaces/chart.interface';
-
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 
   @Component({
-    components: {},
+    components: { MainBtn },
   })
   export default class LastAnalyzes extends Vue {
 
@@ -108,6 +127,30 @@
         font-weight: normal;
         font-size: 14px;
         line-height: 130%;
+      }
+    }
+
+    .main-wrapper {
+      display: flex;
+    }
+
+    .right-wrapper {
+      margin-top: 70px;
+      margin-left: 54px;
+
+      &__text {
+        margin-top: 10px;
+        display: block;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 130%;
+        color: $black-04;
+      }
+
+      &__btn-icon {
+        width: 24px;
+        height: 24px;
+        color: $accent-color;
       }
     }
   }

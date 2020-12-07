@@ -71,7 +71,6 @@
               content-class="rect-tooltip"
               anchor="top left"
               self="top right"
-              :max-width="'116px'"
           >
             <span class="tooltip-text">{{d.value}} {{d.laboratory.units}}</span>
             <span class="tooltip-text">{{countTooltipDate(d)}}</span>
@@ -134,9 +133,6 @@
     select as d3Select,
     timeFormatDefaultLocale as d3TimeFormatDefaultLocale,
   } from 'd3';
-  import parse from 'date-fns/parse';
-  import format from 'date-fns/format';
-  import RU from 'date-fns/locale/ru';
   import { IChart } from '@/interfaces/chart.interface';
 
   interface IRefs {
@@ -156,7 +152,7 @@
 
     @Prop({}) data: IChart.IChart;
     @Prop() dateRange: Date[];
-    @Prop({ default: 722 }) width: number;
+    @Prop({ default: 702 }) width: number;
     @Prop({ default: 350 }) height: number;
 
     get viewBox() {
@@ -248,7 +244,7 @@
     }
 
     countTooltipDate(d: IChart.IChartItem): string {
-      return format(this.prettyDate(d.date), 'd MMMM yyyy', { locale: RU });
+      return this.$date(new Date(d.date), 'd MMMM yyyy');
     }
 
     countXTextRefZone(idx: number) {
@@ -388,7 +384,7 @@
     }
 
     prettyDate(date: string): Date {
-      return parse(date, 'yyyy-MM-dd', new Date());
+      return new Date(date);
     };
 
     setLocale() {
@@ -430,6 +426,10 @@
 </script>
 
 <style lang="scss" scoped>
+  .chart__wrapper {
+    margin: 0 auto;
+  }
+
   ::v-deep text {
     font-weight: 500;
     font-size: 12px;

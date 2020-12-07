@@ -10,6 +10,7 @@
         height: height + 'px'
       }"
       :disable="disabled"
+      :ripple="{ color: 'white' }"
       @click="clickBtn"
   >
     <div class="main-btn__icon-wrapper">
@@ -20,21 +21,21 @@
 </template>
 
 <script lang="ts">
-  import {Component, Emit, Prop, Vue} from 'vue-property-decorator';
+  import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 
   @Component({})
   export default class MainBtn extends Vue {
-    @Prop({default: 'primary'}) type: string
-    @Prop({default: '#7C74E9'}) bcgColor: string
-    @Prop({default: 'none'}) borderColor: string
-    @Prop() width: number
-    @Prop() height: number
-    @Prop() text: string
-    @Prop() disabled: boolean
+    @Prop({ default: 'primary' }) type: string;
+    @Prop({ default: '#7C74E9' }) bcgColor: string;
+    @Prop({ default: 'none' }) borderColor: string;
+    @Prop() width: number;
+    @Prop() height: number;
+    @Prop() text: string;
+    @Prop() disabled: boolean;
 
     @Emit('click-btn')
     clickBtn() {
-      return false
+      return false;
     }
   }
 </script>

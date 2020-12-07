@@ -2,10 +2,44 @@
   <div class="analyzes-page layout">
     <info-header/>
 
-    <chart-component
-        :data="mainData"
-        :date-range="dateRange"
-    />
+    <chart-control />
+
+    <div class="chart-dates-wrapper">
+      <div class="chart">
+        <chart-component
+            :data="mainData"
+            :date-range="dateRange"
+        />
+
+        <div class="chart__bottom">
+          <main-btn
+              class="chart__btn"
+              :text="'Скачать график в .jpeg'"
+              :bcg-color="'#ffffff'"
+              :type="'small'"
+              :height="56"
+          >
+            <template v-slot:icon>
+              <icon name="download-icon" class="chart__btn-icon"/>
+            </template>
+          </main-btn>
+
+          <checkbox-input
+              class="chart__checkbox"
+              :label="'Референсные зоны'"
+              :border-color="'#63C58A'"
+              :color="'#63C58A'"
+              :value="isCheckboxValue"
+              @change-value="changeCheckboxValue"
+          />
+        </div>
+      </div>
+
+      <choose-specific-dates :results="mainData.results"/>
+    </div>
+
+
+    <look-dynamic/>
 
     <last-analyzes :results="mainData.results"/>
   </div>
@@ -17,12 +51,18 @@
   import ChartComponent from '@/components/ChartComponent.vue';
   import { IChart } from '@/interfaces/chart.interface';
   import LastAnalyzes from '@/components/analyzesPage/LastAnalyzes.vue';
+  import LookDynamic from '@/components/analyzesPage/LookDynamic.vue';
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
+  import ChooseSpecificDates from '@/components/analyzesPage/ChooseSpecificDates.vue';
+  import ChartControl from '@/components/analyzesPage/ChartControl.vue';
 
   @Component({
-    components: { LastAnalyzes, InfoHeader, ChartComponent },
+    components: { ChartControl, ChooseSpecificDates, CheckboxInput, MainBtn, LookDynamic, LastAnalyzes, InfoHeader, ChartComponent },
   })
   export default class AnalyzesPage extends Vue {
-    dateRange: Date[] = [new Date(2020, 3, 1), new Date(2020, 7, 30)];
+    isCheckboxValue = false;
+    dateRange: Date[] = [new Date(2020, 3, 1), new Date(2020, 9, 30)];
     mainData: IChart.IChart = {
       name: 'Аполипопротеид В',
       results: [
@@ -101,7 +141,6 @@
             'units': 'г/л',
           },
         },
-
         {
           'date': '2020-08-25',
           'value': 1.27,
@@ -117,11 +156,58 @@
             'units': 'г/л',
           },
         },
+        {
+          'date': '2020-9-25',
+          'value': 1.27,
+          'analyzer': {
+            'name': 'AU 680',
+            'ranges': {
+              'min': 0.6,
+              'max': 1.4,
+            },
+          },
+          'laboratory': {
+            'name': 'ЛабСтори',
+            'units': 'г/л',
+          },
+        },
       ],
     };
+
+    changeCheckboxValue(val: boolean) {
+     this.isCheckboxValue = val
+    }
   }
 </script>
 
 <style lang="scss" scoped>
+  .analyzes-page {
+    .chart-dates-wrapper {
+      margin-top: 40px;
+      display: flex;
+      align-items: flex-start;
+    }
 
+    .chart {
+      width: 100%;
+      max-width: 722px;
+      padding-bottom: 24px;
+      background-color: $light-white;
+      border-radius: 15px;
+
+      &__btn-icon {
+        width: 24px;
+        height: 24px;
+        color: $accent-color;
+      }
+
+      &__bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 650px;
+        margin: 15px auto 0 auto;
+      }
+    }
+  }
 </style>
