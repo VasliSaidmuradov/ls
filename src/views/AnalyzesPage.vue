@@ -1,6 +1,6 @@
 <template>
   <div class="analyzes-page layout">
-    <info-header/>
+    <info-header :results="mainData.results"/>
 
     <chart-control />
 
@@ -29,7 +29,7 @@
               :label="'Референсные зоны'"
               :border-color="'#63C58A'"
               :color="'#63C58A'"
-              :value="isCheckboxValue"
+              :value="isRefZonesVisible"
               @change-value="changeCheckboxValue"
           />
         </div>
@@ -61,7 +61,7 @@
     components: { ChartControl, ChooseSpecificDates, CheckboxInput, MainBtn, LookDynamic, LastAnalyzes, InfoHeader, ChartComponent },
   })
   export default class AnalyzesPage extends Vue {
-    isCheckboxValue = false;
+    isRefZonesVisible = true;
     dateRange: Date[] = [new Date(2020, 3, 1), new Date(2020, 9, 30)];
     mainData: IChart.IChart = {
       name: 'Аполипопротеид В',
@@ -143,7 +143,7 @@
         },
         {
           'date': '2020-08-25',
-          'value': 1.27,
+          'value': 1.45,
           'analyzer': {
             'name': 'AU 680',
             'ranges': {
@@ -158,7 +158,7 @@
         },
         {
           'date': '2020-9-25',
-          'value': 1.27,
+          'value': 1.41,
           'analyzer': {
             'name': 'AU 680',
             'ranges': {
@@ -175,7 +175,7 @@
     };
 
     changeCheckboxValue(val: boolean) {
-     this.isCheckboxValue = val
+     this.isRefZonesVisible = val
     }
   }
 </script>

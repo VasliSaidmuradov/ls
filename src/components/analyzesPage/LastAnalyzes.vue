@@ -11,11 +11,19 @@
           <th class="table__header-item">Дата сдачи</th>
         </tr>
 
-        <tr class="table__tr" v-for="(result, index) in results" :key="index">
-          <td class="table__value">{{result.value}}, {{result.laboratory.units}}</td>
-          <td colspan="table__ref">{{result.analyzer.ranges.max}}{{result.analyzer.ranges.min}}</td>
-          <td class="table__laboratory">{{result.laboratory.name}}</td>
-          <td class="table__date">{{$date(new Date(result.date), 'd MMMM yyyy')}}</td>
+        <tr class="table__tr" v-for="(result, index) in results.slice(-5)" :key="index">
+          <td class="table__value" :style="{color: countColor(result)}">
+            {{result.value}}, {{result.laboratory.units}}
+          </td>
+          <td colspan="table__ref">
+            {{countRanges(result)}}
+          </td>
+          <td class="table__laboratory">
+            {{result.laboratory.name}}
+          </td>
+          <td class="table__date">
+            {{$date(new Date(result.date), 'd MMMM yyyy')}}
+          </td>
         </tr>
       </table>
 
@@ -50,6 +58,30 @@
   export default class LastAnalyzes extends Vue {
 
     @Prop() results: IChart.IChartItem[];
+
+    countColor(result: IChart.IChartItem): string {
+      const green = '#63C58A';
+      const red = '#FF7C7C';
+      const value = result.value;
+      const min = result.analyzer.ranges.min || 0;
+      const max = result.analyzer.ranges.max || 0;
+
+      if (value < min || value > max) {
+        return red;
+      }
+
+      return green;
+    }
+
+     countRanges(result: IChart.IChartItem): string {
+      const {ranges} = result.analyzer
+
+      return ranges.min !== null && ranges.max !== null
+        ? `${ranges.min} - ${ranges.max}`
+        : ranges.min !== null
+          ? `${ranges.min} >`
+          : `< ${ranges.max}`
+    }
   }
 </script>
 
@@ -102,7 +134,6 @@
       }
 
       &__value {
-        color: $status-green;
         font-weight: 600;
         font-size: 14px;
         line-height: 130%;

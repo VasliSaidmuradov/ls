@@ -6,31 +6,41 @@
       <div class="info-item">
         <span class="info-item-title">Текущее значение</span>
         <span class="info-item-value">
-          2,8
-          <span class="info-item-value--units">МЕ/мл</span>
+          {{results[results.length - 1].value}}
+          <span class="info-item-value--units">{{results[results.length - 1].laboratory.units}}</span>
         </span>
-        <span class="info-item-date">2 августа 2020 г.</span>
+        <span class="info-item-date">{{$date(new Date(results[results.length - 1].date), 'd MMMM yyyy')}}</span>
       </div>
 
       <div class="info-item">
         <span class="info-item-title">Предыдущее значение</span>
         <div class="info-item-value-wrapper">
           <span class="info-item-value">
-            2,8
-            <span class="info-item-value--units">МЕ/мл</span>
+            {{results[results.length - 2].value}}
+            <span class="info-item-value--units">{{results[results.length - 2].laboratory.units}}</span>
           </span>
-          <div class="info-item-icon-value-wrapper">
-            <icon class="info-item-arrow-icon" name="next-icon"/>
-            <span class="info-item-value-change">1,75</span>
+          <div
+              class="info-item-icon-value-wrapper"
+              v-if="results[results.length - 1].value !== results[results.length - 2].value"
+          >
+            <icon
+                class="info-item-arrow-icon"
+                :class="{
+                  'info-item-arrow-icon--top': results[results.length - 1].value > results[results.length - 2].value,
+                  'info-item-arrow-icon--bottom': results[results.length - 1].value < results[results.length - 2].value
+                }"
+                name="next-icon"
+            />
+            <span class="info-item-value-change">{{countChangeValue}}</span>
           </div>
         </div>
-        <span class="info-item-date">23 июня 2020 г.</span>
+        <span class="info-item-date">{{$date(new Date(results[results.length - 2].date), 'd MMMM yyyy')}}</span>
       </div>
 
       <div class="info-item">
         <span class="info-item-title">Референсные значения</span>
         <span class="info-item-value info-item-value--black">
-          0.41 – 5.18
+          {{countRanges}}
         </span>
         <div class="info-item-laboratory-wrapper">
           <span class="info-item-laboratory">ЛабСтори</span>
@@ -53,6 +63,8 @@
 
         <q-expansion-item
             class="info-item__exp"
+            :value="isCommentsShow"
+            @input="isCommentsShow = !isCommentsShow"
         >
           <template v-slot:header>
             <div class="info-item__exp-header">
@@ -72,14 +84,35 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Prop, Vue } from 'vue-property-decorator';
+  import { IChart } from '@/interfaces/chart.interface';
 
 
   @Component({
     components: {},
   })
   export default class InfoHeader extends Vue {
+    @Prop() results: IChart.IChartItem[];
 
+    isCommentsShow = true;
+
+    get countChangeValue(): string {
+      const value = this.results[this.results.length - 1].value;
+      const prevValue = this.results[this.results.length - 2].value;
+
+      return Math.abs(value - prevValue).toFixed(2);
+    }
+
+    get countRanges(): string {
+      const labstoryResults = this.results.filter(result => result.laboratory.name === 'ЛабСтори');
+      const { ranges } = labstoryResults[0].analyzer;
+
+      return ranges.min !== null && ranges.max !== null
+        ? `${ranges.min} - ${ranges.max}`
+        : ranges.min !== null
+          ? `${ranges.min} >`
+          : `< ${ranges.max}`;
+    }
   }
 </script>
 
@@ -149,7 +182,14 @@
         width: 4px;
         height: 8px;
         color: $black-04;
-        transform: rotate(90deg);
+
+        &--top {
+          transform: rotate(90deg);
+        }
+
+        &--bottom {
+          transform: rotate(-90deg);
+        }
       }
 
       &-item-value-change {
