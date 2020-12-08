@@ -10,7 +10,9 @@
           type="radio"
           name="period"
           :id="period.id"
-          v-model="value"
+          :value="period.id"
+          v-model="picked"
+          @change="changeValue"
       >
       <label :for="period.id" class="period__label">{{period.text}}</label>
     </div>
@@ -18,12 +20,13 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Emit, Vue, Watch } from 'vue-property-decorator';
 
 
   @Component({})
   export default class PeriodsComponent extends Vue {
-    value = {}
+    picked = 3;
+
     periodList = [
       {
         id: 1,
@@ -42,6 +45,13 @@
         text: '1 год',
       },
     ];
+
+    @Watch('picked')
+    @Emit('change-value')
+    changeValue() {
+      return this.picked;
+    }
+
   }
 </script>
 

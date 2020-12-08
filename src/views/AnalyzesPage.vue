@@ -2,7 +2,11 @@
   <div class="analyzes-page layout">
     <info-header :results="mainData.results"/>
 
-    <chart-control/>
+    <chart-control
+        :laboratory-value="laboratoryValue"
+        @choose-laboratory="chooseLaboratory"
+        @change-date-range="changeDateRange"
+    />
 
     <div class="chart-dates-wrapper">
       <div class="chart">
@@ -37,7 +41,7 @@
       </div>
 
       <choose-specific-dates
-          :results="mainData.results"
+          :results="data.results"
           @change-visible="changeVisible"
       />
     </div>
@@ -60,6 +64,7 @@
   import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
   import ChooseSpecificDates from '@/components/analyzesPage/ChooseSpecificDates.vue';
   import ChartControl from '@/components/analyzesPage/ChartControl.vue';
+  import { isAfter, isBefore, subDays } from 'date-fns';
 
   interface IChangeVisibleObject {
     e: boolean;
@@ -80,7 +85,7 @@
   })
   export default class AnalyzesPage extends Vue {
     isRefZonesVisible = true;
-    dateRange: Date[] = [new Date(2020, 3, 1), new Date(2020, 9, 30)];
+    dateRange: Date[] = [subDays(new Date(), 180), new Date()];
     mainData: IChart.IChart = {
       name: 'Аполипопротеид В',
       results: [
@@ -198,6 +203,45 @@
         },
       ],
     };
+    data: IChart.IChart = JSON.parse(JSON.stringify(this.mainData));
+    laboratoryValue = 'Все';
+
+    get countResults() {
+      this.filterDateResults;
+      this.filterLaboratoryResults;
+      return this.filterVisibleResults;
+    }
+
+    get filterVisibleResults() {
+      return this.data.results.filter(result => result.visible === true);
+    }
+
+    get filterDateResults() {
+      const filteredResults: IChart.IChartItem[] = [];
+
+      this.mainData.results.forEach(result => {
+        if (isBefore(subDays(new Date(result.date), 0), this.dateRange[1])
+          && isAfter(subDays(new Date(result.date), 0), this.dateRange[0])) {
+          filteredResults.push(result);
+        }
+      });
+
+      this.data.results = filteredResults;
+      return this.data.results;
+    }
+
+    get filterLaboratoryResults() {
+      if (this.laboratoryValue === 'Все') {
+        return this.data.results;
+      }
+
+      this.data.results = this.data.results.filter(result => result.laboratory.name === this.laboratoryValue);
+      return this.data.results;
+    }
+
+    changeDateRange(val: Date[]) {
+      this.dateRange = val;
+    }
 
     changeCheckboxValue(val: boolean) {
       this.isRefZonesVisible = val;
@@ -206,11 +250,11 @@
     changeVisible(obj: IChangeVisibleObject) {
       const { e, index } = obj;
 
-      this.mainData.results[index].visible = e;
+      this.data.results[index].visible = e;
     }
 
-    get countResults() {
-      return this.mainData.results.filter(result => result.visible === true);
+    chooseLaboratory(val: string) {
+      this.laboratoryValue = val;
     }
   }
 </script>

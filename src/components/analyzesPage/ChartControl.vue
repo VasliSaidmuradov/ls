@@ -6,14 +6,17 @@
       <main-select
           class="select"
           :options="options"
-          :value="value"
+          :value="laboratoryValue"
           :border-color="'#E9E8FF'"
           :width="310"
+          @input-select="inputSelect"
       />
 
       <laboratory-designation/>
 
-      <periods-component/>
+      <periods-component
+          @change-value="changeRadioDateId"
+      />
 
       <main-btn
           type="primary"
@@ -35,7 +38,7 @@
         <q-date
             range
             :value="dateValue"
-            @input="changeValue"
+            @input="changePeriod"
         />
       </q-dialog>
     </div>
@@ -43,19 +46,25 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
   import MainSelect from '@/components/UI/MainSelect.vue';
   import LaboratoryDesignation from '@/components/LaboratoryDesignation.vue';
   import PeriodsComponent from '@/components/PeriodsComponent.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import { subDays } from 'date-fns';
 
+  interface IDatePeriod {
+    from: string;
+    to: string;
+  }
 
   @Component({
     components: { MainBtn, PeriodsComponent, LaboratoryDesignation, MainSelect },
   })
-  export default class AnalyzesPage extends Vue {
-    options = ['ss', 'pp'];
-    value = 'ss';
+  export default class ChartControl extends Vue {
+    @Prop() laboratoryValue: string;
+
+    options = ['ЛабСтори', 'Helex', 'Все'];
     isDateModalOpen = false;
     dateValue = '';
 
@@ -63,8 +72,28 @@
       this.isDateModalOpen = val;
     }
 
-    changeValue(value: string) {
-      this.dateValue = value;
+    @Emit('change-date-range')
+    changePeriod(obj: IDatePeriod) {
+      return [subDays(new Date(obj.from), 0), subDays(new Date(obj.to), 0)];
+    }
+
+    @Emit('change-date-range')
+    changeRadioDateId(id: number) {
+      switch (id) {
+        case 1:
+          return [subDays(new Date(), 30), new Date()];
+        case 2:
+          return [subDays(new Date(), 90), new Date()];
+        case 3:
+          return [subDays(new Date(), 180), new Date()];
+        case 4:
+          return [subDays(new Date(), 365), new Date()];
+      }
+    }
+
+    @Emit('choose-laboratory')
+    inputSelect(val: string) {
+      return val;
     }
   }
 </script>
