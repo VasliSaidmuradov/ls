@@ -3,6 +3,7 @@
       unelevated
       class="back-btn"
       :class="`back-btn-${type}`"
+      :ripple="{ color: 'white' }"
       @click="goBack"
   >
     <div class="back-btn__icon-wrapper">

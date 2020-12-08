@@ -1,8 +1,35 @@
 <template>
   <div class="analyzes-page layout">
+    <back-btn class="back-btn" @go-back="$router.go(-1)"/>
+
     <info-header :results="mainData.results"/>
 
+    <span class="middle-title">Динамика показателя</span>
+
+    <div class="options-wrapper">
+      <q-toggle
+          :value="isRefZonesVisible"
+          @input="changeRefZonesVisible"
+          label="Референсная зона"
+      />
+
+      <main-btn
+          class="options-wrapper__filter-btn"
+          bcg-color="#ffffff"
+          type="only-icon"
+          width="52"
+          height="43"
+      >
+        <template v-slot:icon>
+          <icon name="filter-icon" class="options-wrapper__filter-btn-icon"/>
+        </template>
+      </main-btn>
+    </div>
+
+    <laboratory-designation class="laboratory-designation"/>
+
     <chart-control
+        class="control"
         :laboratory-value="laboratoryValue"
         @choose-laboratory="chooseLaboratory"
         @change-date-range="changeDateRange"
@@ -35,17 +62,29 @@
               :border-color="'#63C58A'"
               :color="'#63C58A'"
               :value="isRefZonesVisible"
-              @change-value="changeCheckboxValue"
+              @change-value="changeRefZonesVisible"
           />
         </div>
       </div>
 
       <choose-specific-dates
+          class="specific-dates"
           :results="data.results"
           @change-visible="changeVisible"
       />
     </div>
 
+    <main-btn
+        class="chart__btn chart__btn--media-small"
+        :text="'Скачать график в .jpeg'"
+        :bcg-color="'transparent'"
+        :type="'small'"
+        :height="56"
+    >
+      <template v-slot:icon>
+        <icon name="download-icon" class="chart__btn-icon"/>
+      </template>
+    </main-btn>
 
     <look-dynamic/>
 
@@ -65,6 +104,8 @@
   import ChooseSpecificDates from '@/components/analyzesPage/ChooseSpecificDates.vue';
   import ChartControl from '@/components/analyzesPage/ChartControl.vue';
   import { isAfter, isBefore, subDays } from 'date-fns';
+  import LaboratoryDesignation from '@/components/LaboratoryDesignation.vue';
+  import BackBtn from '@/components/UI/buttons/BackBtn.vue';
 
   interface IChangeVisibleObject {
     e: boolean;
@@ -73,6 +114,8 @@
 
   @Component({
     components: {
+      BackBtn,
+      LaboratoryDesignation,
       ChartControl,
       ChooseSpecificDates,
       CheckboxInput,
@@ -243,7 +286,7 @@
       this.dateRange = val;
     }
 
-    changeCheckboxValue(val: boolean) {
+    changeRefZonesVisible(val: boolean) {
       this.isRefZonesVisible = val;
     }
 
@@ -261,10 +304,56 @@
 
 <style lang="scss" scoped>
   .analyzes-page {
+    .back-btn {
+      display: none;
+      @include media-breakpoint-up($breakpoint-sm) {
+        display: block;
+        position: absolute;
+        top: 30px;
+      }
+    }
+
+    .middle-title {
+      margin-top: 60px;
+      display: block;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 120%;
+      color: $black-02;
+      @include media-breakpoint-up($breakpoint-lg) {
+        margin-top: 48px;
+      }
+    }
+
+    .options-wrapper {
+      display: none;
+      @include media-breakpoint-up($breakpoint-lg) {
+        max-width: 722px;
+        width: 100%;
+        margin-top: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      &__filter-btn {
+        box-shadow: 0 4px 15px $shadow-color;
+      }
+
+      &__filter-btn-icon {
+        width: 24px;
+        height: 24px;
+        color: $accent-color;
+      }
+    }
+
     .chart-dates-wrapper {
       margin-top: 40px;
       display: flex;
       align-items: flex-start;
+      @include media-breakpoint-up($breakpoint-lg) {
+        margin-top: 12px;
+      }
     }
 
     .chart {
@@ -273,6 +362,13 @@
       padding-bottom: 24px;
       background-color: $light-white;
       border-radius: 15px;
+
+      &__btn--media-small {
+        display: none;
+        @include media-breakpoint-up($breakpoint-lg) {
+          display: block;
+        }
+      }
 
       &__btn-icon {
         width: 24px;
@@ -286,6 +382,29 @@
         align-items: center;
         max-width: 650px;
         margin: 15px auto 0 auto;
+        @include media-breakpoint-up($breakpoint-lg) {
+          display: none;
+        }
+      }
+    }
+
+    .specific-dates {
+      @include media-breakpoint-up($breakpoint-lg) {
+        display: none;
+      }
+    }
+
+    .control {
+      @include media-breakpoint-up($breakpoint-lg) {
+        display: none;
+      }
+    }
+
+    .laboratory-designation {
+      display: none;
+      @include media-breakpoint-up($breakpoint-lg) {
+        margin-top: 36px;
+        display: flex;
       }
     }
   }

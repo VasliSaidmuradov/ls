@@ -117,25 +117,31 @@
 </script>
 
 <style lang="scss" scoped>
-  .info-item + .info-item {
-    margin-left: 20px;
-  }
-
   .analyzes-page-info-header {
     .title {
       font-weight: 500;
       font-size: 36px;
       line-height: 130%;
       color: $black-01;
+      @include media-breakpoint-up($breakpoint-md) {
+        font-size: 26px;
+        line-height: 124%;
+      }
     }
 
     .info {
-      margin-top: 30px;
+      margin-top: 22px;
       display: flex;
       align-items: flex-start;
+      flex-wrap: wrap;
+      @include media-breakpoint-up($breakpoint-md) {
+        margin-top: 80px;
+      }
 
       &-item {
         min-width: 256px;
+        margin-right: 20px;
+        margin-top: 8px;
         padding: 18px;
         background-color: $light-white;
         border-radius: 15px;

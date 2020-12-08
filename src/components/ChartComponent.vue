@@ -134,9 +134,25 @@
     timeFormatDefaultLocale as d3TimeFormatDefaultLocale,
   } from 'd3';
   import { IChart } from '@/interfaces/chart.interface';
+  import { format } from 'date-fns';
 
   interface IRefs {
     wrapper: HTMLElement;
+  }
+
+  interface ILangConfig {
+    decimal: string;
+    thousands: string;
+    grouping: [number];
+    currency: [string, string];
+    dateTime: string;
+    date: string;
+    time: string;
+    periods: [string, string];
+    days: [string, string, string, string, string, string, string];
+    shortDays: [string, string, string, string, string, string, string];
+    months: [string, string, string, string, string, string, string, string, string, string, string, string];
+    shortMonths: [string, string, string, string, string, string, string, string, string, string, string, string];
   }
 
   @Component({})
@@ -149,10 +165,24 @@
       bottom: 40,
       top: 0,
     };
+    langConfig: ILangConfig = {
+      'decimal': ',',
+      'thousands': '\xa0',
+      'grouping': [3],
+      'currency': ['', ' руб.'],
+      'dateTime': '%A, %e %B %Y г. %X',
+      'date': '%d.%m.%Y',
+      'time': '%H:%M:%S',
+      'periods': ['AM', 'PM'],
+      'days': ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+      'shortDays': ['Вс.', 'Пн.', 'Вт.', 'Ср.', 'Чт.', 'Пт.', 'Сб.'],
+      'months': ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+      'shortMonths': ['Янв.', 'Фев.', 'Мар.', 'Апр.', 'Май.', 'Июн.', 'Июл.', 'Авг.', 'Сен.', 'Окт.', 'Ноя.', 'Дек.'],
+    };
 
     @Prop({}) results: IChart.IChartItem[];
     @Prop() dateRange: Date[];
-    @Prop() isRefZonesVisible: boolean
+    @Prop() isRefZonesVisible: boolean;
     @Prop({ default: 702 }) width: number;
     @Prop({ default: 350 }) height: number;
 
@@ -222,30 +252,30 @@
 
     get countDStar() {
       const radialAreaGenerator = d3AreaRadial()
-        .angle(d => {
-          return d.angle;
+        .angle((d: [number, number]) => {
+          return d[0];
         })
-        .outerRadius(d => {
-          return d.r1;
+        .outerRadius((d: [number, number]) => {
+          return d[1];
         });
 
-      const points = [
-        { angle: 0, r1: 5 },
-        { angle: Math.PI * 0.25, r1: 2.5 },
-        { angle: Math.PI * 0.5, r1: 5 },
-        { angle: Math.PI * 0.75, r1: 2.5 },
-        { angle: Math.PI, r1: 5 },
-        { angle: Math.PI * 1.25, r1: 2.5 },
-        { angle: Math.PI * 1.5, r1: 5 },
-        { angle: Math.PI * 1.75, r1: 2.5 },
-        { angle: Math.PI * 2, r1: 5 },
+      const points: [number, number][] = [
+        [0, 5],
+        [Math.PI * 0.25, 2.5],
+        [Math.PI * 0.5, 5],
+        [Math.PI * 0.75, 2.5],
+        [Math.PI, 5],
+        [Math.PI * 1.25, 2.5],
+        [Math.PI * 1.5, 5],
+        [Math.PI * 1.75, 2.5],
+        [Math.PI * 2, 5],
       ];
 
       return radialAreaGenerator(points);
     }
 
     countTooltipDate(d: IChart.IChartItem): string {
-      return this.$date(new Date(d.date), 'd MMMM yyyy');
+      return format(new Date(d.date), 'd MMMM yyyy');
     }
 
     countXTextRefZone(idx: number) {
@@ -274,9 +304,7 @@
             ? 0
             : this.y(results[0].analyzer.ranges.max) + 3;
         case 1:
-          return results[results.length - 1].analyzer.ranges.max === null
-            ? 0
-            : this.y(results[results.length - 1].analyzer.ranges.max) + 3;
+          return this.y(results[results.length - 1].analyzer.ranges.max || 0) + 3;
         case 2:
           return results[0].analyzer.ranges.min === null
             ? 0
@@ -284,7 +312,7 @@
         case 3:
           return results[results.length - 1].analyzer.ranges.min === null
             ? 0
-            : this.y(results[results.length - 1].analyzer.ranges.min) + 3;
+            : this.y(results[results.length - 1].analyzer.ranges.min || 0) + 3;
       }
     }
 
@@ -389,20 +417,7 @@
     };
 
     setLocale() {
-      d3TimeFormatDefaultLocale({
-        'decimal': ',',
-        'thousands': '\xa0',
-        'grouping': [3],
-        'currency': ['', ' руб.'],
-        'dateTime': '%A, %e %B %Y г. %X',
-        'date': '%d.%m.%Y',
-        'time': '%H:%M:%S',
-        'periods': ['AM', 'PM'],
-        'days': ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-        'shortDays': ['Вс.', 'Пн.', 'Вт.', 'Ср.', 'Чт.', 'Пт.', 'Сб.'],
-        'months': ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-        'shortMonths': ['Янв.', 'Фев.', 'Мар.', 'Апр.', 'Май.', 'Июн.', 'Июл.', 'Авг.', 'Сен.', 'Окт.', 'Ноя.', 'Дек.'],
-      });
+      d3TimeFormatDefaultLocale(this.langConfig);
     }
 
     init() {

@@ -35,14 +35,20 @@
 .look-dynamic {
   margin-top: 20px;
   max-width: 722px;
-  padding: 25px 40px;
+  padding: 0 40px 25px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   border: 1px solid $light-stroke;
   border-radius: 15px;
 
+  &__btn {
+    margin-top: 25px;
+  }
+
   &__text {
+    margin-top: 25px;
     max-width: 353px;
     color: $black-01;
     font-weight: normal;

@@ -1,6 +1,5 @@
 <template>
   <div class="chart-control">
-    <span class="title">Динамика показателя</span>
 
     <div class="control-wrapper">
       <main-select
@@ -37,7 +36,7 @@
       >
         <q-date
             range
-            :value="dateValue"
+            v-model="periodValue"
             @input="changePeriod"
         />
       </q-dialog>
@@ -66,7 +65,10 @@
 
     options = ['ЛабСтори', 'Helex', 'Все'];
     isDateModalOpen = false;
-    dateValue = '';
+    periodValue: IDatePeriod = {
+      from: '',
+      to: '',
+    };
 
     toggleDateModal(val: boolean) {
       this.isDateModalOpen = val;
@@ -101,13 +103,6 @@
 <style lang="scss" scoped>
   .chart-control {
     margin-top: 60px;
-
-    .title {
-      font-weight: 500;
-      font-size: 20px;
-      line-height: 120%;
-      color: $black-02;
-    }
 
     .control-wrapper {
       margin-top: 20px;

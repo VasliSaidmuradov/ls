@@ -27,6 +27,29 @@
         </tr>
       </table>
 
+      <!--visible if max-width = 600px-->
+      <div class="block__item-wrapper">
+        <div class="block__item" v-for="(result, index) in results.slice(-5)" :key="index">
+          <div class="block__item-header">
+            <span class="block__item-value" :style="{color: countColor(result)}">
+              {{result.value}}
+            </span>
+            <span class="block__item-units">{{result.laboratory.units}}</span>
+          </div>
+          <div class="block__item-middle">
+            {{countRanges(result)}}
+          </div>
+          <div class="block__item-footer">
+            <span class="block__item-date">
+              {{$date(new Date(result.date), 'd MMMM yyyy')}}
+            </span>
+            <span class="block__item-laboratory">
+              {{result.laboratory.name}}
+            </span>
+          </div>
+        </div>
+      </div>
+
       <div class="right-wrapper">
         <main-btn
             class="right-wrapper__btn"
@@ -73,14 +96,14 @@
       return green;
     }
 
-     countRanges(result: IChart.IChartItem): string {
-      const {ranges} = result.analyzer
+    countRanges(result: IChart.IChartItem): string {
+      const { ranges } = result.analyzer;
 
       return ranges.min !== null && ranges.max !== null
         ? `${ranges.min} - ${ranges.max}`
         : ranges.min !== null
           ? `${ranges.min} >`
-          : `< ${ranges.max}`
+          : `< ${ranges.max}`;
     }
   }
 </script>
@@ -96,9 +119,19 @@
       line-height: 130%;
     }
 
+    .main-wrapper {
+      display: flex;
+      @include media-breakpoint-up(1290px) {
+        flex-direction: column;
+      }
+    }
+
     .table {
       border-collapse: separate;
       border-spacing: 0 10px;
+      @include media-breakpoint-up(600px) {
+        display: none;
+      }
 
       td:first-child, th:first-child {
         padding-left: 20px;
@@ -161,13 +194,78 @@
       }
     }
 
-    .main-wrapper {
-      display: flex;
+    .block__item + .block__item {
+      margin-top: 8px;
+    }
+
+    .block__item {
+      margin-top: 24px;
+      padding: 14px 13px;
+      height: 95px;
+      border-radius: 20px;
+      background-color: $light-white;
+      box-shadow: 0 4px 15px $shadow-color;
+
+      &-wrapper {
+        display: none;
+        @include media-breakpoint-up(600px) {
+          display: block;
+        }
+      }
+
+      &-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      &-middle {
+        margin-top: 2px;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 15px;
+        color: $black-03;
+      }
+
+      &-footer {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+      }
+
+      &-value {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 130%;
+      }
+
+      &-date {
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 15px;
+        color: $black-04;
+      }
+
+      &-laboratory {
+        margin-left: 24px;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 15px;
+        color: $black-01;
+      }
     }
 
     .right-wrapper {
       margin-top: 70px;
       margin-left: 54px;
+      @include media-breakpoint-up(600px) {
+        display: none;
+      }
+
+      @include media-breakpoint-up(1290px) {
+        margin-left: 0;
+        margin-top: 10px;
+      }
 
       &__text {
         margin-top: 10px;
