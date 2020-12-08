@@ -27,6 +27,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
 
 @Component({})
 export default class FloatingActionBtn extends Vue {
@@ -49,7 +51,8 @@ export default class FloatingActionBtn extends Vue {
   }
 
   addFile() {
-    console.log('add')
+    if (this.$route.name !== ROUTE_NAME.ADD_ANALYZES) this.$router.push({name: ROUTE_NAME.ADD_ANALYZES});
+
   }
 
   toggleActions() {

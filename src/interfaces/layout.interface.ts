@@ -10,7 +10,8 @@ export namespace ILayout {
 
   export enum Breakpoint {
     MOBILE = 767,
-    MOBILE_SMALL = 575
+    MOBILE_SMALL = 575,
+    PRE_MD = 1110,
   }
 
   export enum LayoutType {

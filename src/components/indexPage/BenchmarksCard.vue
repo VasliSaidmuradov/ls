@@ -16,7 +16,7 @@
         </div>
         <div class="benchmarks-card__content-value-right">
           <span class="benchmarks-card__content-value-right-ranges">
-            {{ranges}}
+            {{getRanges(benchmark.ranges)}}
           </span>
         </div>
       </div>
@@ -37,20 +37,11 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import {IDashBoard} from '@/interfaces/dashboard.interface';
+import AnalyzesMixin from '@/mixins/analyzes-mixin';
 
 @Component({})
-export default class BenchmarksCard extends Vue {
+export default class BenchmarksCard extends AnalyzesMixin {
   @Prop({required: true}) benchmark: IDashBoard.IBenchmarks;
-
-  get ranges(): string {
-    const {ranges} = this.benchmark;
-
-    return ranges.min !== null && ranges.max !== null
-        ? `${ranges.min} - ${ranges.max}`
-        : ranges.min !== null
-            ? `${ranges.min} >`
-            : `< ${ranges.max}`
-  }
 }
 </script>
 

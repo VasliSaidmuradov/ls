@@ -21,7 +21,7 @@
 
         <ul class="add-research__actions-exp-list">
           <li class="add-research__actions-exp-item">Документ</li>
-          <li class="add-research__actions-exp-item">Вручную</li>
+          <li class="add-research__actions-exp-item" @click="openAddAnalyzesModal">Вручную</li>
         </ul>
       </q-expansion-item>
 
@@ -38,6 +38,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import AnalyzesCard from '@/components/indexPage/AnalyzesCard.vue';
+import {bus} from '@/plugins/bus';
+import {IAnalyzes} from '@/interfaces/analyzes.interface';
 
 @Component({
   components: {
@@ -45,7 +47,9 @@ import AnalyzesCard from '@/components/indexPage/AnalyzesCard.vue';
   }
 })
 export default class AddResearch extends Vue {
-
+  openAddAnalyzesModal() {
+    bus.$emit(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL);
+  }
 }
 </script>
 

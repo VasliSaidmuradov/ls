@@ -3,6 +3,7 @@
     <component :is="layout">
       <router-view/>
     </component>
+    <ConfirmModal />
   </div>
 </template>
 
@@ -10,8 +11,13 @@
 import {Component, Vue} from 'vue-property-decorator';
 import {ILayout} from '@/interfaces/layout.interface';
 import LayoutType = ILayout.LayoutType;
+import ConfirmModal from '@/components/modals/ConfirmModal.vue';
 
-  @Component({})
+  @Component({
+    components: {
+      ConfirmModal
+    }
+  })
 
   export default class App extends Vue {
     get layout() {
