@@ -20,6 +20,10 @@
         </div>
       </div>
     </div>
+
+    <AddAnalyzesModal :isShow="addAnalyzesModalState" @close="addAnalyzesModalClose"/>
+    <AddComment :isShow="addCommentModalState" @close="addCommentClose"/>
+    <EditAnalyzes :isShow="editAnalyzesModalState" :editData="editData" @close="editModalClose"/>
   </div>
 </template>
 
@@ -33,7 +37,12 @@ import {IDashBoard} from '@/interfaces/dashboard.interface';
 import {ITabs} from '@/interfaces/tabs.interface';
 import LatestResults from '@/components/indexPage/LatestResults.vue';
 import Benchmarks from '@/components/indexPage/Benchmarks.vue';
-import {IRouter} from '@/interfaces/router.interface';
+import AddAnalyzesModal from '@/components/modals/AddAnalyzes.vue';
+import {bus} from '@/plugins/bus';
+import {IAnalyzes} from '@/interfaces/analyzes.interface';
+import AddComment from '@/components/modals/AddComment.vue';
+import EditAnalyzes from '@/components/modals/EditAnalyzes.vue';
+
 
 
 @Component({
@@ -41,7 +50,10 @@ import {IRouter} from '@/interfaces/router.interface';
     AnalyzesCard,
     AddResearch,
     AddedDocuments,
-    Tabs
+    Tabs,
+    AddAnalyzesModal,
+    AddComment,
+    EditAnalyzes
   }
 })
 export default class IndexPage extends Vue {
@@ -58,10 +70,46 @@ export default class IndexPage extends Vue {
     },
   ];
 
+  addAnalyzesModalState = false;
+  editAnalyzesModalState = false;
+  addCommentModalState = false;
+  editData = {};
+
   activeTab = IDashBoard.TabsName.BENCHMARKS;
+
+  mounted() {
+    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL, () => this.addAnalyzesModalState = !this.addAnalyzesModalState);
+    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, () => this.addCommentModalState = !this.addCommentModalState);
+    bus.$on(IAnalyzes.BusEvents.EDIT_ANALYZES, (data: IAnalyzes.IAddedAnalyzes) => {
+      this.editData = data;
+      this.editAnalyzesModalState = !this.editAnalyzesModalState;
+    });
+  }
+
+  changeAddModalState() {
+    this.addAnalyzesModalState = !this.addAnalyzesModalState;
+  }
+
+  addAnalyzesModalClose(value: boolean) {
+    this.addAnalyzesModalState = value;
+  }
 
   onTabChange(value: IDashBoard.TabsName) {
     this.activeTab = value;
+  }
+
+  editModalClose(value: boolean) {
+    this.editAnalyzesModalState = value
+  }
+
+  addCommentClose(value: boolean) {
+    this.addCommentModalState = value;
+  }
+
+  destroy() {
+    bus.$off(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL);
+    bus.$off(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT);
+    bus.$off(IAnalyzes.BusEvents.EDIT_ANALYZES);
   }
 }
 </script>

@@ -8,6 +8,7 @@ import router from "@/router";
 import {IRouter} from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
 import {IUserCard} from '@/interfaces/personal-area.interface';
+
 type AuthStore = ActionContext<IAuthStore.IState, IAppState>;
 
 export default {
