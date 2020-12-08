@@ -8,9 +8,9 @@
         <g class="y-horizontal"></g>
 
         <!--REF ZONE MAX-->
-        <g class="ref-zone-max">
+        <g class="ref-zone-max" v-if="isRefZonesVisible">
           <line
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :x1="countRefX1(idx)"
               :x2="countRefX2(idx)"
@@ -24,9 +24,9 @@
         </g>
 
         <!--REF ZONE MIN-->
-        <g class="ref-zone-min">
+        <g class="ref-zone-min" v-if="isRefZonesVisible">
           <line
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :x1="countRefX1(idx)"
               :x2="countRefX2(idx)"
@@ -40,7 +40,7 @@
         </g>
 
         <!--TEXT VALUE REF ZONE-->
-        <g class="value-ref-zones">
+        <g class="value-ref-zones" v-if="isRefZonesVisible">
           <text
               v-for="(val, idx) in 4"
               :key="val"
@@ -58,7 +58,7 @@
         <!--RECT-->
         <rect
             class="rect"
-            v-for="(d, idx) in data.results"
+            v-for="(d, idx) in results"
             :key="idx"
             :x="x(prettyDate(d.date))"
             :y="y(d.value)"
@@ -80,7 +80,7 @@
         <!--CIRCLE ON RECT-->
         <g class="g-circle">
           <circle
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :cx="x(prettyDate(d.date)) + 2.5"
               :cy="y(d.value) - 7"
@@ -93,7 +93,7 @@
         <!--STAR ON RECT-->
         <g class="g-star">
           <path
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :d="countDStar"
               :transform="`translate(${x(prettyDate(d.date)) + 2.5}, ${y(d.value) - 7})`"
@@ -106,7 +106,7 @@
         <!--TEXT ON RECT-->
         <g class="g-text">
           <text
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :x="x(prettyDate(d.date)) + 2"
               :y="y(d.value) - 20"
@@ -150,8 +150,9 @@
       top: 0,
     };
 
-    @Prop({}) data: IChart.IChart;
+    @Prop({}) results: IChart.IChartItem[];
     @Prop() dateRange: Date[];
+    @Prop() isRefZonesVisible: boolean
     @Prop({ default: 702 }) width: number;
     @Prop({ default: 350 }) height: number;
 
@@ -170,7 +171,7 @@
     get valueArray() {
       const valueArray: number[] = [];
 
-      this.data.results.forEach((item: IChart.IChartItem) => {
+      this.results.forEach((item: IChart.IChartItem) => {
         valueArray.push(item.value);
 
         if (item.analyzer.ranges.max !== null) {
@@ -261,7 +262,7 @@
     }
 
     countYTextRefZone(idx: number) {
-      const results: IChart.IChartItem[] = this.data.results;
+      const results: IChart.IChartItem[] = this.results;
 
       if (!results.length) {
         return 0;
@@ -288,7 +289,7 @@
     }
 
     countTextRefZone(idx: number) {
-      const results = this.data.results;
+      const results = this.results;
 
       if (!results.length) {
         return '';
@@ -307,7 +308,7 @@
     }
 
     countRefX1(idx: number) {
-      const results = this.data.results;
+      const results = this.results;
       const resultItem = results[idx];
       const nextResultItem = results[idx + 1];
 
@@ -326,7 +327,7 @@
     }
 
     countRefX2(idx: number) {
-      const results = this.data.results;
+      const results = this.results;
       const resultItem = results[idx];
       const prevResultItem = results[idx - 1];
 
@@ -409,7 +410,7 @@
       this.initHorizontalLines();
     }
 
-    @Watch('data', { deep: true })
+    @Watch('results', { deep: true })
     refreshChart() {
       this.init();
     }

@@ -12,6 +12,7 @@ export namespace IChart {
     value: number
     analyzer: IAnalyzer
     laboratory: ILaboratory
+    visible?: boolean
   }
 
   export interface IAnalyzer {

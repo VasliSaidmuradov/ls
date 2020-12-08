@@ -2,13 +2,14 @@
   <div class="analyzes-page layout">
     <info-header :results="mainData.results"/>
 
-    <chart-control />
+    <chart-control/>
 
     <div class="chart-dates-wrapper">
       <div class="chart">
         <chart-component
-            :data="mainData"
+            :results="countResults"
             :date-range="dateRange"
+            :is-ref-zones-visible="isRefZonesVisible"
         />
 
         <div class="chart__bottom">
@@ -35,7 +36,10 @@
         </div>
       </div>
 
-      <choose-specific-dates :results="mainData.results"/>
+      <choose-specific-dates
+          :results="mainData.results"
+          @change-visible="changeVisible"
+      />
     </div>
 
 
@@ -57,8 +61,22 @@
   import ChooseSpecificDates from '@/components/analyzesPage/ChooseSpecificDates.vue';
   import ChartControl from '@/components/analyzesPage/ChartControl.vue';
 
+  interface IChangeVisibleObject {
+    e: boolean;
+    index: number;
+  }
+
   @Component({
-    components: { ChartControl, ChooseSpecificDates, CheckboxInput, MainBtn, LookDynamic, LastAnalyzes, InfoHeader, ChartComponent },
+    components: {
+      ChartControl,
+      ChooseSpecificDates,
+      CheckboxInput,
+      MainBtn,
+      LookDynamic,
+      LastAnalyzes,
+      InfoHeader,
+      ChartComponent,
+    },
   })
   export default class AnalyzesPage extends Vue {
     isRefZonesVisible = true;
@@ -80,6 +98,7 @@
             'name': 'ЛабСтори',
             'units': 'г/л',
           },
+          visible: true,
         },
         {
           'date': '2020-05-18',
@@ -95,6 +114,7 @@
             'name': 'ЛабСтори',
             'units': 'г/л',
           },
+          visible: true,
         },
         {
           'date': '2020-06-25',
@@ -110,6 +130,7 @@
             'name': 'Helex',
             'units': 'г/л',
           },
+          visible: true,
         },
         {
           'date': '2020-07-28',
@@ -125,6 +146,7 @@
             'name': 'ЛабСтори',
             'units': 'г/л',
           },
+          visible: true,
         },
         {
           'date': '2020-08-16',
@@ -140,6 +162,7 @@
             'name': 'ЛабСтори',
             'units': 'г/л',
           },
+          visible: true,
         },
         {
           'date': '2020-08-25',
@@ -155,6 +178,7 @@
             'name': 'ЛабСтори',
             'units': 'г/л',
           },
+          visible: true,
         },
         {
           'date': '2020-9-25',
@@ -170,12 +194,23 @@
             'name': 'ЛабСтори',
             'units': 'г/л',
           },
+          visible: true,
         },
       ],
     };
 
     changeCheckboxValue(val: boolean) {
-     this.isRefZonesVisible = val
+      this.isRefZonesVisible = val;
+    }
+
+    changeVisible(obj: IChangeVisibleObject) {
+      const { e, index } = obj;
+
+      this.mainData.results[index].visible = e;
+    }
+
+    get countResults() {
+      return this.mainData.results.filter(result => result.visible === true);
     }
   }
 </script>

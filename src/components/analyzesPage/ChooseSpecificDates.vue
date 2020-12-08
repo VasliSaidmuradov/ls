@@ -11,10 +11,20 @@
             v-for="(result, index) in results"
             :key="index"
         >
-          <span class="date__value">{{result.value}} {{result.laboratory.units}}</span>
-          <span class="date__date">{{$date(new Date(result.date), 'd MMMM yyyy')}}</span>
+          <span
+              class="date__value"
+              :style="{color: countColor(result)}"
+          >
+            {{result.value}} {{result.laboratory.units}}
+          </span>
+          <span class="date__date">
+            {{$date(new Date(result.date), 'd MMMM yyyy')}}
+          </span>
           <checkbox-input
-              :value="isCheckboxValue"
+              :value="result.visible"
+              :color="countColor(result)"
+              :border-color="countColor(result)"
+              @change-value="changeVisible($event, index)"
           />
         </div>
       </div>
@@ -23,7 +33,7 @@
 </template>
 
 <script lang="ts">
-  import { Component, Prop, Vue } from 'vue-property-decorator';
+  import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
   import { IChart } from '@/interfaces/chart.interface';
   import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 
@@ -33,7 +43,24 @@
   export default class ChooseSpecificDates extends Vue {
     @Prop() results: IChart.IChartItem[];
 
-    isCheckboxValue = false;
+    @Emit('change-visible')
+    changeVisible(e: boolean, index: number) {
+      return { e, index };
+    }
+
+    countColor(result: IChart.IChartItem): string {
+      const green = '#63C58A';
+      const red = '#FF7C7C';
+      const value = result.value;
+      const min = result.analyzer.ranges.min || 0;
+      const max = result.analyzer.ranges.max || 0;
+
+      if (value < min || value > max) {
+        return red;
+      }
+
+      return green;
+    }
 
   }
 </script>
@@ -105,7 +132,6 @@
         font-weight: 500;
         font-size: 12px;
         line-height: 15px;
-        color: $status-green;
       }
 
       &__date {
