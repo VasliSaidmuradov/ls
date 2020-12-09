@@ -374,7 +374,11 @@
     }
 
     initAxisX() {
-      const gX = d3Select('.x')
+      d3Select('.x-g').remove();
+
+      const gX = d3Select('.x');
+      gX.append('g')
+        .attr('class', 'x-g')
         .call(d3AxisBottom(this.x));
 
       gX.selectAll('line').remove();
@@ -382,7 +386,11 @@
     }
 
     initHorizontalLines() {
-      const gYHorizontal = d3Select('.y-horizontal')
+      d3Select('.y-horizontal-g').remove();
+
+      const gYHorizontal = d3Select('.y-horizontal');
+      gYHorizontal.append('g')
+        .attr('class', 'y-horizontal-g')
         .call(d3AxisRight(this.y)
           .ticks(3)
           .tickSizeOuter(0)
