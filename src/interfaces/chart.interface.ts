@@ -24,4 +24,9 @@ export namespace IChart {
     name: string
     units: string
   }
+
+  export interface IDatePeriod {
+    from: string;
+    to: string;
+  }
 }

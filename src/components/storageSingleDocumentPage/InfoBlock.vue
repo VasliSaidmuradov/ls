@@ -52,6 +52,7 @@
     }
 
     &__date-icon {
+      color: $accent-color;
       width: 30px;
       height: 30px;
     }

@@ -4,8 +4,9 @@
     <div class="control-wrapper">
       <main-select
           class="select"
-          :options="options"
-          :value="laboratoryValue"
+          :options="laboratoryOptions"
+          :value="laboratoryList"
+          :multiple="true"
           :border-color="'#E9E8FF'"
           :width="310"
           @input-select="inputSelect"
@@ -51,21 +52,17 @@
   import PeriodsComponent from '@/components/PeriodsComponent.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import { subDays } from 'date-fns';
-
-  interface IDatePeriod {
-    from: string;
-    to: string;
-  }
+  import { IChart } from '@/interfaces/chart.interface';
 
   @Component({
     components: { MainBtn, PeriodsComponent, LaboratoryDesignation, MainSelect },
   })
   export default class ChartControl extends Vue {
-    @Prop() laboratoryValue: string;
+    @Prop() laboratoryList: Array<string>;
+    @Prop() laboratoryOptions: Array<string>
 
-    options = ['ЛабСтори', 'Helex', 'Все'];
     isDateModalOpen = false;
-    periodValue: IDatePeriod = {
+    periodValue: IChart.IDatePeriod = {
       from: '',
       to: '',
     };
@@ -75,20 +72,20 @@
     }
 
     @Emit('change-date-range')
-    changePeriod(obj: IDatePeriod) {
+    changePeriod(obj: IChart.IDatePeriod) {
       return [subDays(new Date(obj.from), 0), subDays(new Date(obj.to), 0)];
     }
 
     @Emit('change-date-range')
-    changeRadioDateId(id: number) {
-      switch (id) {
-        case 1:
+    changeRadioDateId(index: number) {
+      switch (index) {
+        case 0:
           return [subDays(new Date(), 30), new Date()];
-        case 2:
+        case 1:
           return [subDays(new Date(), 90), new Date()];
-        case 3:
+        case 2:
           return [subDays(new Date(), 180), new Date()];
-        case 4:
+        case 3:
           return [subDays(new Date(), 365), new Date()];
       }
     }

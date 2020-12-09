@@ -2,19 +2,19 @@
   <div class="periods">
     <div
         class="period__item"
-        v-for="period in periodList"
-        :key="`${period.id}-radio`"
+        v-for="(period, index) in periodList"
+        :key="index"
     >
       <input
           class="period__input"
           type="radio"
           name="period"
-          :id="period.id"
-          :value="period.id"
+          :id="`${index}-radio`"
+          :value="index"
           v-model="picked"
           @change="changeValue"
       >
-      <label :for="period.id" class="period__label">{{period.text}}</label>
+      <label :for="`${index}-radio`" class="period__label">{{period}}</label>
     </div>
   </div>
 </template>
@@ -25,26 +25,8 @@
 
   @Component({})
   export default class PeriodsComponent extends Vue {
-    picked = 3;
-
-    periodList = [
-      {
-        id: 1,
-        text: '1 месяц',
-      },
-      {
-        id: 2,
-        text: '3 м.',
-      },
-      {
-        id: 3,
-        text: '6 м.',
-      },
-      {
-        id: 4,
-        text: '1 год',
-      },
-    ];
+    picked = 2;
+    periodList = ['1 месяц', '3 м.', '6 м.', '1 год'];
 
     @Watch('picked')
     @Emit('change-value')

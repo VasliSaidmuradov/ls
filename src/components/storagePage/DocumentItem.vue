@@ -157,6 +157,7 @@
       }
 
       &-calendar-icon {
+        color: $accent-color;
         width: 22px;
         height: 22px;
       }
@@ -290,6 +291,7 @@
       }
 
       &-download-icon {
+        color: $accent-color;
         align-self: flex-end;
         width: 24px;
         height: 24px;

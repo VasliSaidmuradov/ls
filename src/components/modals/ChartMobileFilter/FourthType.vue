@@ -1,5 +1,10 @@
 <template>
-  <div class="choose-specific-dates">
+  <div class="fourth-type">
+    <back-btn
+        class="back-btn"
+        @go-back="changeType"
+    />
+
     <span class="title">Выберите конкретные даты сдачи</span>
     <span class="subtitle">Если вы хотите посмотреть общую динамику из ключевых промежуточных значений</span>
 
@@ -10,36 +15,52 @@
             v-for="(result, index) in results"
             :key="index"
         >
+          <div class="date__input-date-wrapper">
+            <checkbox-input
+                :value="result.visible"
+                :color="countColor(result)"
+                :border-color="countColor(result)"
+                @change-value="changeVisible($event, index)"
+            />
+
+            <span class="date__date">{{$date(new Date(result.date), 'd MMMM yyyy')}}</span>
+          </div>
+
           <span
               class="date__value"
               :style="{color: countColor(result)}"
           >
             {{result.value}} {{result.laboratory.units}}
           </span>
-          <span class="date__date">
-            {{$date(new Date(result.date), 'd MMMM yyyy')}}
-          </span>
-          <checkbox-input
-              :value="result.visible"
-              :color="countColor(result)"
-              :border-color="countColor(result)"
-              @change-value="changeVisible($event, index)"
-          />
         </div>
       </div>
     </div>
+
+    <main-btn
+        class="btn-accept"
+        type="small-bg"
+        width="122"
+        height="42"
+        text="Применить"
+    >
+      <template v-slot:icon>
+        <icon name="gull-icon" class="btn-accept-icon"/>
+      </template>
+    </main-btn>
   </div>
 </template>
 
 <script lang="ts">
   import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
   import { IChart } from '@/interfaces/chart.interface';
+  import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
+  import BackBtn from '@/components/UI/buttons/BackBtn.vue';
 
   @Component({
-    components: { CheckboxInput },
+    components: { BackBtn, CheckboxInput, MainBtn },
   })
-  export default class ChooseSpecificDates extends Vue {
+  export default class FourthType extends Vue {
     @Prop() results: IChart.IChartItem[];
 
     @Emit('change-visible')
@@ -60,47 +81,38 @@
 
       return green;
     }
+
+    @Emit('change-type')
+    changeType() {
+      return 0;
+    }
   }
 </script>
 
 <style lang="scss" scoped>
-  .choose-specific-dates {
-    margin-left: 20px;
-
+  .fourth-type {
     .title {
       display: block;
+      color: $black-02;
       font-weight: 600;
       font-size: 14px;
       line-height: 130%;
-      color: $black-02;
     }
 
     .subtitle {
-      margin-top: 10px;
       display: block;
+      margin-top: 10px;
       font-weight: normal;
       font-size: 14px;
       line-height: 130%;
       color: $black-03;
     }
 
-    .date__item + .date__item {
-      margin-top: 10px;
-    }
-
     .date {
       &__main-wrapper {
-        margin-top: 20px;
-        border: 1px solid $light-stroke;
-        border-radius: 15px;
-      }
-
-      &__wrapper {
-        margin: 20px 25px 20px 30px;
+        margin-top: 19px;
         padding-right: 20px;
-        display: flex;
-        flex-direction: column-reverse;
-        max-height: 324px;
+        max-height: 292px;
         overflow: auto;
 
         &::-webkit-scrollbar {
@@ -117,15 +129,34 @@
         }
       }
 
+      &__wrapper {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+
       &__item {
+        margin-top: 5px;
         flex-shrink: 0;
-        height: 49px;
+        height: 40px;
         display: flex;
         align-items: center;
-        justify-content: space-around;
-        background-color: $light-white;
+        justify-content: space-between;
+        background-color: $light-background;
         border-radius: 10px;
-        box-shadow: 0 4px 15px $shadow-color;
+      }
+
+      &__input-date-wrapper {
+        display: flex;
+        align-items: center;
+      }
+
+      &__date {
+        margin-left: 12px;
+        width: 115px;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 15px;
+        color: $black-02;
       }
 
       &__value {
@@ -134,13 +165,19 @@
         font-size: 12px;
         line-height: 15px;
       }
+    }
 
-      &__date {
-        width: 110px;
-        font-weight: normal;
-        font-size: 12px;
-        line-height: 15px;
-        color: $black-02;
+    .back-btn {
+      margin-bottom: 35px;
+    }
+
+    .btn-accept {
+      margin-top: 35px;
+
+      &-icon {
+        width: 12px;
+        height: 12px;
+        color: $light-white;
       }
     }
   }

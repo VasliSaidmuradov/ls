@@ -8,9 +8,9 @@
 
     <div class="options-wrapper">
       <q-toggle
+          label="Референсная зона"
           :value="isRefZonesVisible"
           @input="changeRefZonesVisible"
-          label="Референсная зона"
       />
 
       <main-btn
@@ -19,6 +19,7 @@
           type="only-icon"
           width="52"
           height="43"
+          @click-btn="toggleFilterModal(true)"
       >
         <template v-slot:icon>
           <icon name="filter-icon" class="options-wrapper__filter-btn-icon"/>
@@ -30,7 +31,8 @@
 
     <chart-control
         class="control"
-        :laboratory-value="laboratoryValue"
+        :laboratory-list="laboratoryList"
+        :laboratory-options="countAllLaboratory"
         @choose-laboratory="chooseLaboratory"
         @change-date-range="changeDateRange"
     />
@@ -89,6 +91,13 @@
     <look-dynamic/>
 
     <last-analyzes :results="mainData.results"/>
+
+    <chart-mobile-filter
+        :is-filter-open="isFilterOpen"
+        :results="mainData.results"
+        @apply-changes="changeResults"
+        @close-modal="toggleFilterModal(false)"
+    />
   </div>
 </template>
 
@@ -106,6 +115,7 @@
   import { isAfter, isBefore, subDays } from 'date-fns';
   import LaboratoryDesignation from '@/components/LaboratoryDesignation.vue';
   import BackBtn from '@/components/UI/buttons/BackBtn.vue';
+  import ChartMobileFilter from '@/components/modals/ChartMobileFilter/ChartMobileFilter.vue';
 
   interface IChangeVisibleObject {
     e: boolean;
@@ -114,6 +124,7 @@
 
   @Component({
     components: {
+      ChartMobileFilter,
       BackBtn,
       LaboratoryDesignation,
       ChartControl,
@@ -247,11 +258,12 @@
       ],
     };
     data: IChart.IChart = JSON.parse(JSON.stringify(this.mainData));
-    laboratoryValue = 'Все';
+    laboratoryList: Array<string> = ['Все'];
+    isFilterOpen = false;
 
     get countResults() {
       this.filterDateResults;
-      this.filterLaboratoryResults;
+      // this.filterLaboratoryResults;
       return this.filterVisibleResults;
     }
 
@@ -274,12 +286,29 @@
     }
 
     get filterLaboratoryResults() {
-      if (this.laboratoryValue === 'Все') {
+      if (this.laboratoryList[0] === 'Все') {
         return this.data.results;
       }
 
-      this.data.results = this.data.results.filter(result => result.laboratory.name === this.laboratoryValue);
+      this.data.results = this.data.results.filter(result => result.laboratory.name === this.laboratoryList[0]);
       return this.data.results;
+    }
+
+    get countAllLaboratory() {
+      const laboratoryList: Array<string> = [];
+      laboratoryList.push('Все');
+
+      this.mainData.results.forEach(result => {
+        laboratoryList.push(result.laboratory.name);
+      });
+
+      const uniqLaboratoryList: Array<string> = [];
+
+      new Set(laboratoryList).forEach(laboratory => {
+        uniqLaboratoryList.push(laboratory);
+      });
+
+      return uniqLaboratoryList;
     }
 
     changeDateRange(val: Date[]) {
@@ -296,8 +325,16 @@
       this.data.results[index].visible = e;
     }
 
-    chooseLaboratory(val: string) {
-      this.laboratoryValue = val;
+    chooseLaboratory(val: Array<string>) {
+      this.laboratoryList = val;
+    }
+
+    toggleFilterModal(val: boolean) {
+      this.isFilterOpen = val;
+    }
+
+    changeResults(newResults: IChart.IChartItem[]) {
+      // this.data.results = newResults;
     }
   }
 </script>

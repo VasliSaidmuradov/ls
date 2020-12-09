@@ -12,15 +12,16 @@
         hide-dropdown-icon
         :value="value"
         :options="options"
+        :multiple="multiple"
         :disable="disabled"
         :style="{
-        backgroundColor: bcgColor,
-        border: `1px solid ${borderColor}`,
-        width: width + 'px',
-        height: height + 'px',
-        minWidth: minWidth + 'px',
-        maxWidth: maxWidth + 'px'
-      }"
+          backgroundColor: bcgColor,
+          border: `1px solid ${borderColor}`,
+          width: width + 'px',
+          height: height + 'px',
+          minWidth: minWidth + 'px',
+          maxWidth: maxWidth + 'px'
+        }"
         @input="inputSelect"
         @popup-show="isIconReverse = true"
         @popup-hide="isIconReverse = false"
@@ -38,6 +39,20 @@
           />
         </slot>
       </template>
+
+      <template v-slot:option="{ itemProps, itemEvents, opt, selected, toggleOption }" v-if="multiple">
+        <q-item
+            v-bind="itemProps"
+            v-on="itemEvents"
+        >
+          <q-item-section>
+            <q-item-label v-html="opt.label || opt"></q-item-label>
+          </q-item-section>
+          <q-item-section side>
+            <q-toggle :value="selected" @input="toggleOption(opt)"/>
+          </q-item-section>
+        </q-item>
+      </template>
     </q-select>
   </div>
 </template>
@@ -49,6 +64,7 @@
   export default class MainSelect extends Vue {
     @Prop({ required: true }) value: number | string | object;
     @Prop({ required: true }) options: Array<number> | Array<string> | Array<object>;
+    @Prop() multiple: boolean;
     @Prop() labelTitle: string;
     @Prop() disabled: boolean;
     @Prop({ default: 'transparent' }) bcgColor: string;

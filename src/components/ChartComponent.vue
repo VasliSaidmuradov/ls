@@ -181,7 +181,7 @@
     };
 
     @Prop({}) results: IChart.IChartItem[];
-    @Prop() dateRange: Date[];
+    @Prop() dateRange: [Date, Date];
     @Prop() isRefZonesVisible: boolean;
     @Prop({ default: 702 }) width: number;
     @Prop({ default: 350 }) height: number;
