@@ -1,11 +1,37 @@
 <template>
-  <q-checkbox
-      class="checkbox-input"
-      :label="label"
-      :value="value"
-      :disable="disabled"
-      @input="changeValue"
-  />
+  <div class="checkbox-wrapper">
+    <div
+        @click="changeValue"
+        class="checkbox-block"
+        :style="{
+          border: `1px solid ${borderColor}`,
+          color: color
+        }"
+    >
+      <icon
+          class="checkbox-block__icon"
+          name="gull-icon"
+          v-if="value"
+      />
+    </div>
+
+    <label
+        class="label"
+        :for="id"
+        v-if="label"
+    >
+      {{label}}
+    </label>
+
+    <input
+        class="checkbox"
+        type="checkbox"
+        :id="id"
+        :value="value"
+        :disabled="disabled"
+        @change="changeValue"
+    >
+  </div>
 </template>
 
 <script lang="ts">
@@ -16,44 +42,46 @@
     @Prop({ required: true }) value: boolean;
     @Prop() label: string;
     @Prop() disabled: boolean;
+    @Prop({ default: '#7C74E9' }) borderColor: string;
+    @Prop({ default: '#7C74E9' }) color: string;
+
+    id = Math.random();
 
     @Emit('change-value')
     changeValue() {
-      return false;
+      return !this.value;
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .checkbox-input {
-    ::v-deep .q-checkbox__label {
+  .checkbox-wrapper {
+    display: flex;
+    align-items: center;
+
+    .label {
+      margin-left: 13px;
       user-select: none;
-      display: block;
-      font-weight: 500;
-      font-size: 13px;
-      color: $black-02;
+      cursor: pointer;
     }
 
-    ::v-deep .q-checkbox__bg {
-      color: $light-white;
+    .checkbox {
+      display: none;
+    }
+
+    .checkbox-block {
+      cursor: pointer;
       width: 16px;
       height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 5px;
-      border: 1px solid $accent-color;
 
-      svg {
-        color: $accent-color;
-        width: 12px !important;
-        height: 12px !important;
-        left: 0;
-        margin: 0 auto;
-        top: 50%;
-        transform: translate(0, -50%);
+      &__icon {
+        width: 10px;
+        height: 12px;
       }
-    }
-
-    ::v-deep .q-checkbox__inner {
-      font-size: 32px;
     }
   }
 </style>

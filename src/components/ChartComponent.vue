@@ -8,9 +8,9 @@
         <g class="y-horizontal"></g>
 
         <!--REF ZONE MAX-->
-        <g class="ref-zone-max">
+        <g class="ref-zone-max" v-if="isRefZonesVisible">
           <line
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :x1="countRefX1(idx)"
               :x2="countRefX2(idx)"
@@ -24,9 +24,9 @@
         </g>
 
         <!--REF ZONE MIN-->
-        <g class="ref-zone-min">
+        <g class="ref-zone-min" v-if="isRefZonesVisible">
           <line
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :x1="countRefX1(idx)"
               :x2="countRefX2(idx)"
@@ -40,7 +40,7 @@
         </g>
 
         <!--TEXT VALUE REF ZONE-->
-        <g class="value-ref-zones">
+        <g class="value-ref-zones" v-if="isRefZonesVisible">
           <text
               v-for="(val, idx) in 4"
               :key="val"
@@ -58,7 +58,7 @@
         <!--RECT-->
         <rect
             class="rect"
-            v-for="(d, idx) in data.results"
+            v-for="(d, idx) in results"
             :key="idx"
             :x="x(prettyDate(d.date))"
             :y="y(d.value)"
@@ -69,9 +69,8 @@
         >
           <q-tooltip
               content-class="rect-tooltip"
-              anchor="center right"
-              self="center left"
-              :max-width="'116px'"
+              anchor="top left"
+              self="top right"
           >
             <span class="tooltip-text">{{d.value}} {{d.laboratory.units}}</span>
             <span class="tooltip-text">{{countTooltipDate(d)}}</span>
@@ -81,7 +80,7 @@
         <!--CIRCLE ON RECT-->
         <g class="g-circle">
           <circle
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :cx="x(prettyDate(d.date)) + 2.5"
               :cy="y(d.value) - 7"
@@ -94,7 +93,7 @@
         <!--STAR ON RECT-->
         <g class="g-star">
           <path
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :d="countDStar"
               :transform="`translate(${x(prettyDate(d.date)) + 2.5}, ${y(d.value) - 7})`"
@@ -107,7 +106,7 @@
         <!--TEXT ON RECT-->
         <g class="g-text">
           <text
-              v-for="(d, idx) in data.results"
+              v-for="(d, idx) in results"
               :key="idx"
               :x="x(prettyDate(d.date)) + 2"
               :y="y(d.value) - 20"
@@ -125,20 +124,17 @@
 <script lang="ts">
   import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
   import {
+    areaRadial as d3AreaRadial,
     axisBottom as d3AxisBottom,
     axisRight as d3AxisRight,
     max as d3Max,
     scaleLinear as d3ScaleLinear,
     scaleTime as d3ScaleTime,
     select as d3Select,
-    symbol as d3Symbol,
-    symbolStar as d3SymbolStar,
     timeFormatDefaultLocale as d3TimeFormatDefaultLocale,
   } from 'd3';
-  import parse from 'date-fns/parse';
-  import format from 'date-fns/format';
-  import RU from 'date-fns/locale/ru';
   import { IChart } from '@/interfaces/chart.interface';
+  import { format } from 'date-fns';
 
   interface IRefs {
     wrapper: HTMLElement;
@@ -154,10 +150,25 @@
       bottom: 40,
       top: 0,
     };
+    langConfig: IChart.ILangConfig = {
+      'decimal': ',',
+      'thousands': '\xa0',
+      'grouping': [3],
+      'currency': ['', ' руб.'],
+      'dateTime': '%A, %e %B %Y г. %X',
+      'date': '%d.%m.%Y',
+      'time': '%H:%M:%S',
+      'periods': ['AM', 'PM'],
+      'days': ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+      'shortDays': ['Вс.', 'Пн.', 'Вт.', 'Ср.', 'Чт.', 'Пт.', 'Сб.'],
+      'months': ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+      'shortMonths': ['Янв.', 'Фев.', 'Мар.', 'Апр.', 'Май.', 'Июн.', 'Июл.', 'Авг.', 'Сен.', 'Окт.', 'Ноя.', 'Дек.'],
+    };
 
-    @Prop({}) data: IChart.IChart;
-    @Prop() dateRange: Date[];
-    @Prop({ default: 722 }) width: number;
+    @Prop({}) results: IChart.IChartItem[];
+    @Prop() dateRange: [Date, Date];
+    @Prop() isRefZonesVisible: boolean;
+    @Prop({ default: 702 }) width: number;
     @Prop({ default: 350 }) height: number;
 
     get viewBox() {
@@ -175,7 +186,7 @@
     get valueArray() {
       const valueArray: number[] = [];
 
-      this.data.results.forEach((item: IChart.IChartItem) => {
+      this.results.forEach((item: IChart.IChartItem) => {
         valueArray.push(item.value);
 
         if (item.analyzer.ranges.max !== null) {
@@ -225,11 +236,31 @@
     }
 
     get countDStar() {
-      return d3Symbol().type(d3SymbolStar).size(40)();
+      const radialAreaGenerator = d3AreaRadial()
+        .angle((d: [number, number]) => {
+          return d[0];
+        })
+        .outerRadius((d: [number, number]) => {
+          return d[1];
+        });
+
+      const points: [number, number][] = [
+        [0, 5],
+        [Math.PI * 0.25, 2.5],
+        [Math.PI * 0.5, 5],
+        [Math.PI * 0.75, 2.5],
+        [Math.PI, 5],
+        [Math.PI * 1.25, 2.5],
+        [Math.PI * 1.5, 5],
+        [Math.PI * 1.75, 2.5],
+        [Math.PI * 2, 5],
+      ];
+
+      return radialAreaGenerator(points);
     }
 
     countTooltipDate(d: IChart.IChartItem): string {
-      return format(this.prettyDate(d.date), 'd MMMM yyyy', { locale: RU });
+      return format(new Date(d.date), 'd MMMM yyyy');
     }
 
     countXTextRefZone(idx: number) {
@@ -246,7 +277,7 @@
     }
 
     countYTextRefZone(idx: number) {
-      const results: IChart.IChartItem[] = this.data.results;
+      const results: IChart.IChartItem[] = this.results;
 
       if (!results.length) {
         return 0;
@@ -258,9 +289,7 @@
             ? 0
             : this.y(results[0].analyzer.ranges.max) + 3;
         case 1:
-          return results[results.length - 1].analyzer.ranges.max === null
-            ? 0
-            : this.y(results[results.length - 1].analyzer.ranges.max) + 3;
+          return this.y(results[results.length - 1].analyzer.ranges.max || 0) + 3;
         case 2:
           return results[0].analyzer.ranges.min === null
             ? 0
@@ -268,12 +297,12 @@
         case 3:
           return results[results.length - 1].analyzer.ranges.min === null
             ? 0
-            : this.y(results[results.length - 1].analyzer.ranges.min) + 3;
+            : this.y(results[results.length - 1].analyzer.ranges.min || 0) + 3;
       }
     }
 
     countTextRefZone(idx: number) {
-      const results = this.data.results;
+      const results = this.results;
 
       if (!results.length) {
         return '';
@@ -292,7 +321,7 @@
     }
 
     countRefX1(idx: number) {
-      const results = this.data.results;
+      const results = this.results;
       const resultItem = results[idx];
       const nextResultItem = results[idx + 1];
 
@@ -311,11 +340,11 @@
     }
 
     countRefX2(idx: number) {
-      const results = this.data.results;
+      const results = this.results;
       const resultItem = results[idx];
       const prevResultItem = results[idx - 1];
 
-      if (results[idx - 1]) {
+      if (prevResultItem) {
         if (resultItem.analyzer.ranges.max !== prevResultItem.analyzer.ranges.max
           || resultItem.analyzer.ranges.min !== prevResultItem.analyzer.ranges.min
         ) {
@@ -330,7 +359,11 @@
     }
 
     initAxisX() {
-      const gX = d3Select('.x')
+      d3Select('.x-g').remove();
+
+      const gX = d3Select('.x');
+      gX.append('g')
+        .attr('class', 'x-g')
         .call(d3AxisBottom(this.x));
 
       gX.selectAll('line').remove();
@@ -338,7 +371,11 @@
     }
 
     initHorizontalLines() {
-      const gYHorizontal = d3Select('.y-horizontal')
+      d3Select('.y-horizontal-g').remove();
+
+      const gYHorizontal = d3Select('.y-horizontal');
+      gYHorizontal.append('g')
+        .attr('class', 'y-horizontal-g')
         .call(d3AxisRight(this.y)
           .ticks(3)
           .tickSizeOuter(0)
@@ -369,24 +406,11 @@
     }
 
     prettyDate(date: string): Date {
-      return parse(date, 'yyyy-MM-dd', new Date());
+      return new Date(date);
     };
 
     setLocale() {
-      d3TimeFormatDefaultLocale({
-        'decimal': ',',
-        'thousands': '\xa0',
-        'grouping': [3],
-        'currency': ['', ' руб.'],
-        'dateTime': '%A, %e %B %Y г. %X',
-        'date': '%d.%m.%Y',
-        'time': '%H:%M:%S',
-        'periods': ['AM', 'PM'],
-        'days': ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
-        'shortDays': ['Вс.', 'Пн.', 'Вт.', 'Ср.', 'Чт.', 'Пт.', 'Сб.'],
-        'months': ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-        'shortMonths': ['Янв.', 'Фев.', 'Мар.', 'Апр.', 'Май.', 'Июн.', 'Июл.', 'Авг.', 'Сен.', 'Окт.', 'Ноя.', 'Дек.'],
-      });
+      d3TimeFormatDefaultLocale(this.langConfig);
     }
 
     init() {
@@ -394,7 +418,7 @@
       this.initHorizontalLines();
     }
 
-    @Watch('data', { deep: true })
+    @Watch('results', { deep: true })
     refreshChart() {
       this.init();
     }
@@ -411,6 +435,10 @@
 </script>
 
 <style lang="scss" scoped>
+  .chart__wrapper {
+    margin: 0 auto;
+  }
+
   ::v-deep text {
     font-weight: 500;
     font-size: 12px;
