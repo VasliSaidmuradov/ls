@@ -140,21 +140,6 @@
     wrapper: HTMLElement;
   }
 
-  interface ILangConfig {
-    decimal: string;
-    thousands: string;
-    grouping: [number];
-    currency: [string, string];
-    dateTime: string;
-    date: string;
-    time: string;
-    periods: [string, string];
-    days: [string, string, string, string, string, string, string];
-    shortDays: [string, string, string, string, string, string, string];
-    months: [string, string, string, string, string, string, string, string, string, string, string, string];
-    shortMonths: [string, string, string, string, string, string, string, string, string, string, string, string];
-  }
-
   @Component({})
   export default class ChartComponent extends Vue {
     $refs: IRefs & Vue['$refs'];
@@ -165,7 +150,7 @@
       bottom: 40,
       top: 0,
     };
-    langConfig: ILangConfig = {
+    langConfig: IChart.ILangConfig = {
       'decimal': ',',
       'thousands': '\xa0',
       'grouping': [3],

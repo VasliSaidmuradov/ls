@@ -29,4 +29,19 @@ export namespace IChart {
     from: string;
     to: string;
   }
+
+  export interface ILangConfig {
+    decimal: string;
+    thousands: string;
+    grouping: [number];
+    currency: [string, string];
+    dateTime: string;
+    date: string;
+    time: string;
+    periods: [string, string];
+    days: [string, string, string, string, string, string, string];
+    shortDays: [string, string, string, string, string, string, string];
+    months: [string, string, string, string, string, string, string, string, string, string, string, string];
+    shortMonths: [string, string, string, string, string, string, string, string, string, string, string, string];
+  }
 }
