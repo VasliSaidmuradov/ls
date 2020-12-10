@@ -77,5 +77,10 @@ export default new Router({
     meta: {
       layout: ILayout.LayoutType.AUTH,
     }
-  }]
+  }, {
+      path: ROUTE_PATH[ROUTE_NAME.ADD_ANALYZES],
+      name: ROUTE_NAME.ADD_ANALYZES,
+      component: () => import('@/views/AddAnalyzesPage.vue'),
+    beforeEnter: MobileRouteRedirect,
+    }]
 });
