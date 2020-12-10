@@ -95,7 +95,6 @@
     <chart-mobile-filter
         :is-filter-open="isFilterOpen"
         :results="mainData.results"
-        @apply-changes="changeResults"
         @close-modal="toggleFilterModal(false)"
     />
   </div>
@@ -258,12 +257,12 @@
       ],
     };
     data: IChart.IChart = JSON.parse(JSON.stringify(this.mainData));
-    laboratoryList: Array<string> = ['Все'];
+    laboratoryList: Array<string> = [];
     isFilterOpen = false;
 
     get countResults() {
       this.filterDateResults;
-      // this.filterLaboratoryResults;
+      this.filterLaboratoryResults;
       return this.filterVisibleResults;
     }
 
@@ -286,17 +285,21 @@
     }
 
     get filterLaboratoryResults() {
-      if (this.laboratoryList[0] === 'Все') {
+      if (!this.laboratoryList.length) {
         return this.data.results;
       }
 
-      this.data.results = this.data.results.filter(result => result.laboratory.name === this.laboratoryList[0]);
+      this.data.results = this.data.results.filter(result => {
+        return this.laboratoryList.some(laboratory => {
+          return result.laboratory.name === laboratory;
+        });
+      });
+
       return this.data.results;
     }
 
     get countAllLaboratory() {
       const laboratoryList: Array<string> = [];
-      laboratoryList.push('Все');
 
       this.mainData.results.forEach(result => {
         laboratoryList.push(result.laboratory.name);
@@ -331,10 +334,6 @@
 
     toggleFilterModal(val: boolean) {
       this.isFilterOpen = val;
-    }
-
-    changeResults(newResults: IChart.IChartItem[]) {
-      // this.data.results = newResults;
     }
   }
 </script>

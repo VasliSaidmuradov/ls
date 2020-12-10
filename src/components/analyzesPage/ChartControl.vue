@@ -7,6 +7,7 @@
           :options="laboratoryOptions"
           :value="laboratoryList"
           :multiple="true"
+          :select-label="'Выберите лабораторию'"
           :border-color="'#E9E8FF'"
           :width="310"
           @input-select="inputSelect"
@@ -59,7 +60,7 @@
   })
   export default class ChartControl extends Vue {
     @Prop() laboratoryList: Array<string>;
-    @Prop() laboratoryOptions: Array<string>
+    @Prop() laboratoryOptions: Array<string>;
 
     isDateModalOpen = false;
     periodValue: IChart.IDatePeriod = {

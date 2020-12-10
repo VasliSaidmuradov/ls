@@ -10,6 +10,7 @@
     <q-select
         class="main-select"
         hide-dropdown-icon
+        :label="selectLabel"
         :value="value"
         :options="options"
         :multiple="multiple"
@@ -49,7 +50,7 @@
             <q-item-label v-html="opt.label || opt"></q-item-label>
           </q-item-section>
           <q-item-section side>
-            <q-toggle :value="selected" @input="toggleOption(opt)"/>
+            <checkbox-input :value="selected" @change-value="toggleOption(opt)"/>
           </q-item-section>
         </q-item>
       </template>
@@ -59,13 +60,17 @@
 
 <script lang="ts">
   import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+  import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 
-  @Component({})
+  @Component({
+    components: { CheckboxInput }
+  })
   export default class MainSelect extends Vue {
     @Prop({ required: true }) value: number | string | object;
     @Prop({ required: true }) options: Array<number> | Array<string> | Array<object>;
     @Prop() multiple: boolean;
     @Prop() labelTitle: string;
+    @Prop() selectLabel: string
     @Prop() disabled: boolean;
     @Prop({ default: 'transparent' }) bcgColor: string;
     @Prop({ default: 'none' }) borderColor: string;
