@@ -1,20 +1,20 @@
-import Vue from 'vue'
-import Router, {Route} from 'vue-router'
-import {IRouter} from '@/interfaces/router.interface';
-import {ILayout} from '@/interfaces/layout.interface';
+import Vue from 'vue';
+import Router, { Route } from 'vue-router';
+import { IRouter } from '@/interfaces/router.interface';
+import { ILayout } from '@/interfaces/layout.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
 import ROUTE_PATH = IRouter.ROUTE_PATH;
 import Breakpoint = ILayout.Breakpoint;
 
-Vue.use(Router)
+Vue.use(Router);
 
 export const MobileRouteRedirect = (to: Route, from: Route, next: Function) => {
   if (window.screen.width >= Breakpoint.MOBILE) {
-    next({name: ROUTE_NAME.PAGE_PERSONAL_AREA})
+    next({ name: ROUTE_NAME.PAGE_PERSONAL_AREA });
   } else {
     next();
   }
-}
+};
 
 export default new Router({
   mode: 'history',
@@ -22,7 +22,7 @@ export default new Router({
     path: ROUTE_PATH[ROUTE_NAME.PAGE_PERSONAL_AREA],
     name: ROUTE_NAME.PAGE_PERSONAL_AREA,
     component: () => import('@/views/PersonalArea.vue'),
-    props: (route: Route) => ({query: route.query.activeTab})
+    props: (route: Route) => ({ query: route.query.activeTab }),
   }, {
     path: ROUTE_PATH[ROUTE_NAME.MEDICAL_CARD_PAGE],
     name: ROUTE_NAME.MEDICAL_CARD_PAGE,
@@ -47,6 +47,10 @@ export default new Router({
     name: ROUTE_NAME.ANALYZES_PAGE,
     component: () => import('@/views/AnalyzesPage.vue'),
   }, {
+    path: ROUTE_PATH[ROUTE_NAME.DYNAMICS_ANALYZES],
+    name: ROUTE_NAME.DYNAMICS_ANALYZES,
+    component: () => import('@/views/DynamicsAnalyzes.vue'),
+  }, {
     path: ROUTE_PATH[ROUTE_NAME.STORAGE_PAGE],
     name: ROUTE_NAME.STORAGE_PAGE,
     component: () => import('@/views/StoragePage.vue'),
@@ -54,7 +58,7 @@ export default new Router({
     path: ROUTE_PATH[ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE],
     name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE,
     component: () => import('@/views/StorageSingleDocumentPage.vue'),
-  },{
+  }, {
     path: ROUTE_PATH[ROUTE_NAME.APPOINTMENT_PAGE],
     name: ROUTE_NAME.APPOINTMENT_PAGE,
     component: () => import('@/views/AppointmentPage.vue'),
@@ -66,21 +70,21 @@ export default new Router({
     path: ROUTE_PATH[ROUTE_NAME.AUTH_PAGE],
     name: ROUTE_NAME.AUTH_PAGE,
     component: () => import('@/views/AuthPage.vue'),
-    props: (route: Route) => ({query: route.query.pageMode}),
+    props: (route: Route) => ({ query: route.query.pageMode }),
     meta: {
       layout: ILayout.LayoutType.AUTH,
-    }
+    },
   }, {
     path: ROUTE_PATH[ROUTE_NAME.CHANGE_CABINETS],
     name: ROUTE_NAME.CHANGE_CABINETS,
     component: () => import('@/views/ChangeCabinets.vue'),
     meta: {
       layout: ILayout.LayoutType.AUTH,
-    }
+    },
   }, {
-      path: ROUTE_PATH[ROUTE_NAME.ADD_ANALYZES],
-      name: ROUTE_NAME.ADD_ANALYZES,
-      component: () => import('@/views/AddAnalyzesPage.vue'),
+    path: ROUTE_PATH[ROUTE_NAME.ADD_ANALYZES],
+    name: ROUTE_NAME.ADD_ANALYZES,
+    component: () => import('@/views/AddAnalyzesPage.vue'),
     beforeEnter: MobileRouteRedirect,
-    }]
+  }],
 });

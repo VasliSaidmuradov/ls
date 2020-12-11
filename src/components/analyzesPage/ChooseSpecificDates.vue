@@ -84,10 +84,6 @@
       color: $black-03;
     }
 
-    .date__item + .date__item {
-      margin-top: 10px;
-    }
-
     .date {
       &__main-wrapper {
         margin-top: 20px;
@@ -118,6 +114,7 @@
       }
 
       &__item {
+        margin-top: 10px;
         flex-shrink: 0;
         height: 49px;
         display: flex;
@@ -125,7 +122,6 @@
         justify-content: space-around;
         background-color: $light-white;
         border-radius: 10px;
-        box-shadow: 0 4px 15px $shadow-color;
       }
 
       &__value {

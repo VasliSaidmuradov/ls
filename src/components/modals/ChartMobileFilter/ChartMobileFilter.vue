@@ -115,6 +115,7 @@
 <style lang="scss" scoped>
   .modal {
     position: relative;
+    max-width: none;
     width: 100%;
     margin: 0 20px;
     background-color: $light-white;
@@ -141,7 +142,11 @@
       margin-top: 35px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      flex-wrap: wrap;
+
+      &-btn-accept {
+        margin-right: 30px;
+      }
 
       &-btn-accept-icon {
         width: 12px;

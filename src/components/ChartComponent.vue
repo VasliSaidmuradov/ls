@@ -135,6 +135,7 @@
   } from 'd3';
   import { IChart } from '@/interfaces/chart.interface';
   import { format } from 'date-fns';
+  import { timeFormat as d3TimeFormat } from 'd3-time-format';
 
   interface IRefs {
     wrapper: HTMLElement;
@@ -364,7 +365,9 @@
       const gX = d3Select('.x');
       gX.append('g')
         .attr('class', 'x-g')
-        .call(d3AxisBottom(this.x));
+        .call(d3AxisBottom(this.x)
+          .ticks(5, d3TimeFormat('%e.%m.%Y')),
+        );
 
       gX.selectAll('line').remove();
       gX.select('.domain').remove();
