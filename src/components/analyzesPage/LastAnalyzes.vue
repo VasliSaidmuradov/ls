@@ -129,6 +129,10 @@
     .table {
       border-collapse: separate;
       border-spacing: 0 10px;
+      max-width: 828px;
+      width: 100%;
+      margin-top: 30px;
+
       @include media-breakpoint-up(600px) {
         display: none;
       }
@@ -146,10 +150,6 @@
         border-bottom-right-radius: 10px;
         border-top-right-radius: 10px;
       }
-
-      max-width: 828px;
-      width: 100%;
-      margin-top: 30px;
 
       &__header-item {
         text-align: left;

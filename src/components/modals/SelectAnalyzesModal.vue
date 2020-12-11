@@ -17,15 +17,15 @@
       <span class="modal__title">Выбрать показатели для сравнения</span>
 
       <div class="input-wrapper">
-        <label for="input" class="input-wrapper__label">
-          <icon name="search-icon" class="input-wrapper__icon"/>
-        </label>
         <input
             class="input-wrapper__input"
             type="text"
             id="input"
             v-model="inputValue"
         >
+        <label for="input" class="input-wrapper__label">
+          <icon name="search-icon" class="input-wrapper__icon"/>
+        </label>
       </div>
 
       <span class="selected__title">Сейчас выбраны:</span>
@@ -35,6 +35,62 @@
       />
 
       <span class="selected__description">Максимум 4 показателя</span>
+
+      <div class="table__description-wrapper">
+        <span class="table__title">Лабораторная диагностика функций щитовидной железы</span>
+        <span class="table__subtitle">Гормональные исследования</span>
+      </div>
+
+      <table class="table">
+        <tr class="table__tr">
+          <td class="table__checkbox">
+            <checkbox-input :value="true"/>
+          </td>
+          <td class="table__analyze">
+            Соотношение своб. ПСА к общему
+          </td>
+          <td colspan="table__value">
+            21,42 %
+          </td>
+          <td class="table__ref">
+            > 18
+          </td>
+          <td class="table__date">
+            02 июля 2020
+          </td>
+        </tr>
+
+        <tr class="table__tr">
+          <td class="table__checkbox">
+            <checkbox-input :value="true"/>
+          </td>
+          <td class="table__analyze">
+            Соотношение своб. ПСА к общему
+          </td>
+          <td colspan="table__value">
+            21,42 %
+          </td>
+          <td class="table__ref">
+            > 18
+          </td>
+          <td class="table__date">
+            02 июля 2020
+          </td>
+        </tr>
+      </table>
+
+      <main-btn
+          class="go-comparison-btn"
+          type="primary"
+          border-color="#7C74E9"
+          width="224"
+          height="56"
+          text="Перейти к сравнению"
+      >
+        <template v-slot:icon>
+          <icon name="next-icon" class="go-comparison-btn-icon"/>
+        </template>
+      </main-btn>
     </div>
   </q-dialog>
 </template>
@@ -43,9 +99,10 @@
   import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import SelectedAnalyzesList from '@/components/dynamicsAnalyzes/SelectedAnalyzesList.vue';
+  import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 
   @Component({
-    components: { SelectedAnalyzesList, MainBtn },
+    components: { CheckboxInput, SelectedAnalyzesList, MainBtn },
   })
   export default class SelectAnalyzesModal extends Vue {
     @Prop({ required: true }) isSelectAnalyzesModalOpen: boolean;
@@ -101,8 +158,11 @@
         height: 56px;
         padding-left: 20px;
         position: absolute;
+        top: 0;
+        left: 0;
         display: flex;
         align-items: center;
+        cursor: text;
       }
 
       &__icon {
@@ -117,10 +177,12 @@
         padding: 0 52px;
         border: 1px solid $light-stroke;
         background-color: $light-white;
-        box-shadow: 0 4px 15px $shadow-color;
         border-radius: 15px;
 
         &:focus {
+          box-shadow: 0 4px 15px $shadow-color;
+          border-radius: 18px;
+          border-color: $light-stroke;
           outline: none;
         }
       }
@@ -147,6 +209,114 @@
         font-size: 14px;
         line-height: 20px;
         color: $black-04;
+      }
+    }
+
+    .table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      @include media-breakpoint-up(600px) {
+        display: none;
+      }
+
+      &__description-wrapper {
+        margin-top: 35px;
+        display: flex;
+      }
+
+      &__title {
+        display: block;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 130%;
+        color: $black-01;
+      }
+
+      &__subtitle {
+        margin-left: 60px;
+        display: block;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 130%;
+        color: $black-04;
+      }
+
+      td:first-child, th:first-child {
+        padding-left: 20px;
+      }
+
+      td:first-child {
+        width: 50px;
+        background-color: $light-background;
+      }
+
+      td {
+        background-color: $light-white;
+      }
+
+      td:nth-child(2) {
+        padding-left: 30px;
+        border-bottom-left-radius: 10px;
+        border-top-left-radius: 10px;
+      }
+
+      td:last-child {
+        text-align: center;
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 10px;
+      }
+
+      &__header-item {
+        text-align: left;
+        color: $black-04;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 130%;
+      }
+
+      &__tr {
+        height: 60px;
+        border-radius: 10px;
+      }
+
+      &__analyze {
+        color: $black-02;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 130%;
+      }
+
+      &__value {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 130%;
+      }
+
+      &__ref {
+        color: $black-03;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 130%;
+      }
+
+      &__date {
+        color: $black-04;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 130%;
+      }
+    }
+
+    .go-comparison-btn {
+      margin-top: 30px;
+
+      &-icon {
+        width: 4px;
+        height: 8px;
+        color: $accent-color;
+        transform: rotate(180deg);
       }
     }
   }
