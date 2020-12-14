@@ -53,38 +53,100 @@
         />
       </div>
 
-      <laboratory-designation/>
+      <laboratory-designation class="laboratory-designation"/>
+
+      <main-btn
+          class="second-control-wrapper__btn"
+          bcg-color="#ffffff"
+          type="only-icon"
+          width="52"
+          height="43"
+          @click-btn="toggleFilterModal(true)"
+      >
+        <template v-slot:icon>
+          <icon name="filter-icon" class="second-control-wrapper__btn-icon"/>
+        </template>
+      </main-btn>
     </div>
 
-    <div class="chart__wrapper">
+    <div class="chart__main-wrapper">
       <div class="chart__item" v-for="(chart, index) in mainData" :key="index">
-        <div class="chart__top-wrapper">
-          <div class="chart__top">
-            <span class="chart__title">{{chart.name}}</span>
+        <div class="chart__top">
+          <span class="chart__title">{{chart.name}}</span>
 
+          <div class="chart__top-btn-wrapper">
             <main-btn
-                class="chart__right-btn"
+                class="chart__first-btn"
                 type="only-icon"
                 border-color="#E9E8FF"
                 bcg-color="#ffffff"
                 width="20"
                 height="20"
+                @click-btn="clickLeftRightBtn(index)"
             >
               <template v-slot:icon>
-                <icon name="next-icon" class="chart__right-btn-icon"/>
+                <icon
+                    name="next-icon"
+                    class="chart__first-btn-icon"
+                    :class="countArrowBtnLeftRight(index)"
+                />
               </template>
             </main-btn>
 
             <main-btn
-                class="chart__top-btn"
+                class="chart__second-btn"
                 type="only-icon"
                 border-color="#E9E8FF"
                 bcg-color="#ffffff"
                 width="20"
                 height="20"
+                @click-btn="clickTopBottomBtn(index)"
             >
               <template v-slot:icon>
-                <icon name="next-icon" class="chart__top-btn-icon"/>
+                <icon
+                    name="next-icon"
+                    class="chart__second-btn-icon"
+                    :class="countArrowBtnTopBottom(index)"
+                />
+              </template>
+            </main-btn>
+          </div>
+
+          <!--v-if pre-md breakpoint-->
+          <div class="chart__top-btn-wrapper chart__top-btn-wrapper--mobile">
+            <main-btn
+                class="chart__first-btn"
+                type="only-icon"
+                border-color="#E9E8FF"
+                bcg-color="#ffffff"
+                width="20"
+                height="20"
+                :disabled="index === mainData.length - 1"
+                @click-btn="clickBottomBtnMobile(index)"
+            >
+              <template v-slot:icon>
+                <icon
+                    name="next-icon"
+                    class="chart__second-btn-icon chart__second-btn-icon--bottom"
+                />
+              </template>
+            </main-btn>
+
+            <main-btn
+                class="chart__second-btn"
+                type="only-icon"
+                border-color="#E9E8FF"
+                bcg-color="#ffffff"
+                width="20"
+                height="20"
+                :disabled="index === 0"
+                @click-btn="clickTopBtnMobile(index)"
+            >
+              <template v-slot:icon>
+                <icon
+                    name="next-icon"
+                    class="chart__second-btn-icon chart__second-btn-icon--top"
+                />
               </template>
             </main-btn>
           </div>
@@ -94,6 +156,8 @@
             :date-range="dateRange"
             :is-ref-zones-visible="isRefZonesVisible"
             :results="chart.results"
+            :width="616"
+            :height="300"
         />
       </div>
     </div>
@@ -112,6 +176,12 @@
           v-model="periodValue"
       />
     </q-dialog>
+
+    <chart-mobile-filter
+        :is-filter-open="isFilterOpen"
+        :results="mainData[0].results"
+        @close-modal="toggleFilterModal(false)"
+    />
   </div>
 </template>
 
@@ -127,9 +197,11 @@
   import { subDays } from 'date-fns';
   import { IChart } from '@/interfaces/chart.interface';
   import ChartComponent from '@/components/ChartComponent.vue';
+  import ChartMobileFilter from '@/components/modals/ChartMobileFilter/ChartMobileFilter.vue';
 
   @Component({
     components: {
+      ChartMobileFilter,
       ChartComponent,
       LaboratoryDesignation,
       MainToggle,
@@ -503,6 +575,7 @@
           },
         ],
       }];
+    isFilterOpen = false;
 
     toggleSelectAnalyzesModal(val: boolean) {
       this.isSelectAnalyzesModalOpen = val;
@@ -512,8 +585,133 @@
       this.isDateModalOpen = val;
     }
 
+    toggleFilterModal(val: boolean) {
+      this.isFilterOpen = val;
+    }
+
     changeRefZonesVisible(val: boolean) {
       this.isRefZonesVisible = val;
+    }
+
+    countArrowBtnLeftRight(index: number) {
+      const rightClass = 'chart__first-btn-icon--right';
+      const leftClass = 'chart__first-btn-icon--left';
+      let returnedClass = '';
+
+      index % 2 === 0
+        ? returnedClass = rightClass
+        : returnedClass = leftClass;
+
+      return returnedClass;
+    }
+
+    countArrowBtnTopBottom(index: number) {
+      const topClass = 'chart__second-btn-icon--top';
+      const bottomClass = 'chart__second-btn-icon--bottom';
+
+      if (index === 0 || index === 1) {
+        return bottomClass;
+      }
+
+      return topClass;
+    }
+
+    clickLeftRightBtn(index: number) {
+      let timeResults: IChart.IChartItem[] = [];
+      let timeName = '';
+
+      if (index === 0) {
+        timeResults = this.mainData[0].results;
+        this.mainData[0].results = this.mainData[1].results;
+        this.mainData[1].results = timeResults;
+        timeName = this.mainData[0].name;
+        this.mainData[0].name = this.mainData[1].name;
+        this.mainData[1].name = timeName;
+      } else if (index === 1) {
+        timeResults = this.mainData[1].results;
+        this.mainData[1].results = this.mainData[0].results;
+        this.mainData[0].results = timeResults;
+        timeName = this.mainData[1].name;
+        this.mainData[1].name = this.mainData[0].name;
+        this.mainData[0].name = timeName;
+      } else if (index === 2) {
+        timeResults = this.mainData[2].results;
+        this.mainData[2].results = this.mainData[3].results;
+        this.mainData[3].results = timeResults;
+        timeName = this.mainData[2].name;
+        this.mainData[2].name = this.mainData[3].name;
+        this.mainData[3].name = timeName;
+      } else if (index === 3) {
+        timeResults = this.mainData[3].results;
+        this.mainData[3].results = this.mainData[2].results;
+        this.mainData[2].results = timeResults;
+        timeName = this.mainData[3].name;
+        this.mainData[3].name = this.mainData[2].name;
+        this.mainData[2].name = timeName;
+      }
+    }
+
+    clickTopBottomBtn(index: number) {
+      let timeResults: IChart.IChartItem[] = [];
+      let timeName = '';
+
+      if (index === 0) {
+        timeResults = this.mainData[0].results;
+        this.mainData[0].results = this.mainData[2].results;
+        this.mainData[2].results = timeResults;
+        timeName = this.mainData[0].name;
+        this.mainData[0].name = this.mainData[2].name;
+        this.mainData[2].name = timeName;
+      } else if (index === 1) {
+        timeResults = this.mainData[1].results;
+        this.mainData[1].results = this.mainData[3].results;
+        this.mainData[3].results = timeResults;
+        timeName = this.mainData[1].name;
+        this.mainData[1].name = this.mainData[3].name;
+        this.mainData[3].name = timeName;
+      } else if (index === 2) {
+        timeResults = this.mainData[2].results;
+        this.mainData[2].results = this.mainData[0].results;
+        this.mainData[0].results = timeResults;
+        timeName = this.mainData[2].name;
+        this.mainData[2].name = this.mainData[0].name;
+        this.mainData[0].name = timeName;
+      } else if (index === 3) {
+        timeResults = this.mainData[3].results;
+        this.mainData[3].results = this.mainData[1].results;
+        this.mainData[1].results = timeResults;
+        timeName = this.mainData[3].name;
+        this.mainData[3].name = this.mainData[1].name;
+        this.mainData[1].name = timeName;
+      }
+    }
+
+    clickBottomBtnMobile(index: number) {
+      let timeResults: IChart.IChartItem[] = [];
+      let timeName = '';
+      const item: IChart.IChart = this.mainData[index];
+      const nextItem: IChart.IChart = this.mainData[index + 1];
+
+      timeResults = item.results;
+      item.results = nextItem.results;
+      nextItem.results = timeResults;
+      timeName = item.name;
+      item.name = nextItem.name;
+      nextItem.name = timeName;
+    }
+
+    clickTopBtnMobile(index: number) {
+      let timeResults: IChart.IChartItem[] = [];
+      let timeName = '';
+      const item: IChart.IChart = this.mainData[index];
+      const prevItem: IChart.IChart = this.mainData[index - 1];
+
+      timeResults = item.results;
+      item.results = prevItem.results;
+      prevItem.results = timeResults;
+      timeName = item.name;
+      item.name = prevItem.name;
+      prevItem.name = timeName;
     }
   }
 </script>
@@ -579,12 +777,25 @@
 
     .selected-analyzes-list {
       margin-top: 18px;
+      margin-right: -44px;
+
+      @include media-breakpoint-up($breakpoint-lg) {
+        margin-right: -30px;
+      }
+
+      @include media-breakpoint-up($breakpoint-sm) {
+        margin-right: -20px;
+      }
     }
 
     .first-control-wrapper {
       display: flex;
       align-items: center;
       margin-top: 60px;
+
+      @include media-breakpoint-up($breakpoint-lg) {
+        display: none;
+      }
     }
 
     .date-btn {
@@ -602,6 +813,21 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      &__btn {
+        box-shadow: 0 4px 15px $shadow-color;
+        display: none;
+
+        @include media-breakpoint-up($breakpoint-lg) {
+          display: block;
+        }
+      }
+
+      &__btn-icon {
+        width: 24px;
+        height: 24px;
+        color: $accent-color;
+      }
     }
 
     .select-ref-wrapper {
@@ -614,36 +840,56 @@
     }
 
     .chart {
-      &__wrapper {
+      &__main-wrapper {
         margin-top: 25px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 20px;
+        @include media-breakpoint-up($breakpoint-pre-md) {
+          grid-template-columns: 1fr;
+          grid-gap: 10px;
+        }
       }
 
       &__item {
-        width: 800px;
         padding-top: 22px;
         background-color: $light-white;
         border-radius: 15px;
       }
 
-      &__top-wrapper {
-        display: flex;
-        justify-content: flex-end;
-      }
-
       &__top {
         display: flex;
         align-items: center;
+        justify-content: flex-end;
+        @include media-breakpoint-up($breakpoint-pre-md) {
+          justify-content: space-between;
+        }
+      }
+
+      &__top-btn-wrapper {
+        display: flex;
+        align-items: center;
+        @include media-breakpoint-up($breakpoint-pre-md) {
+          display: none;
+        }
+
+        &--mobile {
+          display: none;
+          @include media-breakpoint-up($breakpoint-pre-md) {
+            display: flex;
+          }
+        }
       }
 
       &__title {
-        margin-right: 15px;
+        margin: 0 15px;
         font-weight: 500;
         font-size: 12px;
         line-height: 15px;
         color: $black-02;
       }
 
-      &__right-btn {
+      &__first-btn {
         margin-right: 5px;
         border-radius: 5px;
 
@@ -651,11 +897,18 @@
           width: 4px;
           height: 8px;
           color: $accent-color;
+        }
+
+        &-icon--right {
           transform: rotate(180deg);
+        }
+
+        &-icon--left {
+          transform: rotate(0deg);
         }
       }
 
-      &__top-btn {
+      &__second-btn {
         margin-right: 20px;
         border-radius: 5px;
 
@@ -663,8 +916,27 @@
           width: 4px;
           height: 8px;
           color: $accent-color;
+        }
+
+        &-icon--top {
           transform: rotate(90deg);
         }
+
+        &-icon--bottom {
+          transform: rotate(-90deg);
+        }
+      }
+    }
+
+    .select {
+      @include media-breakpoint-up($breakpoint-lg) {
+        display: none;
+      }
+    }
+
+    .laboratory-designation {
+      @include media-breakpoint-up($breakpoint-lg) {
+        display: none;
       }
     }
   }

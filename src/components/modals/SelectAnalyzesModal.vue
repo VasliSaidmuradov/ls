@@ -41,43 +41,40 @@
         <span class="table__subtitle">Гормональные исследования</span>
       </div>
 
-      <table class="table">
-        <tr class="table__tr">
-          <td class="table__checkbox">
-            <checkbox-input :value="true"/>
-          </td>
-          <td class="table__analyze">
-            Соотношение своб. ПСА к общему
-          </td>
-          <td colspan="table__value">
-            21,42 %
-          </td>
-          <td class="table__ref">
-            > 18
-          </td>
-          <td class="table__date">
-            02 июля 2020
-          </td>
-        </tr>
 
-        <tr class="table__tr">
-          <td class="table__checkbox">
-            <checkbox-input :value="true"/>
-          </td>
-          <td class="table__analyze">
-            Соотношение своб. ПСА к общему
-          </td>
-          <td colspan="table__value">
-            21,42 %
-          </td>
-          <td class="table__ref">
-            > 18
-          </td>
-          <td class="table__date">
-            02 июля 2020
-          </td>
-        </tr>
-      </table>
+      <div class="table__wrapper">
+        <table class="table">
+          <tr class="table__tr" v-for="table in 8" :key="table">
+            <td class="table__checkbox">
+              <checkbox-input :value="true"/>
+            </td>
+            <td class="table__analyze">
+              Соотношение своб. ПСА к общему
+            </td>
+            <td colspan="table__value">
+              21,42 %
+            </td>
+            <td class="table__ref">
+              > 18
+            </td>
+            <td class="table__date">
+              02 июля 2020
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!--v-if max-width = 1000px-->
+      <div class="block__wrapper">
+        <div class="block__item" v-for="block in 8" :key="block">
+          <span class="block__title">Определение концентрации 25ОН-витамина D в сыворотке крови</span>
+
+          <button class="block__action-btn">
+            <span class="block__action-btn-icon">+</span>
+            <span class="block__action-btn-text">Добавить анализ</span>
+          </button>
+        </div>
+      </div>
 
       <main-btn
           class="go-comparison-btn"
@@ -122,8 +119,12 @@
     width: 100%;
     padding: 60px 26px 30px 60px;
     position: relative;
-    background-color: $light-background;
+    background-color: $light-white;
     border-radius: 8px;
+
+    @include media-breakpoint-up(1000px) {
+      padding: 40px 20px 17px 20px;
+    }
 
     &__close-btn {
       position: absolute;
@@ -200,6 +201,11 @@
 
       &__analyzes-list {
         margin-top: 10px;
+        margin-right: -26px;
+
+        @include media-breakpoint-up(1000px) {
+          margin-right: -20px;
+        }
       }
 
       &__description {
@@ -214,16 +220,40 @@
 
     .table {
       width: 100%;
-      margin-top: 20px;
+      overflow-y: scroll;
       border-collapse: separate;
       border-spacing: 0 10px;
-      @include media-breakpoint-up(600px) {
-        display: none;
+
+      &__wrapper {
+        margin-top: 20px;
+        max-height: 340px;
+        padding-right: 60px;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+          width: 2px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: $black-04;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 8px;
+          background-color: $accent-color;
+        }
+
+        @include media-breakpoint-up(1000px) {
+          display: none;
+        }
       }
 
       &__description-wrapper {
         margin-top: 35px;
         display: flex;
+        @include media-breakpoint-up(1000px) {
+          display: none;
+        }
       }
 
       &__title {
@@ -254,6 +284,7 @@
 
       td {
         background-color: $light-white;
+        height: 60px;
       }
 
       td:nth-child(2) {
@@ -277,7 +308,6 @@
       }
 
       &__tr {
-        height: 60px;
         border-radius: 10px;
       }
 
@@ -309,8 +339,71 @@
       }
     }
 
+    .block__item + .block__item {
+      margin-top: 10px;
+    }
+
+    .block {
+      &__wrapper {
+        max-height: 484px;
+        margin-top: 22px;
+        padding-right: 14px;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+          width: 2px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: $black-04;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 8px;
+          background-color: $accent-color;
+        }
+      }
+
+      &__item {
+        padding: 18px;
+        background-color: $light-background;
+        border-radius: 20px;
+      }
+
+      &__title {
+        display: block;
+        max-width: 264px;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 130%;
+        color: $black-02;
+      }
+
+      &__action-btn {
+        margin-top: 12px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+        &-icon {
+          color: $accent-color;
+        }
+
+        &-text {
+          margin-left: 13px;
+          font-weight: normal;
+          font-size: 12px;
+          line-height: 150%;
+          color: $black-02;
+        }
+      }
+    }
+
     .go-comparison-btn {
       margin-top: 30px;
+      @include media-breakpoint-up(1000px) {
+        margin-top: 17px;
+      }
 
       &-icon {
         width: 4px;

@@ -13,8 +13,7 @@
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator';
 
-  @Component({
-  })
+  @Component({})
   export default class SelectedAnalyzesList extends Vue {
     selectedAnalyzesList: Array<string> = ['Тиреотропный гормон', 'Тироксин общий', 'ПСА свободный', 'Соотношение своб. ПСА к общему ПСА'];
   }
@@ -24,8 +23,14 @@
   .selected-analyzes {
     display: flex;
     align-items: center;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
 
     .analyze-item {
+      flex-shrink: 0;
       height: 38px;
       padding: 0 12px;
       margin-right: 14px;
