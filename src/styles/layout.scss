@@ -44,12 +44,12 @@
 
 .scrollable {
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 2px;
+    height: 2px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: $light-stroke;
-    border: 1px $light-stroke solid;
+    background-color: $accent-color;
 
     &:hover {
       background-color: $scroll-hover-color;

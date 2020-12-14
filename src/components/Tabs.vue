@@ -12,7 +12,7 @@
         :value="activeTab"
         class="tabs__body"
         animated>
-      <q-tab-panel v-for="(tab, index) in data" :name="tab.name" :key="index">
+      <q-tab-panel v-for="(tab, index) in data" :name="tab.name" :key="index" class="scrollable">
         <component v-bind:is="tab.componentName"></component>
       </q-tab-panel>
     </q-tab-panels>
