@@ -7,10 +7,10 @@
     <span class="middle-title">Динамика показателя</span>
 
     <div class="options-wrapper">
-      <q-toggle
+      <main-toggle
           label="Референсная зона"
           :value="isRefZonesVisible"
-          @input="changeRefZonesVisible"
+          @change-value="changeRefZonesVisible"
       />
 
       <main-btn
@@ -115,6 +115,7 @@
   import LaboratoryDesignation from '@/components/LaboratoryDesignation.vue';
   import BackBtn from '@/components/UI/buttons/BackBtn.vue';
   import ChartMobileFilter from '@/components/modals/ChartMobileFilter/ChartMobileFilter.vue';
+  import MainToggle from '@/components/UI/MainToggle.vue';
 
   interface IChangeVisibleObject {
     e: boolean;
@@ -123,6 +124,7 @@
 
   @Component({
     components: {
+      MainToggle,
       ChartMobileFilter,
       BackBtn,
       LaboratoryDesignation,

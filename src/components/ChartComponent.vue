@@ -130,7 +130,8 @@
     max as d3Max,
     scaleLinear as d3ScaleLinear,
     scaleTime as d3ScaleTime,
-    select as d3Select,
+    selectAll as d3SelectAll,
+    timeFormat as d3TimeFormat,
     timeFormatDefaultLocale as d3TimeFormatDefaultLocale,
   } from 'd3';
   import { IChart } from '@/interfaces/chart.interface';
@@ -359,21 +360,23 @@
     }
 
     initAxisX() {
-      d3Select('.x-g').remove();
+      d3SelectAll('.x-g').remove();
 
-      const gX = d3Select('.x');
+      const gX = d3SelectAll('.x');
       gX.append('g')
         .attr('class', 'x-g')
-        .call(d3AxisBottom(this.x));
+        .call(d3AxisBottom(this.x)
+          .ticks(5, d3TimeFormat('%e.%m.%Y')),
+        );
 
       gX.selectAll('line').remove();
       gX.select('.domain').remove();
     }
 
     initHorizontalLines() {
-      d3Select('.y-horizontal-g').remove();
+      d3SelectAll('.y-horizontal-g').remove();
 
-      const gYHorizontal = d3Select('.y-horizontal');
+      const gYHorizontal = d3SelectAll('.y-horizontal');
       gYHorizontal.append('g')
         .attr('class', 'y-horizontal-g')
         .call(d3AxisRight(this.y)

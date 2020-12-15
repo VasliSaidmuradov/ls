@@ -37,7 +37,7 @@
         <span class="info-item-date">{{$date(new Date(results[results.length - 2].date), 'd MMMM yyyy')}}</span>
       </div>
 
-      <div class="info-item">
+      <div class="info-item info-item__last">
         <span class="info-item-title">Референсные значения</span>
         <span class="info-item-value info-item-value--black">
           {{countRanges}}
@@ -133,9 +133,9 @@
       margin-top: 22px;
       display: flex;
       align-items: flex-start;
-      flex-wrap: wrap;
       @include media-breakpoint-up($breakpoint-md) {
         margin-top: 80px;
+        flex-direction: column;
       }
 
       &-item {
@@ -145,6 +145,16 @@
         padding: 18px;
         background-color: $light-white;
         border-radius: 15px;
+        @include media-breakpoint-up($breakpoint-md) {
+          width: 100%;
+        }
+
+        &__last {
+          width: 309px;
+          @include media-breakpoint-up($breakpoint-md) {
+            width: 100%;
+          }
+        }
       }
 
       &-item-title {
@@ -256,13 +266,13 @@
         ::v-deep.q-item {
           display: flex;
           align-items: center;
-          justify-content: space-between;
           min-height: initial;
           padding: 0;
         }
 
         ::v-deep.q-item__section {
           padding: 0;
+          margin-left: auto;
           width: 24px;
           height: 24px;
           display: flex;

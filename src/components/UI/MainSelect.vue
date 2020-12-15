@@ -63,14 +63,14 @@
   import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 
   @Component({
-    components: { CheckboxInput }
+    components: { CheckboxInput },
   })
   export default class MainSelect extends Vue {
     @Prop({ required: true }) value: number | string | object;
     @Prop({ required: true }) options: Array<number> | Array<string> | Array<object>;
     @Prop() multiple: boolean;
     @Prop() labelTitle: string;
-    @Prop() selectLabel: string
+    @Prop() selectLabel: string;
     @Prop() disabled: boolean;
     @Prop({ default: 'transparent' }) bcgColor: string;
     @Prop({ default: 'none' }) borderColor: string;
@@ -138,6 +138,12 @@
         transform: rotate(180deg);
         margin-bottom: 7px;
       }
+    }
+  }
+
+  .main-select.q-field--focused {
+    ::v-deep .q-field__label {
+      color: $accent-color;
     }
   }
 </style>
