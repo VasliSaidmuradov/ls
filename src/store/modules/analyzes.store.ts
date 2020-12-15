@@ -55,6 +55,19 @@ export default {
         date: new Date(),
       },
     ],
+
+    checkBoxValues: {
+      check1: false,
+      check2: false,
+      check3: false,
+      check4: false,
+      check5: false,
+      check6: false,
+      check7: false,
+      check8: false,
+    },
+
+    compareMode: false,
   },
 
   mutations: {

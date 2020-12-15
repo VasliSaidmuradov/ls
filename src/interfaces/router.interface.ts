@@ -16,6 +16,9 @@ export namespace IRouter {
     AUTH_PAGE = 'authPage',
     CHANGE_CABINETS = 'changeCabinets',
     ADD_ANALYZES = 'addAnalyzes',
+    ALL_ANALYZES = 'allAnalyzes',
+    ORDER_HISTORY = 'orderHistory',
+    ORDER_PAGE = 'orderPage',
   }
 
   export const ROUTE_PATH = {
@@ -33,6 +36,9 @@ export namespace IRouter {
     [ROUTE_NAME.AUTH_PAGE]: '/auth',
     [ROUTE_NAME.CHANGE_CABINETS]: '/change-cabinets',
     [ROUTE_NAME.ADD_ANALYZES]: '/add-analyzes',
+    [ROUTE_NAME.ALL_ANALYZES]: '/all-analyzes',
+    [ROUTE_NAME.ORDER_HISTORY]: '/order-history',
+    [ROUTE_NAME.ORDER_PAGE]: '/order-page',
   }
 
   export interface IAppRoute<T> extends Omit<Route, 'query'> {

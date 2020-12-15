@@ -86,5 +86,17 @@ export default new Router({
     name: ROUTE_NAME.ADD_ANALYZES,
     component: () => import('@/views/AddAnalyzesPage.vue'),
     beforeEnter: MobileRouteRedirect,
+  }, {
+    path: ROUTE_PATH[ROUTE_NAME.ALL_ANALYZES],
+    name: ROUTE_NAME.ALL_ANALYZES,
+    component: () => import('@/views/AllAnalyzesPage.vue'),
+  }, {
+    path: ROUTE_PATH[ROUTE_NAME.ORDER_HISTORY],
+    name: ROUTE_NAME.ORDER_HISTORY,
+    component: () => import('@/views/OrderHistoryPage.vue'),
+  }, {
+    path: ROUTE_PATH[ROUTE_NAME.ORDER_PAGE],
+    name: ROUTE_NAME.ORDER_PAGE,
+    component: () => import('@/views/OrderPage.vue'),
   }],
 });
