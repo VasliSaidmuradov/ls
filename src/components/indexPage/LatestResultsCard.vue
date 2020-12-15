@@ -1,5 +1,5 @@
 <template>
-  <div class="latest-result-card">
+  <div class="latest-result-card" @click="goToOrderPage">
     <div class="latest-result-card__top">
       <div class="latest-result-card__top-left">
         <span class="latest-result-card__category">{{data.category}}</span>
@@ -43,10 +43,16 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import {IDashBoard} from '@/interfaces/dashboard.interface';
+import {IRouter} from '@/interfaces/router.interface';
+import ROUTE_NAME = IRouter.ROUTE_NAME;
 
 @Component({})
 export default class LatestResultsCard extends Vue {
   @Prop() data: IDashBoard.ILatestResult;
+
+  goToOrderPage() {
+    this.$router.push({name: ROUTE_NAME.ORDER_PAGE})
+  }
 }
 </script>
 

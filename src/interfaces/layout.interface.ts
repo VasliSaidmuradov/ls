@@ -30,8 +30,8 @@ export namespace IMenu {
       text: 'Главная',
       exact: true
     }, {
-      name: ROUTE_NAME.ANALYZES_PAGE,
-      link: ROUTE_PATH[ROUTE_NAME.ANALYZES_PAGE],
+      name: ROUTE_NAME.ALL_ANALYZES,
+      link: ROUTE_PATH[ROUTE_NAME.ALL_ANALYZES],
       icon: 'analyzes-icon',
       text: 'Анализы',
       exact: false
