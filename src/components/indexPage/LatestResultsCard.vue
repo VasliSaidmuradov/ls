@@ -5,13 +5,13 @@
         <span class="latest-result-card__category">{{data.category}}</span>
         <h4 class="latest-result-card__title">{{data.name}}</h4>
         <div class="latest-result-card__desk">
-          {{data.description}}
+          {{bioMarkers}}
         </div>
         <div class="latest-result-card__date">
           <span class="latest-result-card__date-icon">
             <icon name="calendar-icon"></icon>
           </span>
-          {{$date(data.date, 'dd.MM.yyyy')}}
+          {{$date(new Date(data.date), 'dd.MM.yyyy')}}
         </div>
       </div>
       <div class="latest-result-card__top-right">
@@ -28,13 +28,15 @@
           Всего 12 показателей:
         </span>
         <div class="latest-result-card__bottom-left-branch">
-          <span v-for="item in 3" :key="item" class="latest-result-card__bottom-left-branch-value">
-            {{item}}
+          <span v-for="(item, index) in bioMarkersStatus"
+                :key="index"
+                class="latest-result-card__bottom-left-branch-value" :class="index">
+            {{item.length}}
           </span>
         </div>
       </div>
-      <div class="latest-result-card__bottom-right">
-        {{data.is_new ? 'Новый!' : 'что то'}}
+      <div class="latest-result-card__bottom-right" v-if="data.is_new">
+        Новый!
       </div>
     </div>
   </div>
@@ -52,6 +54,25 @@ export default class LatestResultsCard extends Vue {
 
   goToOrderPage() {
     this.$router.push({name: ROUTE_NAME.ORDER_PAGE})
+  }
+
+  get bioMarkers(): string {
+    return this.data.biomarkers.map(item => item.name).join(',');
+  }
+
+  get bioMarkersStatus() {
+    return this.groupBy(this.data.biomarkers, 'status');
+  }
+
+
+  groupBy(items: any[], key: string) {
+    return items.reduce((result, item) => ({
+          ...result,
+          [item[key]]: [
+            ...(result[item[key]] || []),
+            item,
+          ],
+        }), {},);
   }
 }
 </script>

@@ -49,12 +49,12 @@ export default class AllAnalyzesPage extends Vue {
     {
       name: IAnalyzes.TabsName.ALL_ANALYZES,
       label: 'Все анализы',
-      componentName: AllAnalyzes,
+      componentName: AnalyzesByCategory,
     },
     {
       name: IAnalyzes.TabsName.BY_CATEGORY,
       label: 'По категориям',
-      componentName: AnalyzesByCategory,
+      componentName: AllAnalyzes,
     }
   ]
 

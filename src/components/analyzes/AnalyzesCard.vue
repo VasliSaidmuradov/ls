@@ -147,7 +147,7 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
 
   @Prop({required: true}) data: IAnalyzes.IAddedAnalyzes;
   dataClone: IAnalyzes.IAddedAnalyzes  = {};
-  isEditMode = false;
+  isEditMode = true;
 
   rules: Function[] = []
 
