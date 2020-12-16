@@ -41,20 +41,7 @@ export default {
         units: 'МЕ/л'
       },
     ],
-    addedAnalyzes: [
-      {
-        name: "витамина концентрации 25ОН-витамина D в сыворотке крови",
-        ranges: {
-          min: 30,
-          max: null
-        },
-        units: 'МЕ/л',
-        id: 'da',
-        result: 52,
-        lab: 'Лабстори',
-        date: new Date(),
-      },
-    ],
+    addedAnalyzes: [],
 
     checkBoxValues: {
       check1: false,
