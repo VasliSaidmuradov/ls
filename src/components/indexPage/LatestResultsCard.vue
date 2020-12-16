@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="latest-result-card__bottom">
-      <div class="latest-result-card__bottom-left">
+      <div class="latest-result-card__bottom-left" v-if="data.biomarkers.length">
         <span class="latest-result-card__bottom-left-desk">
           Всего 12 показателей:
         </span>
@@ -57,7 +57,7 @@ export default class LatestResultsCard extends Vue {
   }
 
   get bioMarkers(): string {
-    return this.data.biomarkers.map(item => item.name).join(',');
+    return this.data?.biomarkers?.map(item => item.name).join(',') || '-';
   }
 
   get bioMarkersStatus() {
