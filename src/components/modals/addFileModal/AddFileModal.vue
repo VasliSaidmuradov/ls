@@ -50,6 +50,7 @@
         />
 
         <q-checkbox
+            v-if="decipherAnalyzes"
             class="form-checkbox form-checkbox--with-label"
             label="Расшифровать анализы"
             v-model="isCheckboxValue"
@@ -189,6 +190,7 @@
   })
   export default class AddFileModal extends Vue {
     @Prop({ required: true }) isFileModalOpen: boolean;
+    @Prop() decipherAnalyzes: boolean;
 
     isGoBackModalOpen = false;
     isDeleteFileModalOpen = false;
