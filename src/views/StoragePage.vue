@@ -56,6 +56,7 @@
     </div>
 
     <add-file-modal
+        :decipher-analyzes="true"
         :is-file-modal-open="isFileModalOpen"
         @close-modal="toggleFileModal"
     />
@@ -134,7 +135,7 @@
     }
 
     toggleCheckboxValue() {
-      this.isCheckboxValue = !this.isCheckboxValue
+      this.isCheckboxValue = !this.isCheckboxValue;
     }
   }
 </script>

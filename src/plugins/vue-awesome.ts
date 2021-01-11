@@ -161,7 +161,7 @@ import Icon from 'vue-awesome/components/Icon.vue';
   'doc-success-icon': {
     width: 18,
     height: 18,
-    raw: `<circle cx="9" cy="9" r="9" fill="#58DE8E"/> <path d="M12 7L7.875 11L6 9.18182" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+    raw: `<circle cx="9" cy="9" r="9" fill="#63C58A"/><path fill-rule="evenodd" clip-rule="evenodd" d="M12.8899 6.9379L8.70061 11.563C8.55381 11.7013 8.3158 11.7013 8.169 11.563L5.77677 9.30935C5.62997 9.17105 5.62997 8.94684 5.77677 8.80854C5.92356 8.67025 6.16157 8.67025 6.30837 8.80854L8.43469 10.2503L12.3583 6.43709C12.5051 6.2988 12.7431 6.2988 12.8899 6.43709C13.0367 6.57539 13.0367 6.79961 12.8899 6.9379Z" fill="#F9F9FC"/>`,
   },
   'doc-question-icon': {
     width: 18,

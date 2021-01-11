@@ -1,6 +1,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import {IDashBoard} from '@/interfaces/dashboard.interface';
 import IRanges = IDashBoard.IRanges;
+import { IChart } from '@/interfaces/chart.interface';
 
 
 @Component({})
