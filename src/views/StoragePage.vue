@@ -137,6 +137,10 @@
     toggleCheckboxValue() {
       this.isCheckboxValue = !this.isCheckboxValue;
     }
+
+    mounted() {
+      this.$store.dispatch('storage/loadDocuments')
+    }
   }
 </script>
 

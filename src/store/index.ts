@@ -5,6 +5,7 @@ import error from './modules/error.store';
 import personalArea from './modules/personalArea.store'
 import analyzes from './modules/analyzes.store'
 import confirm from './modules/confirm.store'
+import storage from './modules/storage.store'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     error,
     personalArea,
     analyzes,
-    confirm
+    confirm,
+    storage
   }
 })

@@ -1,8 +1,8 @@
-
 import {IAuthStore} from '@/interfaces/auth.interface';
 import {IPersonalAreaStore} from '@/interfaces/personal-area.interface';
 import {IAnalyzesStore} from '@/interfaces/analyzes.interface';
 import {IConfirmStoreState} from '@/interfaces/confirm.interface';
+import { IStorageStore } from '@/interfaces/storage.interface';
 
 
 export interface IAppState {
@@ -10,4 +10,5 @@ export interface IAppState {
   auth: IAuthStore.IState;
   analyzes: IAnalyzesStore.IState;
   confirm: IConfirmStoreState;
+  storage: IStorageStore.IState
 }
