@@ -1,11 +1,11 @@
 <template>
-  <div class="document-item" :class="{'cursor-pointer': document.type === 1}" @click="goToSingleDocumentPage">
+  <div class="document-item" :class="{'cursor-pointer': document.type_doc === 1}" @click="goToSingleDocumentPage">
     <div class="document-item__header">
       <div class="document-item__header-date-wrapper">
         <icon name="calendar-icon" class="document-item__header-calendar-icon"/>
         <span class="document-item__header-date">11.03.2020</span>
       </div>
-      <div v-if="document.type === 1">
+      <div v-if="document.type_doc === 1">
         <!-- class tooltip you can find in styles/quasar.scss-->
         <q-tooltip
             content-class="tooltip"
@@ -26,7 +26,7 @@
       <icon
           name="edit-icon"
           class="document-item__edit-icon"
-          v-if="document.type === 2"
+          v-if="document.type_doc === 2"
           @click="toggleEditDocumentModal(true)"
       />
     </div>
@@ -46,7 +46,7 @@
 
       <main-btn
           class="document-item__footer-btn"
-          v-if="document.type === 1"
+          v-if="document.type_doc === 1"
           :type="'only-icon'"
           :width="32"
           :height="32"
@@ -75,6 +75,7 @@
             :width="105"
             :height="42"
             :bcg-color="'#FF7C7C'"
+            @click-btn="deleteDocument"
         >
           <template v-slot:icon>
             <icon
@@ -130,8 +131,14 @@
       this.isFileListSliderModalOpen = val;
     }
 
+    deleteDocument() {
+      const isResult = this.$store.dispatch('storage/deleteDocument', this.document.id)
+
+      isResult && this.toggleDialogModal(false)
+    }
+
     goToSingleDocumentPage() {
-      if (this.document.type === 1) {
+      if (this.document.type_doc === 1) {
         this.$router.push({ name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: { id: this.document.id } });
       }
     }

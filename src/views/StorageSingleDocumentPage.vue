@@ -44,6 +44,8 @@
   import FileItem from '@/components/storageSingleDocumentPage/FileItem.vue';
   import { IAnalyzes } from '@/interfaces/analyzes.interface';
   import StorageAnalyzesCard from '@/components/storagePage/StorageAnalyzesCard.vue';
+  import { IRouter } from '@/interfaces/router.interface';
+  import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   @Component({
     components: { StorageAnalyzesCard, FileItem, InfoBlock },
@@ -99,6 +101,12 @@
         units: 'МЕ/л',
       },
     ];
+
+    async mounted() {
+      const isResult = await this.$store.dispatch('storage/loadDocument', this.$route.params.id)
+
+      !isResult && await this.$router.push({name: ROUTE_NAME.STORAGE_PAGE})
+    }
   }
 </script>
 

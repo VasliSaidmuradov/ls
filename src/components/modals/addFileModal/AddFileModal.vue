@@ -59,8 +59,8 @@
         <div class="modal__input-wrapper">
           <div class="modal__input form-input form-input--empty">
             <q-input
-                :value="''"
                 placeholder="Введите название документа"
+                v-model="documentName"
             />
             <span class="modal__input-postscript">Необязательно для заполнения</span>
           </div>
@@ -113,6 +113,7 @@
             :border-color="'#7C74E9'"
             :width="214"
             :height="56"
+            @click-btn="loadDocument"
         >
           <template v-slot:icon>
             <icon name="cloud-icon" class="modal__load-btn-icon"/>
@@ -184,6 +185,8 @@
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import BackBtn from '@/components/UI/buttons/BackBtn.vue';
   import MainSelect from '@/components/UI/MainSelect.vue';
+  import { format } from 'date-fns';
+  import { serverDateFormat } from '@/interfaces/api.interface';
 
   @Component({
     components: { MainSelect, BackBtn, MainBtn, PreviewImg, FileForm, InputDate, DialogModal },
@@ -196,11 +199,12 @@
     isDeleteFileModalOpen = false;
     deletedFileIndex: number;
     modalVisibleType = 1;
-    date = '';
-    selectValue = 'Узи';
+    date = new Date();
     isCheckboxValue = false;
+    selectValue = 'Узи';
     selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса'];
     fileList: File[] = [];
+    documentName = '';
 
     @Watch('fileList')
     fileListChanged() {
@@ -233,7 +237,7 @@
       this.toggleDeleteFileModal(false);
     }
 
-    changeDate(value: string) {
+    changeDate(value: Date) {
       this.date = value;
     }
 
@@ -252,6 +256,17 @@
 
     inputSelect(val: string) {
       this.selectValue = val;
+    }
+
+    async loadDocument() {
+      const payload = {
+        name: this.documentName,
+        date: format(new Date(this.date), serverDateFormat),
+        type_doc: 1,
+      };
+
+      const isResult = await this.$store.dispatch('storage/createDocument', payload);
+      isResult && this.closeModal();
     }
 
     @Emit('close-modal')
