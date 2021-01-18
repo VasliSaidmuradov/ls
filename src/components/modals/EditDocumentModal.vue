@@ -12,7 +12,7 @@
       <div class="modal__input form-input form-input--empty">
         <label class="form-label" for="documentName">Название документа</label>
         <q-input
-            :value="'ss'"
+            v-model="documentData.name"
             :placeholder="'Введите название документа'"
             id="documentName"
         />
@@ -22,7 +22,7 @@
         <input-date
             class="modal__date modal__input form-input form-input--empty"
             :label="'Дата исследования'"
-            :value="date"
+            :value="documentData.date"
             :placeholder="'Дата исследования'"
             @change-value="changeDate"
         />
@@ -43,6 +43,7 @@
             :height="42"
             :type="'small-bg'"
             :text="'Сохранить'"
+            @click-btn="editDocument"
         />
 
         <main-btn
@@ -62,25 +63,37 @@
   import InputDate from '@/components/InputDate.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import MainSelect from '@/components/UI/MainSelect.vue';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import IDocument = IStorage.IDocument;
 
   @Component({
     components: { MainSelect, MainBtn, InputDate },
   })
   export default class DialogModal extends Vue {
     @Prop({ required: true }) isEditDocumentModalOpen: boolean;
+    @Prop({ required: true }) document: string;
 
-    date: Date | string = new Date();
     selectValue = 'Узи';
+    documentData: IDocument = JSON.parse(JSON.stringify(this.document));
     selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса'];
-
 
     @Emit('close-modal')
     closeModal() {
       return false;
     }
 
+    @Emit('edit-document')
+    editDocument() {
+      const { date, name } = this.documentData;
+
+      return {
+        date,
+        name,
+      };
+    }
+
     changeDate(value: string) {
-      this.date = value;
+      this.documentData.date = value;
     }
   }
 </script>

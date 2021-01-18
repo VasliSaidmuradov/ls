@@ -91,38 +91,7 @@
     ];
 
     get documentList(): IStorage.IDocument[] {
-      // {
-      //   name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-      //   type: 1,
-      //   id: '1',
-      // },
-      // {
-      //   name: 'УЗИ живота',
-      //   type: 2,
-      //   id: '2',
-      // },
-      // {
-      //   name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-      //   type: 1,
-      //   id: '3',
-      // },
-      // {
-      //   name: 'УЗИ живота',
-      //   type: 2,
-      //   id: '4',
-      // },
-      // {
-      //   name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-      //   type: 1,
-      //   id: '5',
-      // },
-      // {
-      //   name: 'УЗИ живота',
-      //   type: 2,
-      //   id: '6',
-      // },
-      console.log(this.$store.state.storage.documentList);
-      return this.$store.state.storage.documentList;
+      return this.$store.state.storage.documentList
     };
 
     inputSelect(val: string) {

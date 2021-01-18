@@ -262,7 +262,7 @@
       const payload = {
         name: this.documentName,
         date: format(new Date(this.date), serverDateFormat),
-        type_doc: 1,
+        type_doc: 0,
       };
 
       const isResult = await this.$store.dispatch('storage/createDocument', payload);

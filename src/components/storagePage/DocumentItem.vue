@@ -3,7 +3,7 @@
     <div class="document-item__header">
       <div class="document-item__header-date-wrapper">
         <icon name="calendar-icon" class="document-item__header-calendar-icon"/>
-        <span class="document-item__header-date">11.03.2020</span>
+        <span class="document-item__header-date">{{document.date}}</span>
       </div>
       <div v-if="document.type_doc === 1">
         <!-- class tooltip you can find in styles/quasar.scss-->
@@ -26,7 +26,7 @@
       <icon
           name="edit-icon"
           class="document-item__edit-icon"
-          v-if="document.type_doc === 2"
+          v-if="document.type_doc === 0"
           @click="toggleEditDocumentModal(true)"
       />
     </div>
@@ -89,7 +89,9 @@
 
     <edit-document-modal
         :is-edit-document-modal-open="isEditDocumentModalOpen"
+        :document="document"
         @close-modal="toggleEditDocumentModal"
+        @edit-document="editDocument"
     />
 
     <file-list-slider-modal
@@ -108,6 +110,8 @@
   import FileListSliderModal from '@/components/modals/FileListSliderModal.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import ROUTE_NAME = IRouter.ROUTE_NAME;
+  import { format } from "date-fns";
+  import { serverDateFormat } from '@/interfaces/api.interface';
 
   @Component({
     components: { MainBtn, FileListSliderModal, EditDocumentModal, DialogModal },
@@ -132,9 +136,23 @@
     }
 
     deleteDocument() {
-      const isResult = this.$store.dispatch('storage/deleteDocument', this.document.id)
+      const isResult = this.$store.dispatch('storage/deleteDocument', this.document.id);
 
-      isResult && this.toggleDialogModal(false)
+      isResult && this.toggleDialogModal(false);
+    }
+
+    editDocument(obj: { name: string; date: Date }) {
+      const { name, date } = obj;
+      const payload = {
+        name,
+        date: format(new Date(date), serverDateFormat),
+        id: this.document.id,
+        type_doc: 0,
+      };
+
+      const isResult = this.$store.dispatch('storage/editDocument', payload);
+
+      isResult && this.toggleEditDocumentModal(false);
     }
 
     goToSingleDocumentPage() {
