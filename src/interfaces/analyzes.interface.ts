@@ -3,15 +3,16 @@ import IRanges = IDashBoard.IRanges;
 
 export namespace IAnalyzesStore {
   export interface IState {
-    analyzesForAddList: IAnalyzes.IAnalyzesForAddItem[];
-    addedAnalyzes: any[];
+    addedAnalyzes: IAnalyzes.IBiomarker[];
     compareMode: boolean;
     checkBoxValues: IAnalyzes.ICheckArr;
+    laboratoriesList: IAnalyzes.ILaboratories[];
+    biomarkersList: IAnalyzes.IBiomarker[];
+    commentAnalyzesId: null | string | number;
   }
 }
 
 export namespace IAnalyzes {
-
 
   export enum BusEvents {
     OPEN_ADD_ANALYZES_MODAL = 'addAnalyzesModal:open',
@@ -25,6 +26,22 @@ export namespace IAnalyzes {
     name?: string;
     ranges?: IRanges;
     units?: string;
+  }
+
+  export interface IBiomarker {
+    name: string;
+    available_units: string[];
+    categories: [];
+    id: number;
+    ranges: IRanges;
+    rubrics: number[];
+    unit: string;
+    value?: string;
+    laboratory?: string;
+    date?: string | Date;
+    isEdit?: boolean;
+    comment?: null | string;
+    biomarker_id: number;
   }
 
   export interface IAddedAnalyzes extends IAnalyzesForAddItem {
@@ -46,10 +63,21 @@ export namespace IAnalyzes {
     check8: boolean;
   }
 
+  export interface ILaboratories {
+    id: number;
+    name: string;
+  }
 
   export enum TabsName {
     ALL_ANALYZES = 'allAnalyzes',
     BY_CATEGORY = 'byCategory',
+  }
+}
+
+export namespace IAnalyzesApi {
+  export interface IBiomarkerResponse {
+    biomarkers: IAnalyzes.IBiomarker;
+    count: number;
   }
 }
 

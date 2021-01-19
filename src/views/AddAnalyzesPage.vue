@@ -29,7 +29,10 @@ export default class AnalyzesPage extends Vue {
   editData = {};
 
   mounted() {
-    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, () => this.addCommentModalState = !this.addCommentModalState);
+    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, (id: number | string) => {
+      this.addCommentModalState = !this.addCommentModalState
+      this.$store.commit('analyzes/setPropertyInStore', {name: 'commentAnalyzesId', value: id})
+    });
     bus.$on(IAnalyzes.BusEvents.EDIT_ANALYZES, (data: IAnalyzes.IAddedAnalyzes) => {
       this.editData = data;
       this.editAnalyzesModalState = !this.editAnalyzesModalState;

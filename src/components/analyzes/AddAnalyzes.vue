@@ -47,45 +47,59 @@ import { Component, Vue, Prop, Emit} from 'vue-property-decorator';
 import {IAnalyzes} from '@/interfaces/analyzes.interface';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 import AnalyzesCard from '@/components/analyzes/AnalyzesCard.vue';
-import {bus} from '@/plugins/bus';
+import {mapGetters} from "vuex";
 
 @Component({
   components: {
     MainBtn,
     AnalyzesCard
-  }
+  },
+  computed: mapGetters({
+    addedAnalyzes: 'analyzes/getAddedAnalyzes',
+  })
 })
 export default class AddAnalyzes extends Vue {
   @Prop({default: false, type: Boolean}) isPopup: boolean;
+
   searchedValue = '';
   searchedList: IAnalyzes.IAnalyzesForAddItem[] = [];
 
-  get analyzesForAddList(): IAnalyzes.IAnalyzesForAddItem[] {
-    return this.$store.state.analyzes.analyzesForAddList;
+  get laboratoriesList(): IAnalyzes.ILaboratories[] {
+    return this.$store.state.analyzes.laboratoriesList;
   }
 
-  get addedAnalyzes(): IAnalyzes.IAddedAnalyzes[] {
-    return this.$store.state.analyzes.addedAnalyzes;
+  get biomarkersList(): IAnalyzes.IBiomarker[] {
+    return this.$store.state.analyzes.biomarkersList;
   }
 
+  async mounted() {
+    if (this.laboratoriesList.length && this.biomarkersList.length) return;
 
-  addAnalyzes(item: IAnalyzes.IAnalyzesForAddItem) {
-    this.$store.commit('analyzes/addAnalyzes', this.convertAnalyzes(item));
+    await this.$store.dispatch('analyzes/init');
+  }
+
+  addAnalyzes(item: IAnalyzes.IBiomarker) {
+    this.$store.commit('analyzes/addAnalyzes', this.generateItemForAnalyzes(item));
     this.searchedValue = '';
   }
 
-  convertAnalyzes(item: IAnalyzes.IAnalyzesForAddItem) {
+  generateItemForAnalyzes(item: IAnalyzes.IBiomarker) {
     return {
-      ...item,
-      id: Math.random().toString(36).substring(2, 7),
+      biomarker: item.name,
+      available_units: item.available_units,
+      biomarker_id: item.id,
+      id: Math.random().toString(36).substr(2, 9),
+      laboratory: '',
+      value: '',
       date: new Date(),
-      result: null,
-      lab: 'Лаборатория'
+      comment: null,
+      unit: item.unit,
+      ranges: item.ranges,
     }
   }
 
   searchAnalyzes() {
-    this.searchedList = this.analyzesForAddList.filter((item: IAnalyzes.IAnalyzesForAddItem) => {
+    this.searchedList = this.biomarkersList.filter((item: IAnalyzes.IAnalyzesForAddItem) => {
       if (item?.name) {
         return item.name.toLowerCase().search(this.searchedValue.toLowerCase()) !== -1
       }

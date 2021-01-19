@@ -16,7 +16,7 @@ export class AppError extends Error {
 }
 
 axios.interceptors.request.use(function (config) {
-  const token = store.state.auth.patientToken ? store.state.auth.patientToken : store.state.auth.token;
+  const token = store.state.auth.token ? store.state.auth.token : store.state.auth.patientToken;
   config.headers.Authorization = 'Bearer ' + token;
 
   return config;
@@ -28,8 +28,7 @@ axios.interceptors.response.use( (response: AxiosResponse) => {
   const originalRequest = error.config;
 
   const appError = new AppError(error.response.data.detail, error.response.data);
-
-  if (appError.errorData.error_code === ErrorCodes.TOKEN_NOT_VALID && !originalRequest._retry) {
+  if ((appError.errorData.error_code === ErrorCodes.TOKEN_NOT_VALID || appError.errorData.error_code === ErrorCodes.AUTHENTICATION_FAILED) && !originalRequest._retry) {
 
     originalRequest._retry = true;
 
@@ -42,7 +41,6 @@ axios.interceptors.response.use( (response: AxiosResponse) => {
     } catch (error) {
       return Promise.reject(appError);
     }
-
   }
 
   return Promise.reject(appError)

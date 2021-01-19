@@ -66,7 +66,12 @@ export default {
 
     async confirmCode({commit, dispatch}: AuthStore, data: IAuthApi.ILoginUserInputData) {
       try {
-        const response = await authResource.confirmCode(data);
+        const { data: confirmData  } = await authResource.confirmCode(data);
+
+        if (confirmData.refresh) {
+          commit('setTokens', {...confirmData})
+        }
+
         return true;
       } catch (error) {
         if (error.errorData.message) {

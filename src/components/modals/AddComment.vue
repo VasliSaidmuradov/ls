@@ -19,10 +19,11 @@
       </div>
 
       <div class="add-comment__footer">
-        <MainBtn class="add-comment__footer-add" text="Добавить" type="main-btn-primary"/>
+        <MainBtn class="add-comment__footer-add" text="Добавить" type="main-btn-primary" @click-btn="editComment(comment)"/>
         <MainBtn class="add-comment__footer-delete"
                  text="Удалить комментарий"
                  bcg-color="transparent"
+                 @click-btn="editComment(null)"
                  type="main-btn-primary">
           <template v-slot:icon>
             <icon name="close-icon"></icon>
@@ -36,6 +37,8 @@
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+import { bus } from '@/plugins/bus';
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
 
 @Component({
   components: {
@@ -45,7 +48,16 @@ import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 export default class AddComment extends Vue {
   @Prop({required: true, default: () => false}) isShow: boolean;
 
+  get id(): null | string | number {
+    return this.$store.state.analyzes.commentAnalyzesId;
+  }
+
   comment: string = '';
+
+  async editComment(value: string | null) {
+    await this.$store.dispatch('analyzes/addComment', {id: this.id, comment: value});
+    bus.$emit(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, this.id);
+  }
 
   @Emit('close')
   onClose() {
