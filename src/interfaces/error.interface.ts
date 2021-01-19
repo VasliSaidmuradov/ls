@@ -19,6 +19,7 @@ export namespace IError {
   }
 
   export enum ErrorCodes {
-    TOKEN_NOT_VALID = 'token_not_valid'
+    TOKEN_NOT_VALID = 'token_not_valid',
+    AUTHENTICATION_FAILED = 'authentication_failed'
   }
 }

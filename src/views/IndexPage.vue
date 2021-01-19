@@ -79,7 +79,10 @@ export default class IndexPage extends Vue {
 
   mounted() {
     bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL, () => this.addAnalyzesModalState = !this.addAnalyzesModalState);
-    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, () => this.addCommentModalState = !this.addCommentModalState);
+    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, (id: string | number) => {
+      this.addCommentModalState = !this.addCommentModalState;
+      this.$store.commit('analyzes/setPropertyInStore', {name: 'commentAnalyzesId', value: id});
+    });
     bus.$on(IAnalyzes.BusEvents.EDIT_ANALYZES, (data: IAnalyzes.IAddedAnalyzes) => {
       this.editData = data;
       this.editAnalyzesModalState = !this.editAnalyzesModalState;
