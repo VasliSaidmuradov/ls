@@ -27,7 +27,7 @@
       </div>
       <div class="header__content-user-picture" @click="togglePopup">
         <q-avatar square size="34px" rounded>
-          <img src="https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg" alt="avatar">
+          <img :src="require('@/assets/image-placeholder-350x350.png')" alt="avatar">
         </q-avatar>
       </div>
 

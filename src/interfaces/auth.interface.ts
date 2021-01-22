@@ -1,7 +1,6 @@
-import {IUserCard} from '@/interfaces/personal-area.interface';
+import { IUserCard } from '@/interfaces/personal-area.interface';
 
 export namespace IAuthStore {
-
   export interface IState {
     isLabstoryPatient: string;
     userAccountInfo: IAuthApi.ICheckUserResponse | null;
@@ -11,11 +10,11 @@ export namespace IAuthStore {
     isRefreshing: boolean;
     refreshingCall: null | Function;
     patientToken: string;
+    isLoggedIn: boolean;
   }
 }
 
 export namespace IAuthForOtherUser {
-
   export enum RegistrationSteps {
     CHECK_USER = 'checkUser',
     CHECK_PHONE = 'checkPhone',
@@ -39,7 +38,6 @@ export namespace IAuth {
     user_id?: string;
   }
 }
-
 
 export namespace IAuthApi {
   export enum CheckUserParamsType {
@@ -112,6 +110,5 @@ export namespace IAuthApi {
     password?: string;
   }
 }
-
 
 export const cookeTokenKey = 'refreshToken';

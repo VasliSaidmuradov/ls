@@ -173,7 +173,7 @@ export default class HasLogin extends Mixins(AuthMixin, BaseFormMixins) {
   }
 
   &__content-change-number-btn {
-    /deep/ &.q-btn {
+    ::v-deep &.q-btn {
       border-radius: 16px;
       font-size: 12px;
       line-height: 150%;

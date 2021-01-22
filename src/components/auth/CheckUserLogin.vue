@@ -292,7 +292,7 @@ export default class CheckUserLogin extends Mixins(BaseFormMixins, AuthMixin) {
     width: fit-content;
     margin-bottom: 20px;
 
-    /deep/ .q-btn {
+    ::v-deep .q-btn {
       text-transform: none !important;
       font-weight: 500;
       font-size: 14px;

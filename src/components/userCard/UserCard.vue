@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="user-card__footer">
-      <q-btn unelevated class="button1--accent">
+      <q-btn unelevated class="button1--accent" @click="logOut">
         Выйти из кабинета
       </q-btn>
     </div>
@@ -85,6 +85,10 @@ export default class UserCard extends Vue {
 
   goToPersonalArea(activeTab: TabsName) {
     this.$router.push({name: ROUTE_NAME.PAGE_PERSONAL_AREA, query: {activeTab}});
+  }
+
+  logOut() {
+    this.$store.dispatch('auth/logOut');
   }
 }
 </script>

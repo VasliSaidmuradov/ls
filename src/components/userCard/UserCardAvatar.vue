@@ -4,7 +4,7 @@
         <icon name="edit-icon"></icon>
       </q-btn>
       <q-avatar square size="98px" rounded>
-        <img :src="url" alt="avatar">
+        <img :src="require('@/assets/image-placeholder-350x350.png')" alt="avatar">
       </q-avatar>
 
       <input type="file" class="hidden" ref="uploader" @input="onFileGet($event.target.files)"/>
@@ -20,7 +20,7 @@ export interface IRefs {
 
 @Component({})
 export default class UserCardAvatar extends Vue {
-  url: string = 'https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg';
+  url: string = '@/assets/image-placeholder-350x350.png';
 
   $refs: IRefs & Vue['$refs'];
 
@@ -29,7 +29,7 @@ export default class UserCardAvatar extends Vue {
   }
 
   get avatar(): string {
-    return this.$store.state.personalArea.patient.avatar || 'https://www.vsekastingi.ru/storage/2018/10/29/casting_284261.jpg';
+    return this.$store.state.personalArea.patient.avatar || '@/assets/image-placeholder-350x350.png';
   }
 
   onFileGet(fileList: FileList) {
