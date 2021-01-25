@@ -184,18 +184,18 @@ export default class IndexPage extends Vue {
   &__content-bottom-tabs {
     width: 100%;
 
-    /deep/.q-tab-panel {
+    ::v-deep.q-tab-panel {
       padding: 0;
     }
 
     @include media-breakpoint-up($breakpoint-sm) {
       width: 100%;
 
-      /deep/ .q-tab__label {
+      ::v-deep .q-tab__label {
         font-size: 12px;
       }
 
-      /deep/.tabs__header .q-tab {
+      ::v-deep.tabs__header .q-tab {
         padding: 8px 15px;
       }
     }

@@ -209,7 +209,7 @@ export default class AnalyzesCard extends Vue {
     width: 60%;
     margin-right: 27px;
 
-    /deep/ .q-linear-progress {
+    ::v-deep .q-linear-progress {
       color: currentColor;
     }
 
