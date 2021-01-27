@@ -85,7 +85,6 @@
     @Emit('edit-document')
     editDocument() {
       const { date, name } = this.documentData;
-
       return {
         date,
         name,

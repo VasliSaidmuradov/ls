@@ -50,7 +50,7 @@
         />
 
         <q-checkbox
-            v-if="decipherAnalyzes"
+            v-if="decipherAnalyzes && selectValue === 'Анализ'"
             class="form-checkbox form-checkbox--with-label"
             label="Расшифровать анализы"
             v-model="isCheckboxValue"
@@ -113,6 +113,7 @@
             :border-color="'#7C74E9'"
             :width="214"
             :height="56"
+            :disabled="isBtnDisabled"
             @click-btn="loadDocument"
         >
           <template v-slot:icon>
@@ -201,10 +202,11 @@
     modalVisibleType = 1;
     date = new Date();
     isCheckboxValue = false;
-    selectValue = 'Узи';
-    selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса'];
+    selectValue = '';
+    selectOptionList: Array<string> = ['Узи', 'Анализ'];
     fileList: File[] = [];
     documentName = '';
+    isBtnDisabled = false;
 
     @Watch('fileList')
     fileListChanged() {
@@ -217,7 +219,7 @@
       files.forEach((file: File) => {
         this.validateFile(file)
           ? this.fileList.push(file)
-          : alert('Неверный формат файла');
+          : this.$store.dispatch('error/showErrorNotice', { message: 'Неферный формат файла' }, { root: true });
       });
     }
 
@@ -258,17 +260,33 @@
       this.selectValue = val;
     }
 
+    clearData() {
+      this.selectValue = '';
+      this.isCheckboxValue = false;
+      this.fileList = [];
+      this.date = new Date();
+      this.documentName = '';
+    }
+
     async loadDocument() {
+      if (!this.selectValue) {
+        await this.$store.dispatch('error/showErrorNotice', { message: 'Выберите тип исследования' }, { root: true });
+        return;
+      }
+
+      this.isBtnDisabled = true;
       const payload = {
         name: this.documentName,
         date: format(new Date(this.date), serverDateFormat),
-        type_doc: 0,
-        allow_processing: this.isCheckboxValue,
-        fileList: this.fileList
+        type_doc: this.selectValue === 'Анализ' ? 1 : 0,
+        allow_processing: this.selectValue === 'Анализ' ? this.isCheckboxValue : false,
+        fileList: this.fileList,
       };
 
       const isResult = await this.$store.dispatch('storage/createDocument', payload);
+      this.isBtnDisabled = false;
       isResult && this.closeModal();
+      isResult && this.clearData();
     }
 
     @Emit('close-modal')

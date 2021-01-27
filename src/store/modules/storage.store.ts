@@ -69,16 +69,15 @@ export default {
     async createDocument({ commit, dispatch }: StorageStore, payload: { name: string; date: Date; type_doc: number; allow_processing: boolean; fileList: File[] }) {
       try {
         const fileList = payload.fileList;
-        console.log(fileList);
         delete payload.fileList;
 
         const response = await storageResource.createDocument(payload);
         const data = response.data;
-        const ss = await dispatch('createFiles', { id: data.id, fileList });
+        await dispatch('createFiles', { id: data.id, fileList });
+        const documentResponse = await storageResource.loadDocument(data.id);
+        const documentData = documentResponse.data;
 
-        console.log(ss);
-
-        commit('addItemDocumentList', data);
+        commit('addItemDocumentList', documentData);
 
         return true;
 
@@ -88,7 +87,7 @@ export default {
         }
       }
     },
-    async deleteDocument({ commit, dispatch, state }: StorageStore, id: string) {
+    async deleteDocument({ commit, dispatch, state }: StorageStore, id: number) {
       try {
         await storageResource.deleteDocument(id);
 
@@ -121,15 +120,22 @@ export default {
         }
       }
     },
-    async createFiles({ commit, dispatch, state }: StorageStore, payload: { id: number; fileList: string | Blob }) {
+    async createFiles({ commit, dispatch, state }: StorageStore, payload: { id: number; fileList: File[] }) {
       try {
-        const response = await storageResource.createFiles(payload);
-        const data = response.data;
+        await storageResource.createFiles(payload);
+
+        return true;
+
+      } catch (error) {
+        if (error.errorData.message) {
+          await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
+        }
+      }
+    },
+    async deleteFile({ commit, dispatch, state }: StorageStore, payload: { documentId: number; fileId: number }) {
+      try {
+        const data = await storageResource.deleteFile(payload);
         console.log(data);
-
-
-        // commit('changeDocumentDocumentList', { data, index });
-
         return true;
 
       } catch (error) {

@@ -9,7 +9,7 @@ export namespace IStorage {
   export interface IDocument {
     name: string;
     type_doc: number;
-    id: string;
+    id: number;
     date: string;
     files: IFile[];
     created_at: Date;

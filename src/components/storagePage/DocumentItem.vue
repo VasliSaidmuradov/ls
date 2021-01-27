@@ -31,16 +31,16 @@
       />
     </div>
 
-    <p class="document-item__loaded-at">Загружено 22.05.2020</p>
+    <p class="document-item__loaded-at">Загружено {{$date(new Date(document.created_at), 'dd.MM.yyyy')}}</p>
 
     <div class="document-item__footer">
       <div class="document-item__footer-left">
-        <div class="document-item__footer-img-wrapper" @click.stop="toggleFileListSliderModal(true)">
+        <div class="document-item__footer-img-wrapper" @click.stop="document.files.length && toggleFileListSliderModal(true)">
           <img src="@/assets/Doc.jpg" alt="">
         </div>
         <div class="document-item__footer-text-wrapper">
           <span class="document-item__footer-event-name">Анализ</span>
-          <span class="document-item__footer-list-count">4 страницы</span>
+          <span class="document-item__footer-list-count">{{document.files.length}} страницы</span>
         </div>
       </div>
 
@@ -96,6 +96,8 @@
 
     <file-list-slider-modal
         :is-file-list-slider-modal-open="isFileListSliderModalOpen"
+        :file-list="document.files"
+        :document-id="document.id"
         @close-modal="toggleFileListSliderModal"
     />
   </div>
@@ -109,9 +111,9 @@
   import { IRouter } from '@/interfaces/router.interface';
   import FileListSliderModal from '@/components/modals/FileListSliderModal.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
-  import ROUTE_NAME = IRouter.ROUTE_NAME;
-  import { format } from "date-fns";
+  import { format } from 'date-fns';
   import { serverDateFormat } from '@/interfaces/api.interface';
+  import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   @Component({
     components: { MainBtn, FileListSliderModal, EditDocumentModal, DialogModal },
@@ -151,13 +153,12 @@
       };
 
       const isResult = this.$store.dispatch('storage/editDocument', payload);
-
       isResult && this.toggleEditDocumentModal(false);
     }
 
     goToSingleDocumentPage() {
       if (this.document.type_doc === 1) {
-        this.$router.push({ name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: { id: this.document.id } });
+        this.$router.push({ name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: { id: `${this.document.id}` } });
       }
     }
   }

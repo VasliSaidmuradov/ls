@@ -4,7 +4,8 @@
       <div class="document-page__header-wrapper">
         <span class="document-page__header-event-text">Анализ</span>
         <span class="document-page__header-file-text">PDF</span>
-        <span class="document-page__header-date-text">Загрузка 22.05.2020</span>
+        <span
+            class="document-page__header-date-text">Загрузка {{$date(new Date(document.created_at), 'dd.MM.yyyy')}}</span>
       </div>
 
       <div class="document-page__header-wrapper">
@@ -45,6 +46,7 @@
   import { IAnalyzes } from '@/interfaces/analyzes.interface';
   import StorageAnalyzesCard from '@/components/storagePage/StorageAnalyzesCard.vue';
   import { IRouter } from '@/interfaces/router.interface';
+  import { IStorage } from '@/interfaces/storage.interface';
   import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   @Component({
@@ -102,10 +104,14 @@
       },
     ];
 
-    async mounted() {
-      const isResult = await this.$store.dispatch('storage/loadDocument', this.$route.params.id)
+    get document(): IStorage.IDocument {
+      return this.$store.state.storage.document;
+    };
 
-      !isResult && await this.$router.push({name: ROUTE_NAME.STORAGE_PAGE})
+    async mounted() {
+      const isResult = await this.$store.dispatch('storage/loadDocument', this.$route.params.id);
+
+      !isResult && await this.$router.push({ name: ROUTE_NAME.STORAGE_PAGE });
     }
   }
 </script>

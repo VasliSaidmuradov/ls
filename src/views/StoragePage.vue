@@ -78,9 +78,9 @@
   export default class StoragePage extends Vue {
     isCheckboxValue = false;
     isFileModalOpen = false;
-    selectValue = 'Сортировать';
+    selectValue = 'Сортировка';
     selectOptionList: Array<string> = [
-      'Сортировать',
+      'Сортировка',
       'По дате загрузки по убыванию',
       'По дате загрузки по возрастанию',
       ' По дате исследования по убыванию',

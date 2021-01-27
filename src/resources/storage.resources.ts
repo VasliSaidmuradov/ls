@@ -17,7 +17,7 @@ class StorageResource {
     return (Axios.post(`${AppConfig.apiUrl}documents/`, data));
   }
 
-  deleteDocument(id: string) {
+  deleteDocument(id: number) {
     return (Axios.delete(`${AppConfig.apiUrl}documents/${id}`));
   }
 
@@ -25,14 +25,18 @@ class StorageResource {
     return (Axios.patch(`${AppConfig.apiUrl}documents/${data.id}`, data));
   }
 
-  createFiles(data: { id: number; fileList: string | Blob }) {
-    const formData = new FormData()
-    // data.fileList.forEach((file, index) => {
-    //   formData.append(`file${index}`, file)
-    // })
-    formData.append('file', data.fileList)
+  createFiles(data: { id: number; fileList: File[] }) {
+    const formData = new FormData();
+    data.fileList.forEach((file) => {
+      formData.append('file', file);
+    });
+    // formData.append('file', data.fileList)
 
-    return (Axios.post(`${AppConfig.apiUrl}documents/${data.id}/files/`, formData));
+    return (Axios.post(`${AppConfig.apiUrl}documents/${data.id}/files/`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }));
+  }
+
+  deleteFile(data: { documentId: number; fileId: number }) {
+    return (Axios.delete(`${AppConfig.apiUrl}documents/${data.documentId}/files//${data.fileId}`));
   }
 }
 
