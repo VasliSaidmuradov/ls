@@ -3,7 +3,6 @@
     <div class="document-page__header">
       <div class="document-page__header-wrapper">
         <span class="document-page__header-event-text">Анализ</span>
-        <span class="document-page__header-file-text">PDF</span>
         <span
             class="document-page__header-date-text">Загрузка {{$date(new Date(document.created_at), 'dd.MM.yyyy')}}</span>
       </div>
@@ -134,13 +133,6 @@
         font-size: 14px;
         line-height: 130%;
         color: $black-01;
-      }
-
-      &-file-text {
-        margin-left: 15px;
-        color: $black-04;
-        font-size: 14px;
-        line-height: 130%;
       }
 
       &-date-text {
