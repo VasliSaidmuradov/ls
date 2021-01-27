@@ -263,6 +263,8 @@
         name: this.documentName,
         date: format(new Date(this.date), serverDateFormat),
         type_doc: 0,
+        allow_processing: this.isCheckboxValue,
+        fileList: this.fileList
       };
 
       const isResult = await this.$store.dispatch('storage/createDocument', payload);

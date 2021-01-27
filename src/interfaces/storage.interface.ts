@@ -10,6 +10,17 @@ export namespace IStorage {
     name: string;
     type_doc: number;
     id: string;
-    date: string
+    date: string;
+    files: IFile[];
+    created_at: Date;
   }
+
+  export interface IFile {
+    id: number;
+    file_link: string;
+    status: number;
+    created_at: Date
+  }
+
+  export type keyofIStorageType = keyof IDocument
 }

@@ -1,9 +1,9 @@
-import Vue from 'vue'
 import { IStorage, IStorageStore } from '@/interfaces/storage.interface';
 import { ActionContext } from 'vuex';
 import { IAppState } from '@/interfaces/app-state.interface';
 import { storageResource } from '@/resources/storage.resources';
 import IDocument = IStorage.IDocument;
+import keyofIStorageType = IStorage.keyofIStorageType;
 
 type StorageStore = ActionContext<IStorageStore.IState, IAppState>;
 
@@ -25,8 +25,10 @@ export default {
     deleteItemDocumentList(state: IStorageStore.IState, index: number) {
       state.documentList.splice(index, 1);
     },
-    changeDocumentDocumentList(state: IStorageStore.IState, data: IDocument) {
-      Vue.set(state, "documentList", data)
+    changeDocumentDocumentList(state: IStorageStore.IState, { data, index }: { data: IDocument; index: number }) {
+      (Object.keys(data) as Array<keyofIStorageType>).forEach((key) => {
+        state.documentList[index][key] = data[key] as never;
+      });
     },
     changeDocument(state: IStorageStore.IState, data: IStorage.IDocument) {
       state.document = data;
@@ -36,9 +38,10 @@ export default {
   actions: {
     async loadDocuments({ commit, dispatch }: StorageStore) {
       try {
-        const data = await storageResource.loadDocuments();
+        const response = await storageResource.loadDocuments();
+        const data = response.data;
 
-        commit('changeDocumentList', data.data);
+        commit('changeDocumentList', data);
 
         return true;
 
@@ -50,9 +53,10 @@ export default {
     },
     async loadDocument({ commit, dispatch }: StorageStore, id: number) {
       try {
-        const data = await storageResource.loadDocument(id);
+        const response = await storageResource.loadDocument(id);
+        const data = response.data;
 
-        commit('changeDocument', data.data);
+        commit('changeDocument', data);
 
         return true;
 
@@ -62,11 +66,19 @@ export default {
         }
       }
     },
-    async createDocument({ commit, dispatch }: StorageStore, payload: { id: string; date: Date; type_doc: number }) {
+    async createDocument({ commit, dispatch }: StorageStore, payload: { name: string; date: Date; type_doc: number; allow_processing: boolean; fileList: File[] }) {
       try {
-        const data = await storageResource.createDocument(payload);
+        const fileList = payload.fileList;
+        console.log(fileList);
+        delete payload.fileList;
 
-        commit('addItemDocumentList', data.data);
+        const response = await storageResource.createDocument(payload);
+        const data = response.data;
+        const ss = await dispatch('createFiles', { id: data.id, fileList });
+
+        console.log(ss);
+
+        commit('addItemDocumentList', data);
 
         return true;
 
@@ -94,13 +106,29 @@ export default {
     },
     async editDocument({ commit, dispatch, state }: StorageStore, payload: IDocument) {
       try {
-        await storageResource.editDocument(payload);
+        const response = await storageResource.editDocument(payload);
+        const data = response.data;
 
-        const items = state.documentList
-        const editDocumentIndex = state.documentList.findIndex(document => document.id === payload.id);
-        items[editDocumentIndex] = payload
+        const index = state.documentList.findIndex(document => document.id === payload.id);
 
-        commit('changeDocumentDocumentList', items);
+        commit('changeDocumentDocumentList', { data, index });
+
+        return true;
+
+      } catch (error) {
+        if (error.errorData.message) {
+          await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
+        }
+      }
+    },
+    async createFiles({ commit, dispatch, state }: StorageStore, payload: { id: number; fileList: string | Blob }) {
+      try {
+        const response = await storageResource.createFiles(payload);
+        const data = response.data;
+        console.log(data);
+
+
+        // commit('changeDocumentDocumentList', { data, index });
 
         return true;
 
