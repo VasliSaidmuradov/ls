@@ -1,47 +1,51 @@
 <template>
   <div class="select">
-    <q-expansion-item class="select__content" @before-hide="onSelect">
+    <q-expansion-item class="select__content" v-model="isHide" @before-hide="onSelect">
       <template v-slot:header>
-        <span class="select__value-icon" :class="{'active': checkedArr.length}">
-          {{checkedArr.length ? `Выбрано: ${checkedArr.length} категории` : 'Выберите группу'}}
+        <span class="select__value-icon" :class="{'active': checkedArr}">
+          {{checkedArr ? `Выбрано: ${checkedArr} категории` : 'Выберите группу'}}
         </span>
       </template>
       <div class="select__options scrollable">
-        <div class="select__options-list select__options-list-first">
-          <CheckboxInput :value="checkBoxValues.check1" @change-value="onCheckChange('check1')" label="Гематологические исследования"/>
-          <CheckboxInput :value="checkBoxValues.check2" @change-value="onCheckChange('check2')" label="Лабораторная диагностика заболеваний верхних дыхательных путей, вызванных вирусом SARS-CoV-2 Covid -19"/>
-          <CheckboxInput :value="checkBoxValues.check3" @change-value="onCheckChange('check3')" label="Биохимические исследования крови"/>
-          <CheckboxInput :value="checkBoxValues.check4" @change-value="onCheckChange('check4')" label="Лабораторная диагностика электролитов"/>
-        </div>
-        <h5 class="select__options-title">Гормональные исследования</h5>
-        <div class="select__options-list select__options-list-second">
-          <CheckboxInput :value="checkBoxValues.check5" @change-value="onCheckChange('check5')" label="Гематологические исследования"/>
-          <CheckboxInput :value="checkBoxValues.check6" @change-value="onCheckChange('check6')" label="Лабораторная диагностика заболеваний верхних дыхательных путей, вызванных вирусом SARS-CoV-2 Covid -19"/>
-          <CheckboxInput :value="checkBoxValues.check7" @change-value="onCheckChange('check7')" label="Биохимические исследования крови"/>
-          <CheckboxInput :value="checkBoxValues.check8" @change-value="onCheckChange('check8')" label="Лабораторная диагностика электролитов"/>
+        <div v-for="rubric in analyzeRubrics" :key="rubric.id">
+          <div v-if="!rubric.subrubrics.length" class="select__options-list select__options-list-first">
+            <CheckboxInput
+              :id="rubric.id"
+              :value="checkboxValues[rubric.id]"
+              :label="`${rubric.id}-${rubric.name}`"
+              @change-value="onCheckChange(rubric.id)"
+            />
+          </div>
+          <h5 v-if="rubric.subrubrics.length" class="select__options-title">{{ rubric.name }}</h5>
+          <div v-if="rubric.subrubrics.length" class="select__options-list select__options-list-second">
+            <CheckboxInput
+              v-for="subrubric in rubric.subrubrics"
+              :key="subrubric.id"
+              :id="subrubric.id"
+              :value="checkboxValues[subrubric.id]"
+              :label="`${subrubric.id}-${subrubric.name}`"
+              @change-value="onCheckChange(subrubric.id)"
+            />
+          </div>
         </div>
       </div>
+      <MainBtn type="small-bg"
+               @click-btn="onSelect"
+               text="Применить"
+               class="select__btn">
+        <template v-slot:icon>
+          <icon name="check-icon"></icon>
+        </template>
+      </MainBtn>
     </q-expansion-item>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Emit } from 'vue-property-decorator';
+import { Component, Vue, Emit, Watch } from 'vue-property-decorator';
 import MainSelect from '@/components/UI/MainSelect.vue';
 import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
-
-
-interface ICheckArr {
-  check1: boolean;
-  check2: boolean;
-  check3: boolean;
-  check4: boolean;
-  check5: boolean;
-  check6: boolean;
-  check7: boolean;
-  check8: boolean;
-}
 
 @Component({
   components: {
@@ -51,28 +55,48 @@ interface ICheckArr {
   }
 })
 export default class AnalyzesSelect extends Vue {
-  isGrouping = false;
-  checkBoxValues: ICheckArr = {
-    check1: false,
-    check2: false,
-    check3: false,
-    check4: false,
-    check5: false,
-    check6: false,
-    check7: false,
-    check8: false,
-  };
-  checkedArr: boolean[] = [];
+  checkboxState = {};
+  isHide: boolean = false;
+  filteredRubrics: [] = [];
 
-  onCheckChange(key: keyof ICheckArr) {
-    this.checkBoxValues[key] = !this.checkBoxValues[key];
-    this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: this.checkBoxValues});
+  async mounted() {
+    await this.$store.dispatch('analyzes/analyzeRubrics');
+    await this.$store.dispatch('analyzes/setCheckBoxValues');
   }
+
+  // @Watch('getSelectedRubricIds')
+  // funсtion(value: number[], oldValue: number[]) {
+  //   console.log('rubric ids: ', value);
+  // }
+
+  get checkboxValues() {
+    this.checkboxState = {...this.$store.state.analyzes.checkBoxValues};
+    return this.$store.state.analyzes.checkBoxValues;
+  }
+  get checkedArr(): number {
+    return this.$store.getters['analyzes/checkedArr'];
+  }
+  get analyzeRubrics() {
+    const rubrics = [...this.$store.state.analyzes.analyzeRubricsList];
+    const withSubrubrics = rubrics.filter(el => el.subrubrics.length);
+    const withoutSubrubrics = rubrics.filter(el => !el.subrubrics.length);
+    return [...withoutSubrubrics, ...withSubrubrics];
+  }
+  get getSelectedRubricIds() {
+    return this.$store.getters['analyzes/getSelectedRubricIds'];
+  }
+
+  onCheckChange(key) {
+    this.checkboxState[key] = !this.checkboxState[key];
+    this.$store.commit('analyzes/setSelectedRubricIds', key);
+    this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: this.checkboxState});
+  }
+
   @Emit('select')
   onSelect() {
-    this.checkedArr = Object.values(this.checkBoxValues).filter(item => item);
-    return true;
+    this.isHide = false;
   }
+
 }
 </script>
 
@@ -126,6 +150,12 @@ export default class AnalyzesSelect extends Vue {
       width: calc(100% + 37px);
       left: -21px;
       margin-top: 6px;
+      background: $light-white;
+      box-sizing: border-box;
+      border-radius: 0 0 12px 12px;
+      border: 1px solid $light-stroke;
+      border-top: none;
+      padding: 0 32px 32px
     }
 
     ::v-deep.select__options-title {
@@ -160,14 +190,19 @@ export default class AnalyzesSelect extends Vue {
   &__options {
     padding: 15px 15px 15px 20px;
     width: 100%;
-    background: $light-white;
-    box-sizing: border-box;
-    border-radius: 0 0 12px 12px;
     max-width: 540px;
     max-height: 300px;
     overflow-y: auto;
-    border: 1px solid $light-stroke;
   }
+  &__btn {
+    margin-top: 7px;
+    padding: 2px 14px;
+    color: #fff;
+
+    svg {
+      width: 10px;
+    }
   }
+}
 
 </style>

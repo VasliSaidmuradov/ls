@@ -21,16 +21,15 @@
         v-if="label"
     >
       {{label}}
+      <input
+          class="checkbox"
+          type="checkbox"
+          :id="id"
+          :value="value"
+          :disabled="disabled"
+          @change="changeValue"
+      >
     </label>
-
-    <input
-        class="checkbox"
-        type="checkbox"
-        :id="id"
-        :value="value"
-        :disabled="disabled"
-        @change="changeValue"
-    >
   </div>
 </template>
 
@@ -40,12 +39,13 @@
   @Component({})
   export default class CheckboxInput extends Vue {
     @Prop({ required: true }) value: boolean;
+    @Prop({ required: false }) id: number;
     @Prop() label: string;
     @Prop() disabled: boolean;
     @Prop({ default: '#7C74E9' }) borderColor: string;
     @Prop({ default: '#7C74E9' }) color: string;
 
-    id = Math.random();
+    // id = Math.random();
 
     @Emit('change-value')
     changeValue() {

@@ -16,14 +16,13 @@ export default {
 
   state: {
     isLabstoryPatient: false,
-    userAccountInfo: null,
+    userAccountInfo: {},
     currentAuthStep: IAuthForOtherUser.RegistrationSteps.CHECK_USER,
     token: null,
     patientToken: '',
     cabinets: [],
     isRefreshing: false,
     refreshingCall: null,
-    isLoggedIn: false,
   },
 
   mutations: {
@@ -36,7 +35,6 @@ export default {
       if (refresh) {
         Vue.$cookies.set(cookeTokenKey, refresh);
       }
-      state.isLoggedIn = !!state.token || !!refresh;
     },
   },
 
@@ -74,12 +72,7 @@ export default {
 
     async confirmCode({ commit, dispatch }: AuthStore, data: IAuthApi.ILoginUserInputData) {
       try {
-        const { data: confirmData  } = await authResource.confirmCode(data);
-
-        if (confirmData.refresh) {
-          commit('setTokens', {...confirmData})
-        }
-
+        const response = await authResource.confirmCode(data);
         return true;
       } catch (error) {
         if (error.errorData.message) {
@@ -153,13 +146,13 @@ export default {
             return Promise.resolve();
           })
           .catch(() => {
-            router.push({ name: ROUTE_NAME.AUTH_PAGE });
+            // router.push({ name: ROUTE_NAME.AUTH_PAGE });
             return infinityResponse;
           });
 
         return refreshingCall;
       } else {
-        router.push({ name: ROUTE_NAME.AUTH_PAGE });
+        // router.push({ name: ROUTE_NAME.AUTH_PAGE });
         return infinityResponse;
       }
     },
@@ -190,20 +183,6 @@ export default {
       } catch (error) {
         console.error(error);
       }
-    },
-
-    logOut({ commit }: AuthStore) {
-      commit('setPropertyInStore', { name: 'isLabstoryPatient', value: false });
-      commit('setPropertyInStore', { name: 'userAccountInfo', value: null });
-      commit('setPropertyInStore', { name: 'currentAuthStep', value: IAuthForOtherUser.RegistrationSteps.CHECK_USER });
-      commit('setPropertyInStore', { name: 'token', value: null });
-      commit('setPropertyInStore', { name: 'patientToken', value: '' });
-      commit('setPropertyInStore', { name: 'cabinets', value: [] });
-      commit('setPropertyInStore', { name: 'isRefreshing', value: false });
-      commit('setPropertyInStore', { name: 'refreshingCall', value: null });
-      commit('setPropertyInStore', { name: 'isLoggedIn', value: false });
-      Vue.$cookies.remove(cookeTokenKey);
-      router.push({ name: ROUTE_NAME.AUTH_PAGE });
     },
   },
 };

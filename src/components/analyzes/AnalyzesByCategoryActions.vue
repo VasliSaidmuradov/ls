@@ -26,7 +26,7 @@
         </template>
       </MainBtn>
 
-      <div class="analyzes-by-category-actions__sort-compare">
+      <div v-if="!isCompareMode" class="analyzes-by-category-actions__sort-compare">
         <MainBtn text="Сравнить анализы"
                  @click-btn="setCompareMode"
                  border-color="transparent"
@@ -39,9 +39,8 @@
     </div>
 
     <div class="fake-select__checkbox">
-      <CheckboxInput :value="isGrouping" label="Включить группировку" @change-value="groupingChange"/>
       <MainBtn type="small"
-               v-if="checkedArr.length"
+               v-if="checkedArr"
                @click-btn="resetFilters"
                text="Сбросить группировку"
                bcg-color="transparent"
@@ -55,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue, Watch, Emit } from 'vue-property-decorator';
 import MainSelect from '@/components/UI/MainSelect.vue';
 import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
@@ -72,7 +71,6 @@ import AnalyzesSelect from '@/components/analyzes/AnalyzesSelect.vue';
   }
 })
 export default class AnalyzesByCategoryActions extends Vue {
-  isGrouping = false;
   sortedValue = 'Сортировать'
   selectOptionList: Array<string> = [
     'Сортировать',
@@ -84,64 +82,54 @@ export default class AnalyzesByCategoryActions extends Vue {
     'Сначала расшифрованные',
     'Сначала нерасшифрованные',
   ];
+  checkboxState = {}
 
-  checkedArr: boolean[] = [];
+  destoyed() {
+    this.resetFilters();
+  }
 
-  get compareMode(): boolean {
+  get isCompareMode(): boolean {
     return this.$store.state.analyzes.compareMode;
   }
 
-  get checkBoxValues(): IAnalyzes.ICheckArr {
+  get checkBoxValues(): {} {
+    this.checkboxState = {...this.$store.state.analyzes.checkBoxValues};
     return this.$store.state.analyzes.checkBoxValues;
   }
 
-  onCheckChange(key: keyof IAnalyzes.ICheckArr) {
-    this.checkBoxValues[key] = !this.checkBoxValues[key];
+  get checkedArr(): number {
+    return this.$store.getters['analyzes/checkedArr'];
+  }
+
+  onCheckChange(key: number) {
+    this.checkboxState[key] = !this.checkboxState[key];
   }
 
   inputSelect(value: string) {
     this.sortedValue = value;
   }
 
-  resetFilters() {
-    const items: IAnalyzes.ICheckArr = this.checkBoxValues;
-    for (const key in this.checkBoxValues) {
-      items[key as keyof IAnalyzes.ICheckArr] = false;
-    }
-
-    this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: items});
-
-    this.onSelect();
-  }
-
   showFilters() {
     bus.$emit(IAnalyzes.BusEvents.SHOW_FILTER);
   }
 
+  @Emit('setFilter')
   onSelect() {
-    this.checkedArr = Object.values(this.checkBoxValues).filter(item => item);
-    this.isGrouping = Boolean(this.checkedArr.length);
-
-    bus.$emit(IAnalyzes.BusEvents.SET_CATEGORY, Boolean(this.checkedArr.length));
+    bus.$emit(IAnalyzes.BusEvents.SET_CATEGORY, Boolean(this.checkedArr));
   }
 
   setCompareMode() {
-    this.$store.commit('analyzes/setPropertyInStore', {name: 'compareMode', value: !this.compareMode})
+    this.$store.commit('analyzes/setPropertyInStore', {name: 'compareMode', value: !this.isCompareMode});
   }
 
-  groupingChange() {
-    this.isGrouping = !this.isGrouping;
-    const items: IAnalyzes.ICheckArr = this.checkBoxValues;
-
-    if (!this.checkedArr.length) {
-      for (const key in this.checkBoxValues) {
-        items[key as keyof IAnalyzes.ICheckArr] = true;
-      }
-
-      this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: items});
-
-      this.onSelect();
+  resetFilters() {
+    const items = this.checkboxState;
+    for (const key in items) {
+      items[key] = false;
     }
+    this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: items});
+    this.$store.commit('analyzes/setPropertyInStore', {name: 'selectedRubricIds', value: []});
+    this.onSelect();
   }
 }
 </script>
@@ -184,6 +172,7 @@ export default class AnalyzesByCategoryActions extends Vue {
       align-items: center;
 
       @include media-breakpoint-up($breakpoint-xs) {
+        // display: none;
         flex-direction: column;
         align-items: flex-start;
       }
@@ -191,8 +180,6 @@ export default class AnalyzesByCategoryActions extends Vue {
   }
 
   .reset-category {
-    margin-left: 54px;
-
     ::v-deep.main-btn__icon-wrapper {
       color: $status-red;
       margin-right: 13px;

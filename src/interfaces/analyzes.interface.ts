@@ -1,19 +1,31 @@
-import {IDashBoard} from '@/interfaces/dashboard.interface';
+import { IDashBoard } from '@/interfaces/dashboard.interface';
+import { namespace, namespaces } from 'd3';
 import IRanges = IDashBoard.IRanges;
 
 export namespace IAnalyzesStore {
   export interface IState {
     addedAnalyzes: IAnalyzes.IBiomarker[];
+    addedAnalyzeItems: any[];
     compareMode: boolean;
-    checkBoxValues: IAnalyzes.ICheckArr;
+
+    // checkBoxValues: IAnalyzes.ICheckArr;
     laboratoriesList: IAnalyzes.ILaboratories[];
     biomarkersList: IAnalyzes.IBiomarker[];
     commentAnalyzesId: null | string | number;
+
+    comparingItems: number[];
+    checkBoxValues: {};
+    checkedArr: number;
+    analyzeBiomarkerList: IAnalyzesApi.IAnalyzeBiomarkerList | null;
+    analyzeResultsList: any[];
+    analyzeRubricsList: any[];
+    analyzeRubric: {};
+    selectedRubrics: any[];
+    selectedRubricIds: number[];
   }
 }
 
 export namespace IAnalyzes {
-
   export enum BusEvents {
     OPEN_ADD_ANALYZES_MODAL = 'addAnalyzesModal:open',
     OPEN_ADD_ANALYZES_COMMENT = 'addAnalyzesComment:open',
@@ -52,17 +64,6 @@ export namespace IAnalyzes {
     range?: string;
   }
 
-  export interface ICheckArr {
-    check1: boolean;
-    check2: boolean;
-    check3: boolean;
-    check4: boolean;
-    check5: boolean;
-    check6: boolean;
-    check7: boolean;
-    check8: boolean;
-  }
-
   export interface ILaboratories {
     id: number;
     name: string;
@@ -79,7 +80,20 @@ export namespace IAnalyzesApi {
     biomarkers: IAnalyzes.IBiomarker;
     count: number;
   }
+  export interface IAnalyzeBiomarkerList {
+    count: number;
+    biomarkers: any[];
+  }
+
+  export interface IAnalyzesResultsList {
+    results: any[];
+  }
+
+  export interface IAnalyzeRubrics {
+    rubrics: any[];
+  }
+
+  export interface IAnalyzeCategories {
+    categories: any[];
+  }
 }
-
-
-

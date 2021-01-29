@@ -24,7 +24,7 @@ export namespace IRouter {
   export const ROUTE_PATH = {
     [ROUTE_NAME.INDEX_PAGE]: '/',
     [ROUTE_NAME.PAGE_PERSONAL_AREA]: '/personal-area',
-    [ROUTE_NAME.ANALYZES_PAGE]: '/analyzes',
+    [ROUTE_NAME.ANALYZES_PAGE]: '/analyzes/:id',
     [ROUTE_NAME.DYNAMICS_ANALYZES]: '/dynamics-analyzes',
     [ROUTE_NAME.ADD_ANALYZES]: '/add-analyzes',
     [ROUTE_NAME.ALL_ANALYZES]: '/all-analyzes',

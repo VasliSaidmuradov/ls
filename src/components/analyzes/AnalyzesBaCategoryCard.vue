@@ -1,20 +1,21 @@
 <template>
-  <div class="analyzes-by-category-card" :class="{'analyzes-by-category-card--compare':compareMode}">
-    <div class="analyzes-by-category-card__compare" v-if="compareMode">
-      <CheckboxInput :value="isCompare" @change-value="compareChange" label="Добавить в сравнение"/>
+  <div class="analyzes-by-category-card">
+    <div class="analyzes-by-category-card__compare" v-if="isCompareMode">
+      <CheckboxInput :value="comparingItems.includes(data.id)" @change-value="compareChange(data.id)" label="Добавить в сравнение"/>
     </div>
-    <div class="analyzes-by-category-card__wrap">
+    <div class="analyzes-by-category-card__wrap" @click="go(data.id)" :class="{'analyzes-by-category-card--compare':isCompareMode}">
       <div class="analyzes-by-category-card__right">
         <div class="analyzes-by-category-card__right-name">
           <div class="analyzes-by-category-card__right-name-value">
-            {{data.name}}
+            {{data.biomarker}}
           </div>
           <div class="analyzes-by-category-card__right-result">
           <span class="analyzes-by-category-card__right-result-current">
             <span class="value">{{data.value}}</span><span class="unit"> / {{data.unit}}</span>
           </span>
-            <span class="analyzes-by-category-card__right-result-prev">
-            <span class="value">{{data.prevCard.value}}</span> <span class="unit"> / {{data.prevCard.unit}}</span>
+          <span v-if="data.prev_result" class="analyzes-by-category-card__right-result-prev">
+            <span class="value">{{data.prev_result}}</span>
+            <span class="unit"> / {{data.unit}}</span>
           </span>
           </div>
         </div>
@@ -27,10 +28,11 @@
       </div>
       <div class="analyzes-by-category-card__left">
         <div class="analyzes-by-category-card__right-values-lab">
-          {{data.lab}}
+          {{data.laboratory}}
         </div>
         <div class="analyzes-by-category-card__left-date">
-          {{$date(data.date, 'dd MMMM yyyy')}}
+          <!-- {{$date(data.date, 'dd MMMM yyyy')}} -->
+          {{ data.date }}
         </div>
 
         <button class="analyzes-by-category-card__left-btn">
@@ -56,14 +58,18 @@ import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
   @Prop() data: any
 
-  isCompare = false;
-
-  get compareMode(): boolean {
+  get isCompareMode(): boolean {
     return this.$store.state.analyzes.compareMode;
   }
+  get comparingItems(): number[] {
+    return this.$store.state.analyzes.comparingItems;
+  }
 
-  compareChange() {
-    this.isCompare = !this.isCompare;
+  compareChange(id) {
+    this.$store.commit('analyzes/setComparingItems', id);
+  }
+  go(id) {
+    this.$router.push({path: `/analyzes/${id}`});
   }
 }
 </script>
@@ -81,7 +87,7 @@ export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
     display: flex;
     padding: 15px 0px 15px 20px;
     background: $light-white;
-    box-shadow: 0px 4px 15px $shadow-color;
+    // box-shadow: 0px 4px 15px $shadow-color;
     border-radius: 10px;
     width: 100%;
 
