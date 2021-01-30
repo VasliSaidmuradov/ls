@@ -22,21 +22,24 @@ class StorageResource {
   }
 
   editDocument(data: IDocument): Promise<AxiosResponse<IDocument>> {
-    return (Axios.patch(`${AppConfig.apiUrl}documents/${data.id}`, data));
+    return (Axios.patch(`${AppConfig.apiUrl}documents/${data.id}/`, data));
   }
 
   createFiles(data: { id: number; fileList: File[] }) {
     const formData = new FormData();
-    data.fileList.forEach((file) => {
-      formData.append('file', file);
+    data.fileList.forEach((file, index) => {
+      formData.append(`file_${index}`, file);
     });
-    // formData.append('file', data.fileList)
 
     return (Axios.post(`${AppConfig.apiUrl}documents/${data.id}/files/`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }));
   }
 
   deleteFile(data: { documentId: number; fileId: number }) {
-    return (Axios.delete(`${AppConfig.apiUrl}documents/${data.documentId}/files//${data.fileId}`));
+    return (Axios.delete(`${AppConfig.apiUrl}documents/${data.documentId}/files/${data.fileId}`));
+  }
+
+  getDocumentTypes() {
+    return (Axios.get(`${AppConfig.apiUrl}static-variables/document-types/`));
   }
 }
 

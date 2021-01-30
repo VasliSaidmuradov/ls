@@ -26,7 +26,7 @@
       <icon
           name="edit-icon"
           class="document-item__edit-icon"
-          v-if="document.type_doc === 0"
+          v-if="document.type_doc !== 1"
           @click="toggleEditDocumentModal(true)"
       />
     </div>
@@ -35,11 +35,12 @@
 
     <div class="document-item__footer">
       <div class="document-item__footer-left">
-        <div class="document-item__footer-img-wrapper" @click.stop="document.files.length && toggleFileListSliderModal(true)">
+        <div class="document-item__footer-img-wrapper"
+             @click.stop="document.files.length && toggleFileListSliderModal(true)">
           <img src="@/assets/Doc.jpg" alt="">
         </div>
         <div class="document-item__footer-text-wrapper">
-          <span class="document-item__footer-event-name">Анализ</span>
+          <span class="document-item__footer-event-name">{{textDocumentType}}</span>
           <span class="document-item__footer-list-count">{{document.files.length}} страницы</span>
         </div>
       </div>
@@ -114,6 +115,7 @@
   import { format } from 'date-fns';
   import { serverDateFormat } from '@/interfaces/api.interface';
   import ROUTE_NAME = IRouter.ROUTE_NAME;
+  import IDocumentType = IStorage.IDocumentType;
 
   @Component({
     components: { MainBtn, FileListSliderModal, EditDocumentModal, DialogModal },
@@ -124,6 +126,15 @@
     isDialogModalOpen = false;
     isEditDocumentModalOpen = false;
     isFileListSliderModalOpen = false;
+
+    get documentTypes(): IDocumentType[] {
+      return this.$store.state.storage.documentTypes;
+    }
+
+    get textDocumentType() {
+      const findItem = this.documentTypes.find((documentType: IDocumentType) => documentType.value === this.document.type_doc);
+      return findItem ? findItem.description : '';
+    }
 
     toggleDialogModal(val: boolean) {
       this.isDialogModalOpen = val;
@@ -143,13 +154,13 @@
       isResult && this.toggleDialogModal(false);
     }
 
-    editDocument(obj: { name: string; date: Date }) {
-      const { name, date } = obj;
+    editDocument(obj: { name: string; date: Date; type_doc: number }) {
+      const { name, date, type_doc } = obj;
       const payload = {
         name,
         date: format(new Date(date), serverDateFormat),
         id: this.document.id,
-        type_doc: 0,
+        type_doc,
       };
 
       const isResult = this.$store.dispatch('storage/editDocument', payload);

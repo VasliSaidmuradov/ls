@@ -41,8 +41,9 @@
         <main-select
             class="modal__select"
             :value="selectValue"
-            :options="selectOptionList"
-            :label-title="'Тип исследования'"
+            :options="documentTypes"
+            :option-label="'description'"
+            :select-label="'Тип исследования'"
             :border-color="'#E9E8FF'"
             :bcg-color="'#F9F9FC'"
             :max-width="310"
@@ -188,6 +189,8 @@
   import MainSelect from '@/components/UI/MainSelect.vue';
   import { format } from 'date-fns';
   import { serverDateFormat } from '@/interfaces/api.interface';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import IDocumentType = IStorage.IDocumentType;
 
   @Component({
     components: { MainSelect, BackBtn, MainBtn, PreviewImg, FileForm, InputDate, DialogModal },
@@ -202,11 +205,14 @@
     modalVisibleType = 1;
     date = new Date();
     isCheckboxValue = false;
-    selectValue = '';
-    selectOptionList: Array<string> = ['Узи', 'Анализ'];
+    selectValue: IDocumentType | '' = '';
     fileList: File[] = [];
     documentName = '';
     isBtnDisabled = false;
+
+    get documentTypes() {
+      return this.$store.state.storage.documentTypes;
+    }
 
     @Watch('fileList')
     fileListChanged() {
@@ -256,8 +262,8 @@
       this.fileList = [];
     }
 
-    inputSelect(val: string) {
-      this.selectValue = val;
+    inputSelect(value: IDocumentType) {
+      this.selectValue = value;
     }
 
     clearData() {
@@ -278,8 +284,8 @@
       const payload = {
         name: this.documentName,
         date: format(new Date(this.date), serverDateFormat),
-        type_doc: this.selectValue === 'Анализ' ? 1 : 0,
-        allow_processing: this.selectValue === 'Анализ' ? this.isCheckboxValue : false,
+        type_doc: this.selectValue.value,
+        allow_processing: this.selectValue.value === 1 ? this.isCheckboxValue : false,
         fileList: this.fileList,
       };
 

@@ -13,6 +13,7 @@ export default {
   state: {
     documentList: [],
     document: {},
+    documentTypes: [],
   },
 
   mutations: {
@@ -32,6 +33,13 @@ export default {
     },
     changeDocument(state: IStorageStore.IState, data: IStorage.IDocument) {
       state.document = data;
+    },
+    changeDocumentTypes(state: IStorageStore.IState, data: IStorage.IDocumentType[]) {
+      state.documentTypes = data;
+    },
+    deleteFileDocumentList(state: IStorageStore.IState, data: { documentIndex: number; fileIndex: number }) {
+      const { documentIndex, fileIndex } = data;
+      state.documentList[documentIndex].files.splice(fileIndex, 1);
     },
   },
 
@@ -112,6 +120,8 @@ export default {
 
         commit('changeDocumentDocumentList', { data, index });
 
+        payload.type_doc === 1 && commit('changeDocument', data);
+
         return true;
 
       } catch (error) {
@@ -134,8 +144,28 @@ export default {
     },
     async deleteFile({ commit, dispatch, state }: StorageStore, payload: { documentId: number; fileId: number }) {
       try {
-        const data = await storageResource.deleteFile(payload);
-        console.log(data);
+        await storageResource.deleteFile(payload);
+
+        const documentIndex = state.documentList.findIndex(document => document.id === payload.documentId);
+        const fileIndex = state.documentList[documentIndex].files.findIndex(file => file.id === payload.fileId);
+        
+        commit('deleteFileDocumentList', { documentIndex, fileIndex });
+
+        return true;
+
+      } catch (error) {
+        if (error.errorData.message) {
+          await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
+        }
+      }
+    },
+    async getDocumentTypes({ commit, dispatch, state }: StorageStore) {
+      try {
+        const response = await storageResource.getDocumentTypes();
+        const data = response.data.list;
+
+        commit('changeDocumentTypes', data);
+
         return true;
 
       } catch (error) {

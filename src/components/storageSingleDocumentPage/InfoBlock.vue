@@ -20,7 +20,7 @@
 
       <div class="info-block__right">
         <icon name="delete-icon" class="info-block__delete-icon" @click="toggleDialogModal(true)"/>
-        <icon name="edit-icon" class="info-block__edit-icon"/>
+        <icon name="edit-icon" class="info-block__edit-icon" @click="toggleEditDocumentModal(true)"/>
         <icon name="download-icon" class="info-block__download-icon"/>
       </div>
     </div>
@@ -49,6 +49,13 @@
         </main-btn>
       </template>
     </dialog-modal>
+
+    <edit-document-modal
+        :is-edit-document-modal-open="isEditDocumentModalOpen"
+        :document="document"
+        @close-modal="toggleEditDocumentModal"
+        @edit-document="editDocument"
+    />
   </div>
 </template>
 
@@ -57,12 +64,17 @@
   import { IStorage } from '@/interfaces/storage.interface';
   import DialogModal from '@/components/modals/DialogModal.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import { IRouter } from '@/interfaces/router.interface';
+  import { format } from 'date-fns';
+  import { serverDateFormat } from '@/interfaces/api.interface';
+  import EditDocumentModal from '@/components/modals/EditDocumentModal.vue';
 
   @Component({
-    components: { MainBtn, DialogModal },
+    components: { EditDocumentModal, MainBtn, DialogModal },
   })
   export default class InfoBlock extends Vue {
     isDialogModalOpen = false;
+    isEditDocumentModalOpen = false;
 
     get document(): IStorage.IDocument {
       return this.$store.state.storage.document;
@@ -72,10 +84,28 @@
       this.isDialogModalOpen = val;
     }
 
+    toggleEditDocumentModal(val: boolean) {
+      this.isEditDocumentModalOpen = val;
+    }
+
     deleteDocument() {
       const isResult = this.$store.dispatch('storage/deleteDocument', this.document.id);
 
       isResult && this.toggleDialogModal(false);
+      isResult && this.$router.push({ name: IRouter.ROUTE_NAME.STORAGE_PAGE });
+    }
+
+    editDocument(obj: { name: string; date: Date; type_doc: number }) {
+      const { name, date, type_doc } = obj;
+      const payload = {
+        name,
+        date: format(new Date(date), serverDateFormat),
+        id: this.document.id,
+        type_doc,
+      };
+
+      const isResult = this.$store.dispatch('storage/editDocument', payload);
+      isResult && this.toggleEditDocumentModal(false);
     }
   }
 </script>

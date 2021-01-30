@@ -30,10 +30,12 @@
         <main-select
             class="modal__select"
             :value="selectValue"
-            :options="selectOptionList"
+            :options="documentTypes"
+            :option-label="'description'"
             :label-title="'Тип исследования'"
             :border-color="'#E9E8FF'"
             :max-width="310"
+            @input-select="inputSelect"
         />
       </div>
 
@@ -65,17 +67,26 @@
   import MainSelect from '@/components/UI/MainSelect.vue';
   import { IStorage } from '@/interfaces/storage.interface';
   import IDocument = IStorage.IDocument;
+  import IDocumentType = IStorage.IDocumentType;
 
   @Component({
     components: { MainSelect, MainBtn, InputDate },
   })
   export default class DialogModal extends Vue {
     @Prop({ required: true }) isEditDocumentModalOpen: boolean;
-    @Prop({ required: true }) document: string;
+    @Prop({ required: true }) document: IDocument;
 
-    selectValue = 'Узи';
+    // selectValue = ;
     documentData: IDocument = JSON.parse(JSON.stringify(this.document));
-    selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса'];
+
+    get documentTypes() {
+      return this.$store.state.storage.documentTypes;
+    }
+
+    get selectValue() {
+      const findItem = this.documentTypes.find((documentType: IDocumentType) => documentType.value === this.documentData.type_doc);
+      return findItem ? findItem.description : '';
+    }
 
     @Emit('close-modal')
     closeModal() {
@@ -84,11 +95,23 @@
 
     @Emit('edit-document')
     editDocument() {
-      const { date, name } = this.documentData;
+      const { date, name, type_doc } = this.documentData;
       return {
         date,
         name,
+        type_doc,
       };
+    }
+
+    inputSelect(value: IDocumentType) {
+      if (this.document.type_doc === 1) {
+        this.$store.dispatch('error/showErrorNotice',
+          { message: 'Расшифрованные анализы будут отвязаны от документа, но сохраняться в системе' },
+          { root: true },
+        );
+      }
+
+      this.documentData.type_doc = value.value;
     }
 
     changeDate(value: string) {

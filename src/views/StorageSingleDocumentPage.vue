@@ -109,8 +109,9 @@
 
     async mounted() {
       const isResult = await this.$store.dispatch('storage/loadDocument', this.$route.params.id);
-
       !isResult && await this.$router.push({ name: ROUTE_NAME.STORAGE_PAGE });
+
+      await this.$store.dispatch('storage/getDocumentTypes')
     }
   }
 </script>

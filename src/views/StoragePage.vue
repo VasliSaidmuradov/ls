@@ -112,6 +112,7 @@
 
     mounted() {
       this.$store.dispatch('storage/loadDocuments');
+      this.$store.dispatch('storage/getDocumentTypes')
     }
   }
 </script>
