@@ -60,8 +60,8 @@ export default class AnalyzesSelect extends Vue {
   filteredRubrics: [] = [];
 
   async mounted() {
-    await this.$store.dispatch('analyzes/analyzeRubrics');
-    await this.$store.dispatch('analyzes/setCheckBoxValues');
+    // await this.$store.dispatch('analyzes/analyzeRubrics');
+    // await this.$store.dispatch('analyzes/setCheckBoxValues');
   }
 
   // @Watch('getSelectedRubricIds')

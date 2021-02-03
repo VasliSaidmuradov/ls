@@ -60,9 +60,11 @@ export default class AllAnalyzesPage extends Vue {
 
   showFilter = false;
 
-  mounted() {
+  async mounted() {
     // this.$store.dispatch('analyzes/analyzeBiomarkers');
-    this.$store.dispatch('analyzes/analyzeResultsList');
+    await this.$store.dispatch('analyzes/analyzeRubrics');
+    await this.$store.dispatch('analyzes/setCheckBoxValues');
+    await this.$store.dispatch('analyzes/analyzeResultsList');
 
     bus.$on(IAnalyzes.BusEvents.SHOW_FILTER, () => this.showFilter = true);
   }

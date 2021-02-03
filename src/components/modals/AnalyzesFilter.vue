@@ -9,11 +9,11 @@
               <span class="modal__select-select-text">Выберите группу</span>
               <icon name="next-icon"></icon>
             </div>
-            <span class="modal__select-desk">Выбрано: 3 группы</span>
+            <span class="modal__select-desk">Выбрано: {{ checkedArr }} группы</span>
           </div>
 
           <div class="modal__check">
-            <CheckboxInput label="Включить группировку"/>
+            <!-- <CheckboxInput label="Включить группировку"/> -->
           </div>
 
           <div class="modal__sort">
@@ -51,18 +51,26 @@
           </div>
           <h6 class="second__title">Выберите группу</h6>
           <div class="second__options scrollable">
-            <div class="second__options-list second__options-list-first">
-              <CheckboxInput :value="checkBoxValues.check1" @change-value="onCheckChange('check1')" label="Гематологические исследования"/>
-              <CheckboxInput :value="checkBoxValues.check2" @change-value="onCheckChange('check2')" label="Лабораторная диагностика заболеваний верхних дыхательных путей, вызванных вирусом SARS-CoV-2 Covid -19"/>
-              <CheckboxInput :value="checkBoxValues.check3" @change-value="onCheckChange('check3')" label="Биохимические исследования крови"/>
-              <CheckboxInput :value="checkBoxValues.check4" @change-value="onCheckChange('check4')" label="Лабораторная диагностика электролитов"/>
-            </div>
-            <h5 class="second__options-title">Гормональные исследования</h5>
-            <div class="second__options-list second__options-list-second">
-              <CheckboxInput :value="checkBoxValues.check5" @change-value="onCheckChange('check5')" label="Гематологические исследования"/>
-              <CheckboxInput :value="checkBoxValues.check6" @change-value="onCheckChange('check6')" label="Лабораторная диагностика заболеваний верхних дыхательных путей, вызванных вирусом SARS-CoV-2 Covid -19"/>
-              <CheckboxInput :value="checkBoxValues.check7" @change-value="onCheckChange('check7')" label="Биохимические исследования крови"/>
-              <CheckboxInput :value="checkBoxValues.check8" @change-value="onCheckChange('check8')" label="Лабораторная диагностика электролитов"/>
+            <div v-for="rubric in analyzeRubrics" :key="rubric.id">
+              <div v-if="!rubric.subrubrics.length" class="second__options-list second__options-list-first">
+                <CheckboxInput
+                  :id="rubric"
+                  :value="checkboxValues[rubric.id]"
+                  :label="`${rubric.id}-${rubric.name}`"
+                  @change-value="onCheckChange(rubric.id)"
+                />
+              </div>
+              <h5 v-if="rubric.subrubrics.length" class="second__options-title">{{ rubric.name }}</h5>
+              <div v-if="rubric.subrubrics.length" class="second__options-list second__options-list-second">
+                <CheckboxInput
+                  v-for="subrubric in rubric.subrubrics"
+                  :key="subrubric.id"
+                  :id="subrubric.id"
+                  :value="checkboxValues[subrubric.id]"
+                  :label="`${subrubric.id}-${subrubric.name}`"
+                  @change-value="onCheckChange(subrubric.id)"
+                />
+              </div>
             </div>
           </div>
 
@@ -127,6 +135,22 @@ export default class AnalyzesFilter extends Vue {
   slide = 'first';
 
   get checkBoxValues(): ICheckArr {
+    return this.$store.state.analyzes.checkBoxValues;
+  }
+  get checkedArr(): number {
+    return this.$store.getters['analyzes/checkedArr'];
+  }
+  get analyzeRubrics() {
+    const rubrics = [...this.$store.state.analyzes.analyzeRubricsList];
+    const withSubrubrics = rubrics.filter(el => el.subrubrics.length);
+    const withoutSubrubrics = rubrics.filter(el => !el.subrubrics.length);
+    return [...withoutSubrubrics, ...withSubrubrics];
+  }
+  get getSelectedRubricIds() {
+    return this.$store.getters['analyzes/getSelectedRubricIds'];
+  }
+  get checkboxValues() {
+    this.checkboxState = {...this.$store.state.analyzes.checkBoxValues};
     return this.$store.state.analyzes.checkBoxValues;
   }
 

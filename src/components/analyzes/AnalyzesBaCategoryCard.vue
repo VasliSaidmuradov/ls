@@ -33,6 +33,7 @@
         <div class="analyzes-by-category-card__left-date">
           <!-- {{$date(data.date, 'dd MMMM yyyy')}} -->
           {{ data.date }}
+          {{ data.rubrics }}
         </div>
 
         <button class="analyzes-by-category-card__left-btn">

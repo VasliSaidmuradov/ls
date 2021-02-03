@@ -2,10 +2,9 @@ import { IAppState } from '@/interfaces/app-state.interface';
 import { ActionContext } from 'vuex';
 import { IAnalyzes, IAnalyzesApi, IAnalyzesStore } from '@/interfaces/analyzes.interface';
 import { IAuthStore } from '@/interfaces/auth.interface';
-import { analyzesResource } from '@/resources/analyzes.resources';
-import { createObjectFormArrayWithGivenPropAndValue } from '@/plugins/helpers';
+// import { createObjectFormArrayWithGivenPropAndValue } from '@/plugins/helpers';
 import Vue from 'vue';
-import { analyzesResources } from '@/resources/analyzes.resources';
+import { analyzesResource } from '@/resources/analyzes.resources';
 import { AxiosResponse, Method } from 'axios';
 
 type AnalyzesStore = ActionContext<IAnalyzesStore.IState, IAppState>;
@@ -126,7 +125,7 @@ export default {
 
     async getBiomarkers({ dispatch, commit }: AnalyzesStore) {
       try {
-        const { data }: AxiosResponse<IAnalyzesApi.IBiomarkerResponse> = await analyzesResources.getBiomarkers();
+        const { data }: AxiosResponse<IAnalyzesApi.IBiomarkerResponse> = await analyzesResource.getBiomarkers();
         commit('setPropertyInStore', { name: 'biomarkersList', value: data.biomarkers });
       } catch (error) {
         if (error.errorData.message) {
@@ -139,7 +138,7 @@ export default {
       try {
         const {
           data,
-        }: AxiosResponse<{ laboratories: IAnalyzes.ILaboratories[] }> = await analyzesResources.getLaboratories();
+        }: AxiosResponse<{ laboratories: IAnalyzes.ILaboratories[] }> = await analyzesResource.getLaboratories();
         commit('setPropertyInStore', { name: 'laboratoriesList', value: data.laboratories });
       } catch (error) {
         if (error.errorData.message) {
@@ -153,7 +152,7 @@ export default {
       { data, id, method }: { data: IAnalyzes.IBiomarker; id: string | number; method: Method }
     ) {
       try {
-        const { data: biomarker }: AxiosResponse<IAnalyzes.IBiomarker> = await analyzesResources.saveBiomarker(
+        const { data: biomarker }: AxiosResponse<IAnalyzes.IBiomarker> = await analyzesResource.saveBiomarker(
           data,
           id,
           method
@@ -169,7 +168,7 @@ export default {
 
     async deleteBiomarker({ dispatch, commit }: AnalyzesStore, id: number) {
       try {
-        await analyzesResources.deleteBiomarker(id);
+        await analyzesResource.deleteBiomarker(id);
         commit('deleteBiomarker', id);
       } catch (error) {
         if (error?.errorData?.message) {
@@ -204,13 +203,12 @@ export default {
       }
     },
     setCheckBoxValues({ state, commit }: AnalyzesStore) {
-      const values = createObjectFormArrayWithGivenPropAndValue(
-        [...state.analyzeRubricsList],
-        {},
-        { prop: 'subrubrics', value: false }
-      );
-
-      commit('setPropertyInStore', { name: 'checkBoxValues', value: values });
+      // const values = createObjectFormArrayWithGivenPropAndValue(
+      //   [...state.analyzeRubricsList],
+      //   {},
+      //   { prop: 'subrubrics', value: false }
+      // );
+      commit('setPropertyInStore', { name: 'checkBoxValues', value: {} });
     },
 
     async analyzeResultsList({ commit, dispatch }: AnalyzesStore) {
@@ -278,10 +276,11 @@ export default {
       return Object.values(state.checkBoxValues).filter(el => el).length;
     },
     getSelectedRubrics(state: IAnalyzesStore.IState): any[] {
+      const result = []!;
       const ids = [...state.selectedRubricIds];
       const rubrics = [...state.analyzeRubricsList];
-      const result: any = createObjectFormArrayWithGivenPropAndValue(rubrics, {}, { prop: 'id', value: ids[0] });
-      console.log('result:', result);
+      // const result: {} = createObjectFormArrayWithGivenPropAndValue(rubrics, {}, { prop: 'id', value: ids[0] });
+      // console.log('result:', result);
       return result;
     },
     getSelectedRubricIds(state: IAnalyzesStore.IState): number[] {

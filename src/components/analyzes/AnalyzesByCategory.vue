@@ -18,7 +18,7 @@
         <MainBtn type="small"
                  v-if="true"
                  @click-btn="resetCompareMode"
-                 text="Сбросить группировку"
+                 text="Отменить выбор"
                  bcg-color="transparent"
                  class="reset-category">
           <template v-slot:icon>
@@ -52,17 +52,28 @@
           Дата сдачи
         </span>
       </div>
+
       <div class="analyzes-by-category__content-value">
-        <div class="" v-for="analyze in isGrouped ? filteredResults : analyzeResults" :key="`${analyze.id}${Math.random()}`">
+        <div class="" >
           <template v-if="isGrouped">
-            <h4 class="analyzes-by-category__content-value-category">{{ analyzeRubrics.find(el => analyze.rubrics.includes(el.id)) }}</h4>
-            <div class="analyzes-by-category__content-value-content">
-              <AnalyzesBaCategoryCard :data="analyze"/>
-              {{ analyze }}
+            <div v-for="analyzeResult in Object.entries(groupedResults).filter(el => el[1].length)" :key="`${analyzeResult[0]}${Math.random()}`">
+              <div v-if="analyzeRubrics.find(el => analyzeResult[0].includes(el.name)).parent_rubric_name" class="analyzes-by-category__content-value-title">
+                <h4 class="analyzes-by-category__content-value-category">{{ analyzeRubrics.find(el => analyzeResult[0].includes(el.name)).parent_rubric_name }}</h4>
+                <h5 class="analyzes-by-category__content-value-subcategory">{{ analyzeRubrics.find(el => analyzeResult[0].includes(el.name)).name }}</h5>
+              </div>
+              <div v-else class="analyzes-by-category__content-value-title">
+                <h4 class="analyzes-by-category__content-value-category">{{ analyzeRubrics.find(el => analyzeResult[0].includes(el.name)).name }}</h4>
+              </div>
+              <div class="analyzes-by-category__content-value-content">
+                <AnalyzesBaCategoryCard v-for="analyze in analyzeResult[1]" :key="`${analyze.id}${Math.random()}`" :data="analyze"/>
+                <!-- {{ analyze }} -->
+              </div>
             </div>
           </template>
           <template v-else>
-            <AnalyzesBaCategoryCard :data="analyze"/>
+            <div v-for="analyze in analyzeResults" :key="`${analyze.id}${Math.random()}`">
+              <AnalyzesBaCategoryCard :data="analyze"/>
+            </div>
           </template>
         </div>
       </div>
@@ -89,10 +100,11 @@ export default class AnalyzesByCategory extends Vue {
   printableData: any = [];
   isGrouped: boolean = false;
   filteredResults: [] = [...this.analyzeResults];
+  groupedResults: {} = {};
 
   async mounted() {
     await this.$store.dispatch('analyzes/analyzeRubrics');
-    filteredResults: [] = [...this.analyzeResults];
+    // this.filteredResults: [] = [...this.analyzeResults];
     bus.$on(IAnalyzes.BusEvents.SET_CATEGORY, (status: boolean) => this.isGrouped = status);
     console.log('RUBRICS: ', this.analyzeRubrics);
   }
@@ -129,16 +141,30 @@ export default class AnalyzesByCategory extends Vue {
     this.filteredResults = [];
     const results = [...this.analyzeResults];
     const rubricIds = [...this.getSelectedRubricIds];
+    const rubrics = [...this.analyzeRubrics];
+    const result: {} = {};
+    const selectedRubrics: [] = [];
     for (const id of rubricIds) {
       results.forEach(result => {
         if (result.rubrics.includes(id)) {
           this.filteredResults.push(result);
         }
       })
+      rubrics.forEach(rubric => {
+        if(rubric.id === id) {
+          selectedRubrics.push(rubric);
+        }
+      })
+      result[selectedRubrics.find(el => el.id === id).name] = [];
+      for (const res of this.filteredResults) {
+        if (res.rubrics.includes(id)) {
+          result[selectedRubrics.find(el => el.id === id).name].push(res);
+        }
+      }
     }
+    this.groupedResults = {...result};
   }
   go(name) {
-
     this.$router.push({ name });
   }
   resetCompareMode() {
@@ -156,6 +182,9 @@ export default class AnalyzesByCategory extends Vue {
     align-items: center;
     margin-top: 50px;
     padding: 0 35px;
+    @include media-breakpoint-up($breakpoint-xs) {
+      padding: 0;
+    }
   }
   &__go-compare {
     ::v-deep.main-btn__icon-wrapper {
@@ -277,6 +306,7 @@ export default class AnalyzesByCategory extends Vue {
     font-size: 14px;
     line-height: 130%;
     color: $black-01;
+    margin-right: 60px;
     margin-bottom: 20px;
     margin-top: 0;
 
@@ -284,7 +314,21 @@ export default class AnalyzesByCategory extends Vue {
       font-weight: 400;
     }
   }
+  &__content-value-subcategory {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 130%;
+    color: $black-04;
+    margin-bottom: 20px;
+    margin-top: 0;
 
+    @include media-breakpoint-up($breakpoint-sm) {
+      font-weight: 400;
+    }
+  }
+  &__content-value-title {
+    display: inline-flex;
+  }
   &__content-value-content {
     margin-bottom: 40px;
   }
