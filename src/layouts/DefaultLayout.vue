@@ -38,6 +38,11 @@ import Aside from '@/components/layout/Aside.vue';
 import Footer from '@/components/layout/Footer.vue';
 import FloatingActionBtn from '@/components/FloatingActionBtn.vue';
 import {ILayout} from '@/interfaces/layout.interface';
+import { cookeTokenKey } from '@/interfaces/auth.interface';
+import { IRouter } from '@/interfaces/router.interface.ts';
+
+const ROUTE_NAME = IRouter.ROUTE_NAME;
+
 import LayoutPattern = ILayout.LayoutPattern;
 import Breakpoint = ILayout.Breakpoint;
 @Component({
@@ -57,6 +62,17 @@ export default class DefaultLayout extends Vue {
 
   mounted() {
     this.setPattern(window.screen.width)
+
+    if (this.$cookies.get(cookeTokenKey) || this.$store.state.auth.token) {
+      this.$store.commit('auth/setPropertyInStore', {name: 'isLoggedIn', value: true});
+    }
+
+    if (!this.isUserLoggedIn) {
+      this.$router.push({name: ROUTE_NAME.AUTH_PAGE});
+    }
+  }
+  get isUserLoggedIn() {
+    return this.$store.state.auth.isLoggedIn;
   }
 
   onResize() {

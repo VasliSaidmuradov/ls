@@ -1,40 +1,43 @@
 <template>
-  <div class="analyzes-card" :class="{'analyzes-card--edit': isEditMode}">
+  <div class="analyzes-card" :class="{'analyzes-card--edit': localDate.isEdit}">
    <div class="analyzes-card__left">
      <div class="analyzes-card__title">
-       <span>{{dataClone.name}}</span>
+       <span>{{data.biomarker}}</span>
      </div>
      <div class="analyzes-card__values">
        <div class="analyzes-card__values-results">
          <div class="default">
-           {{dataClone.result ? dataClone.result : '-'}}
+           {{localDate.value ? localDate.value : '-'}}
          </div>
          <div class="edit">
            <div class="form-input">
-             <q-input v-model="dataClone.result" type="number" ref="result" :rules="rules"/>
+             <q-input v-model="localDate.value" type="number" ref="result" :rules="rules"/>
            </div>
          </div>
        </div>
        <div class="analyzes-card__values-units">
          <div class="default">
-           {{dataClone.units}}
+           {{localDate.unit}}
          </div>
          <div class="edit">
-           <MainSelect :value="dataClone.units"
-                       :options="unitsOptions"
-                       @input-select="update('units', $event)">
+           <MainSelect :value="localDate.unit"
+                       :options="data.available_units"
+                       @input-select="update('unit', $event)">
            </MainSelect>
          </div>
        </div>
        <div class="analyzes-card__values-ranges">
          <div class="default">
-           {{getRanges(dataClone.ranges)}}
+           {{localDate.range}}
          </div>
          <div class="edit">
            <div class="form-input">
-             <q-input v-model="dataClone.range" ref="range" :rules="rules">
+             <q-input v-model="localDate.range" ref="range" :rules="rules">
                <template v-slot:append>
                  <div class="comment" @click.stop.prevent="addComment">
+                   <span class="comment__count" v-if='data.comment'>
+                     1
+                   </span>
                     <span class="comment-icon">
                       <icon name="comment-icon"></icon>
                     </span>
@@ -55,12 +58,14 @@
       <div class="analyzes-card__date">
         <div class="analyzes-card__date-lab">
           <div class="default">
-            {{dataClone.lab}}
+            {{localDate.laboratory.name}}
           </div>
           <div class="edit">
-            <MainSelect :value="dataClone.lab"
-                        :options="labOptions"
-                        @input-select="update('lab', $event)">
+            <MainSelect :value="localDate.laboratory"
+                        :options="laboratoriesList"
+                        optionsLabel="name"
+                        :option-value="convertSelectValue"
+                        @input-select="update('laboratory', $event)">
 
             </MainSelect>
           </div>
@@ -68,17 +73,20 @@
 
         <div class="analyzes-card__date-value">
           <div class="default">
-            {{$date(dataClone.date, 'yyyy MMMM dd')}}
+            {{$date(new Date(localDate.date), 'yyyy MMMM dd')}}
           </div>
           <div class="edit">
-            <InputDate :value="dataClone.date" :propRules="rules" ref="date" @change-value="update('date', new Date($event))"/>
+            <InputDate :value="new Date(localDate.date)"
+                       :propRules="rules"
+                       ref="date"
+                       @change-value="update('date', new Date($event))"/>
           </div>
         </div>
       </div>
 
       <div class="analyzes-card__actions">
-        <button class="analyzes-card__actions-btn analyzes-card__actions-btn--edit" @click="isEditMode ? saveChanges() : editAnalyzes()">
-          <icon :name="isEditMode ? 'check-icon' : 'edit-icon'"></icon>
+        <button class="analyzes-card__actions-btn analyzes-card__actions-btn--edit" @click="localDate.isEdit ? saveChanges() : editAnalyzes()">
+          <icon :name="localDate.isEdit ? 'check-icon' : 'edit-icon'"></icon>
         </button>
         <button class="analyzes-card__actions-btn analyzes-card__actions--delete" @click="deleteAnalyze">
           <icon name="delete-icon"></icon>
@@ -121,7 +129,7 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop, Mixins} from 'vue-property-decorator';
+import {Component, Vue, Prop, Mixins, Watch} from 'vue-property-decorator';
 import {IAnalyzes} from '@/interfaces/analyzes.interface';
 import AnalyzesMixin from '@/mixins/analyzes-mixin';
 import MainSelect from '@/components/UI/MainSelect.vue';
@@ -129,7 +137,10 @@ import InputDate from '@/components/InputDate.vue';
 import {bus} from '@/plugins/bus';
 import {ILayout} from '@/interfaces/layout.interface';
 import BaseFormMixins from '@/mixins/base-form-mixins';
-import {QInput} from 'quasar';
+import { QInput, QSelect } from 'quasar';
+import { format } from 'date-fns';
+import { serverDateFormat } from '@/interfaces/api.interface';
+import { Method } from 'axios';
 
 interface IRefs {
   result: QInput;
@@ -137,30 +148,55 @@ interface IRefs {
   date: InputDate;
 }
 
+export interface ILocalData {
+  value: string;
+  date: string | Date;
+  unit: string;
+  isEdit: boolean;
+  range: string;
+  laboratory: IAnalyzes.ILaboratories;
+  idAfterUpdate: null | string | number;
+}
+
 @Component({
   components: {
     MainSelect,
     InputDate
-  }
+  },
 })
 export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) {
 
-  @Prop({required: true}) data: IAnalyzes.IAddedAnalyzes;
-  dataClone: IAnalyzes.IAddedAnalyzes  = {};
-  isEditMode = false;
+  @Prop({required: true}) data: IAnalyzes.IBiomarker;
 
   rules: Function[] = []
-
-  unitsOptions = ['МЕ/л', 'МЕ/r', 'МЕ/лd'];
-  labOptions = ['dada', '2321', '3131']
 
   showMobileActionsMenu = false;
 
   $refs: IRefs & Vue['$refs'];
 
-  created() {
-    this.dataClone = Object.assign({range: this.getRanges(this.data?.ranges)}, this.data);
+  localDate: ILocalData = {
+    value: '',
+    date: new Date(),
+    unit: this.data.unit || '',
+    isEdit: true,
+    range: '',
+    laboratory: {
+      name: '',
+      id: 0,
+    },
+    idAfterUpdate: null,
+  };
 
+  get laboratoriesList(): IAnalyzes.ILaboratories[] {
+    return this.$store.state.analyzes.laboratoriesList;
+  }
+
+  get id(): number | string {
+    return this.localDate.idAfterUpdate ? this.localDate.idAfterUpdate : this.data.id;
+  }
+
+  created() {
+    this.localDate.range = this.getRanges(this.data.ranges);
     this.rules.push(this.inputRules.required);
   }
 
@@ -170,8 +206,8 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
       title: 'Вы точно хотите удалить добавленный анализ?',
       class: 'delete-analyzes',
       confirm: {
-        rootAction: 'analyzes/deleteAnalyzes',
-        payload: this.data?.id,
+        rootAction: 'analyzes/deleteBiomarker',
+        payload: this.id,
         text: 'Удалить',
         type: 'main-btn-primary',
         bgColor: 'transparent',
@@ -188,16 +224,17 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
   }
 
   addComment() {
-    bus.$emit(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, this.data.id);
+    bus.$emit(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, this.id);
   }
 
   editAnalyzes() {
     if (window.screen.width <= ILayout.Breakpoint.PRE_MD) {
-      bus.$emit(IAnalyzes.BusEvents.EDIT_ANALYZES, this.dataClone);
+      bus.$emit(IAnalyzes.BusEvents.EDIT_ANALYZES, this.data);
       return;
     }
 
-    this.isEditMode = true;
+
+    this.localDate.isEdit = true;
   }
 
   validate() {
@@ -208,24 +245,48 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
     ].includes(false)
   }
 
-  saveChanges() {
+   saveChanges() {
     if (this.validate()) return;
 
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 1000)
-    }).then((status) => {
-      if (status) {
-        this.isEditMode = false;
-      }
-    })
+    let method: Method = 'POST';
+
+    if (typeof this.id === 'number') {
+      method = 'PATCH';
+    }
+
+
+    this.$store.dispatch('analyzes/saveBiomarkers', {...this.createDateForSave(), method})
+     .then(({status, data}: {status: boolean; data: IAnalyzes.IBiomarker}) => {
+       if (status) {
+         this.localDate.idAfterUpdate = data.id;
+         this.localDate.isEdit = false;
+       }
+     })
+  }
+
+  createDateForSave() {
+    return {
+      data: {
+        biomarker_id: this.data.biomarker_id,
+        date: format(new Date(this.localDate.date as string), serverDateFormat),
+        value: this.localDate.value,
+        ranges: this.localDate.range,
+        unit: this.localDate.unit,
+        laboratory: this.localDate?.laboratory?.name,
+        laboratory_id: this.localDate?.laboratory?.id,
+        comment: this.data.comment ? this.data.comment : null,
+      },
+      id: this.id
+    }
   }
 
   update(key: string, value: string | any) {
-    this.$set(this.dataClone, key, value);
+    this.$set(this.localDate, key, value);
   }
 
+  convertSelectValue(v: IAnalyzes.ILaboratories) {
+    return v;
+  }
 }
 </script>
 
@@ -680,13 +741,16 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
     ::v-deep.comment {
       cursor: pointer;
 
-
       svg {
         color: #fff;
 
         path {
           //fill: #000;
         }
+      }
+
+      &__count {
+        font-size: 14px;
       }
     }
   }

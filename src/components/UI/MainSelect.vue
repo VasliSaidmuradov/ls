@@ -10,6 +10,7 @@
     <q-select
         class="main-select"
         hide-dropdown-icon
+        :option-label='optionsLabel'
         :label="selectLabel"
         :option-label="optionLabel"
         :value="value"
@@ -17,6 +18,7 @@
         :options="options"
         :multiple="multiple"
         :disable="disabled"
+        :option-value="optionValue"
         :style="{
           backgroundColor: bcgColor,
           border: `1px solid ${borderColor}`,
@@ -82,6 +84,8 @@
     @Prop() height: number;
     @Prop() minWidth: number;
     @Prop() maxWidth: number;
+    @Prop({default: ''}) optionsLabel: string | Function;
+    @Prop({default: ''}) optionValue: string | Function;
 
     isIconReverse = false;
 

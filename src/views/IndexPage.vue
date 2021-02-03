@@ -79,7 +79,10 @@ export default class IndexPage extends Vue {
 
   mounted() {
     bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL, () => this.addAnalyzesModalState = !this.addAnalyzesModalState);
-    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, () => this.addCommentModalState = !this.addCommentModalState);
+    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, (id: string | number) => {
+      this.addCommentModalState = !this.addCommentModalState;
+      this.$store.commit('analyzes/setPropertyInStore', {name: 'commentAnalyzesId', value: id});
+    });
     bus.$on(IAnalyzes.BusEvents.EDIT_ANALYZES, (data: IAnalyzes.IAddedAnalyzes) => {
       this.editData = data;
       this.editAnalyzesModalState = !this.editAnalyzesModalState;
@@ -181,18 +184,18 @@ export default class IndexPage extends Vue {
   &__content-bottom-tabs {
     width: 100%;
 
-    /deep/.q-tab-panel {
+    ::v-deep.q-tab-panel {
       padding: 0;
     }
 
     @include media-breakpoint-up($breakpoint-sm) {
       width: 100%;
 
-      /deep/ .q-tab__label {
+      ::v-deep .q-tab__label {
         font-size: 12px;
       }
 
-      /deep/.tabs__header .q-tab {
+      ::v-deep.tabs__header .q-tab {
         padding: 8px 15px;
       }
     }

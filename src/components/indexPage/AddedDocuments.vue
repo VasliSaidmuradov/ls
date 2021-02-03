@@ -117,11 +117,11 @@ export default class AddedDocuments extends Vue {
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.03);
     border-radius: 15px;
 
-    /deep/.q-item {
+    ::v-deep.q-item {
       padding: 15px;
     }
 
-    /deep/.q-item__section {
+    ::v-deep.q-item__section {
       margin-left: auto;
       padding: 10px 8px;
       border: 1px solid $light-stroke;

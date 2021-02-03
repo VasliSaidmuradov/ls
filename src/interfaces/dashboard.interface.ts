@@ -8,9 +8,25 @@ export namespace IDashBoard {
     id: number;
     category: string;
     name: string;
-    description: string;
     date: Date | string;
-    is_new: boolean;
+    is_new?: boolean;
+    biomarkers: IBioMarkers[];
+  }
+
+  export interface IOrdersByDate {
+    date: string;
+    orders: ILatestResult[];
+  }
+
+
+  export interface IBioMarkers {
+    name: string;
+    status: string;
+  }
+
+  export enum BioMarkersStatus {
+    PROCESS = 'Исследуется',
+    DONE = 'Готово',
   }
 
   export interface IBenchmarks {
