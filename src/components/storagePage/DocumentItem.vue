@@ -59,7 +59,7 @@
         </template>
       </main-btn>
 
-      <icon name="download-icon" class="document-item__footer-download-icon" v-else/>
+      <icon name="download-icon" class="document-item__footer-download-icon" v-else @click="downloadFiles"/>
     </div>
 
     <dialog-modal
@@ -116,6 +116,8 @@
   import { serverDateFormat } from '@/interfaces/api.interface';
   import ROUTE_NAME = IRouter.ROUTE_NAME;
   import IDocumentType = IStorage.IDocumentType;
+  import Axios from 'axios';
+  import IFile = IStorage.IFile;
 
   @Component({
     components: { MainBtn, FileListSliderModal, EditDocumentModal, DialogModal },
@@ -171,6 +173,25 @@
       if (this.document.type_doc === 1) {
         this.$router.push({ name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: { id: `${this.document.id}` } });
       }
+    }
+
+    downloadFiles() {
+      this.document.files.forEach((file: IFile) => {
+        Axios({
+          url: `${file.file_link}`,
+          method: 'GET',
+          responseType: 'blob',
+        }).then((response: any) => {
+          const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          const fileLink = document.createElement('a');
+
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', `${file.file_link}`);
+          document.body.appendChild(fileLink);
+
+          fileLink.click();
+        });
+      })
     }
   }
 </script>

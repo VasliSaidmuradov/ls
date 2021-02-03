@@ -8,7 +8,7 @@
     <div class="info-block__wrapper">
       <div class="info-block__left">
         <span class="info-block__title">{{document.name}}</span>
-        <span class="info-block__subtitle">Всего загружено: 3 страницы, 17 анализов</span>
+        <span class="info-block__subtitle">Всего загружено: {{document.files.length}} страницы, 17 анализов</span>
 
         <div class="info-block__status-wrapper">
           <div class="info-block__status-item">

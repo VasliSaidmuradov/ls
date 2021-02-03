@@ -142,6 +142,7 @@
 
       const isResult = this.$store.dispatch('storage/deleteFile', payload);
       isResult && this.closeModal();
+      this.isDialogModalOpen = false
     }
 
     downloadFile() {
@@ -150,7 +151,6 @@
         method: 'GET',
         responseType: 'blob',
       }).then((response: any) => {
-        console.log(response);
         const fileURL = window.URL.createObjectURL(new Blob([response.data]));
         const fileLink = document.createElement('a');
 
