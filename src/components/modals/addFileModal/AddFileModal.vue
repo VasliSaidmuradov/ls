@@ -20,7 +20,6 @@
           v-if="modalVisibleType === 2"
           @go-back="toggleGoBackModal(true)"
       />
-
       <span class="modal__title">
           При добавлении нескольких файлов, они будут считаться одним документом внутри приложения.
         </span>
@@ -63,19 +62,19 @@
                 placeholder="Введите название документа"
                 v-model="documentName"
             />
+            <!-- :value="''" -->
             <span class="modal__input-postscript">Необязательно для заполнения</span>
           </div>
-
+          {{ docName }}
           <div class="modal__input-block">
             <input-date
                 class="modal__date modal__input form-input form-input--empty"
-                :value="date"
                 :placeholder="'Дата исследования'"
                 @change-value="changeDate"
             />
+            <!-- :value="date" -->
             <span class="modal__input-postscript">Необязательно для заполнения</span>
           </div>
-
         </div>
       </div>
 
@@ -220,7 +219,39 @@
         ? this.modalVisibleType = 2
         : this.modalVisibleType = 1;
     }
+    // @Watch('modalVisibleType')
+    // function(val) {
+    //   if (val === 2) {
+    //     this.$store.dispatch('staticVariables/getDocumentTypes');
+    //   }
+    // }
 
+    // setDocument() {
+    //   try {
+    //     if (!this.isRequestBodyValid) return
+    //     const docTypeId = this.documentTypes.find(el => el.description === this.selectValue).value;
+    //     const requestBody = {
+    //       name: this.docName,
+    //       date: this.$date(new Date(this.date), 'yyyy-MM-dd'),
+    //       type_doc: docTypeId,
+    //       allow_processing: docTypeId === 1,
+    //     }
+    //     console.log('req body: ', requestBody);
+    //     this.$store.dispatch('documents/createDocument', requestBody);
+    //     this.closeModal();
+    //     this.clearRequestBody();
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
+    // isRequestBodyValid(): boolean {
+    //   return !!this.docName && this.selectValue !== 'Выберите тип исследования' && !!this.date;
+    // }
+    // clearRequestBody() {
+    //   this.docName = ''
+    //   this.selectValue = 'Выберите тип исследования';
+    //   this.date = '';
+    // }
     addFiles(files: File[]) {
       files.forEach((file: File) => {
         this.validateFile(file)
@@ -247,6 +278,7 @@
 
     changeDate(value: Date) {
       this.date = value;
+      console.log('date value: ', this.date);
     }
 
     toggleGoBackModal(val: boolean) {

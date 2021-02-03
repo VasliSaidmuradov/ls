@@ -1,9 +1,9 @@
 <template>
   <div class="order-page layout">
     <div class="order-page__header">
-      <span class="order-page__header-desk">{{mainData.category}}</span>
+      <span class="order-page__header-desk">{{orderedService.rubric_name}}</span>
       <h4 class="order-page__header-title" :class="{'active': unfurlText}">
-        {{mainData.name}}
+        {{orderedService.name}}
       </h4>
 
       <MainBtn class="order-page__header-unfurlText"
@@ -16,7 +16,6 @@
           <icon name="next-icon"></icon>
         </template>
       </MainBtn>
-
       <div class="order-page__header-cards">
         <div class="order-page__header-card" v-for="(card, index) in cardsData" :key="index">
           <h6 class="order-page__header-card-title">{{card.title}}</h6>
@@ -60,9 +59,10 @@
         </div>
       </div>
 
-      <div class="order-page__documents-slider">
+      <!-- SLIDER -->
+      <div v-if="documentsList.length" class="order-page__documents-slider">
         <q-carousel
-            v-model="slide"
+            v-model="slideId"
             ref="slider"
             transition-prev="scale"
             transition-next="scale"
@@ -71,17 +71,19 @@
             height="auto"
             class="bg-white text-white shadow-1 rounded-borders"
         >
-          <q-carousel-slide v-for="index in 5" :key="index" :name="index">
-            <SlideCard/>
+          <q-carousel-slide v-for="document in documentsList" :key="document.id" :name="document.id">
+            <SlideCard :slideInfo="document" />
           </q-carousel-slide>
         </q-carousel>
         <div class="order-page__documents-slider-control">
           <div class="order-page__documents-slider-pagination">
-            <div class="order-page__documents-slider-pagination-item"
-                 :class="{'active': index === slide}"
-                 v-for="index in 5"
-                 :key="index"
-                 @click="setSlide(index)"></div>
+            <div
+              class="order-page__documents-slider-pagination-item"
+              :class="{'active': doc.id === slideId}"
+              v-for="doc in documentsList"
+              :key="doc.id"
+              @click="setSlide(doc.id)"
+            ></div>
           </div>
 
           <div class="order-page__documents-slider-btns">
@@ -106,17 +108,19 @@
           </div>
         </div>
       </div>
+      <!-- SLIDER END -->
+      <!-- {{ documentsList }} -->
     </div>
 
     <span class="table__title">Результаты</span>
 
     <table class="table">
-      <tr class="table__tr" v-for="(result, index) in mainData.biomarkers" :key="index">
+      <tr class="table__tr" v-for="(result, index) in orderedService.results" :key="index">
         <td class="table__name">
           {{result.name}}
         </td>
-        <td class="table__value" :style="{color: result.status === 'Готово' ? '#63C58A' : '#DFDFEB'}">
-          {{result.result}}
+        <td class="table__value" :style="{color: result.status === 1 ? '#63C58A' : '#DFDFEB'}">
+          {{result.value}}
         </td>
         <td class="table__unit">
           {{result.unit}}
@@ -128,7 +132,7 @@
           <div class="table__status-main-wrapper">
             <div class="table__status-wrapper">
               <icon :name="countStatusIcon(result.status)"/>
-              <span class="table__status-text">{{result.status}}</span>
+              <span class="table__status-text">{{ getCurrentOrderStatus(result.status) }}</span>
             </div>
           </div>
         </td>
@@ -137,12 +141,12 @@
 
     <!--visible if max-width = 1000px-->
     <div class="block__item-wrapper">
-      <div class="block__item" v-for="(result, index) in mainData.biomarkers" :key="index">
+      <div class="block__item" v-for="(result, index) in orderedService.results" :key="index">
         <div class="block__item-header">
           <span class="block__item-name">{{result.name}}</span>
           <div class="block__item-value-ranges-wrapper">
-            <span class="block__item-value" :style="{color: result.status === 'Готово' && '#63C58A'}">
-             {{result.result || '0,0'}}
+            <span class="block__item-value" :style="{color: result.status === 1 && '#63C58A'}">
+             {{result.value || '0,0'}}
             </span>
             <span class="block__item-ranges">{{getRanges(result.ranges)}}</span>
           </div>
@@ -152,139 +156,140 @@
         </div>
         <div class="block__item-status-wrapper">
           <icon :name="countStatusIcon(result.status)"/>
-          <span class="block__item-status-text">{{result.status}}</span>
+          <span class="block__item-status-text">{{ getCurrentOrderStatus(result.status) }}</span>
         </div>
       </div>
     </div>
 
-
     <SelectDocumentsModal
-        :is-select-document-modal-open="isSelectDocumentModalOpen"
-        @close-modal="toggleSelectDocumentModal(false)"
+      :isSelectDocumentModalOpen="isSelectDocumentModalOpen"
+      :documentsList="allDocumentsList"
+      :orderedService="orderedService"
+      @close-modal="toggleSelectDocumentModal(false)"
     />
 
     <AddFileModal
-        :is-file-modal-open="isFileModalOpen"
-        @close-modal="toggleFileModal(false)"
+      :isFileModalOpen="isFileModalOpen"
+      @close-modal="toggleFileModal(false)"
     />
   </div>
 </template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Vue, Watch } from 'vue-property-decorator';
   import { QCarousel } from 'quasar';
   import AnalyzesMixin from '@/mixins/analyzes-mixin';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import SlideCard from '@/components/analyzes/SlideCard.vue';
   import SelectDocumentsModal from '@/components/modals/SelectDocumentsModal.vue';
   import AddFileModal from '@/components/modals/addFileModal/AddFileModal.vue';
+  import { mapState, mapActions } from 'vuex';
 
   export interface IRefs {
     slider: QCarousel;
   }
 
   @Component({
-    components: { AddFileModal, SelectDocumentsModal, SlideCard, MainBtn },
+    components: {
+      AddFileModal,
+      SelectDocumentsModal,
+      SlideCard,
+      MainBtn
+    },
+    computed: {
+      ...mapState('orders', ['orderedService']),
+    },
+    methods: {
+      ...mapActions('orders', ['getOrderedService']),
+    }
   })
   export default class OrderPage extends AnalyzesMixin {
-    isSelectDocumentModalOpen = false;
-    isFileModalOpen = false;
-    slide = 1;
+    isSelectDocumentModalOpen: boolean = false;
+    isFileModalOpen: boolean = false;
+    slideId: number | null= null;
     unfurlText = false;
-    mainData = {
-      'id': 34234243,
-      'category': 'Гормональные исследования',
-      'name': 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm ...',
-      'date': '2020-03-11',
-      'analyzer': 'Liaison',
-      'cost': 1800,
-      'biomarkers': [
-        {
-          'name': 'Определение мочевины в сыворотке крови',
-          'status': 'Исследуется',
-          'result': null,
-          'unit': 'МЕ/мл',
-          'ranges': {
-            'min': 20,
-            'max': 45,
-          },
-        },
-        {
-          'name': 'Определение общего белка',
-          'status': 'Исследуется',
-          'result': null,
-          'unit': 'МЕ/мл',
-          'ranges': {
-            'min': 20,
-            'max': 45,
-          },
-        },
-        {
-          'name': 'Витамин D',
-          'status': 'Готово',
-          'result': 56.76,
-          'unit': 'МЕ/мл',
-          'ranges': {
-            'min': 20,
-            'max': 45,
-          },
-        },
-        {
-          'name': 'Витамин D',
-          'status': 'Отказ от исследования',
-          'result': null,
-          'unit': null,
-          'ranges': null,
-        },
-      ],
-    };
-    cardsData = [
-      {
-        title: 'Дата сдачи',
-        desk: this.mainData.date,
-      }, {
-        title: 'Всего показателей',
-        desk: `${this.mainData.biomarkers.length} штук`,
-      }, {
-        title: 'Стоимость',
-        desk: `${this.mainData.cost}₽`,
-      }, {
-        title: 'Метод и оборудование',
-        desk: this.mainData.analyzer,
-      },
-    ];
+    cardsData = [];
 
-    $refs: IRefs & Vue['$refs'];
-
-
-    setSlide(slide: number) {
-      this.$refs.slider.goTo(slide);
+    @Watch('orderedService', { deep: true })
+    setCardsData(val, oldVal) {
+      this.cardsData = [
+        {
+          title: 'Дата сдачи',
+          desk: this.orderedService.date,
+        },
+        {
+          title: 'Всего показателей',
+          desk: `${this.orderedService?.results?.length} штук`,
+        },
+        {
+          title: 'Стоимость',
+          desk: `${this.orderedService?.price}₽`,
+        },
+        // {
+        //   title: 'Метод и оборудование',
+        //   desk: this.orderedService.analyzer || '-',
+        // },
+      ]
     }
 
+    @Watch('documentsList', { deep: true })
+    setSliderId(val) {
+      this.slideId =this.documentsList[0].id;
+    }
+
+    $refs: IRefs & Vue['$refs'];
+    created() {
+      this.getOrderedService(this.$route.params.id);
+      this.$store.dispatch('staticVariables/getOrderStatuses');
+      this.$store.dispatch('staticVariables/getDocumentTypes');
+    }
+
+    get orderStatuses() {
+      return this.$store.state.staticVariables.orderStatuses;
+    }
+    get sliderList() {
+      return this.orderedService
+    }
+    get documentsList() {
+      return this.$store.state.documents.documentsList;
+    }
+    get allDocumentsList() {
+      return this.$store.state.documents.allDocumentsList;
+    }
+
+    getCurrentOrderStatus(statusId) {
+      const statuses = [...this.orderStatuses];
+      const status = statuses.find(el => el.value === statusId);
+      return status?.description;
+    }
+
+    setSlide(slideId: number) {
+      this.$refs.slider.goTo(slideId);
+    }
     prevSlide() {
       this.$refs.slider.previous();
     }
-
     nextSlide() {
       this.$refs.slider.next();
     }
-
     onUnfurlText() {
       this.unfurlText = !this.unfurlText;
     }
-
-    countStatusIcon(status: string) {
+    countStatusIcon(status: number) {
       const processIcon = 'doc-process-icon';
       const errorIcon = 'doc-error-icon';
       const successIcon = 'doc-success-icon';
-
       switch (status) {
-        case 'Готово':
-          return successIcon;
-        case 'Исследуется':
-          return processIcon;
-        case 'Отказ от исследования':
+        case 1:
           return errorIcon;
+        case 2:
+          return errorIcon;
+        case 3:
+          return processIcon;
+        case 4:
+          return processIcon;
+        case 5:
+          return successIcon;
       }
     }
 

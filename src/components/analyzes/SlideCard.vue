@@ -2,16 +2,18 @@
   <div class="slide-card">
     <div class="slide-card__left">
       <div class="slide-card__left-desk">
-        Биохический анализ крови с подсчетом лейкоцитарн. форм.
+        {{ slideInfo.name }}
       </div>
       <div class="slide-card__left-date-wrap">
         <span class="slide-card__left-date">
-        Загружено 22.05.2020
+        Загружено {{ $date(new Date(slideInfo.created_at), 'dd.MM.yyyy') || '-' }}
       </span>
         <MainBtn text="Отвязать документ"
                  type="btn-small"
                  class="slide-card__left-btn"
-                 bcg-color="transparent">
+                 bcg-color="transparent"
+                 @click-btn="unlinkDocument(slideInfo.id)"
+        >
           <template v-slot:icon>
             <icon name="close-icon"></icon>
           </template>
@@ -19,19 +21,19 @@
       </div>
     </div>
     <div class="slide-card__right scrollable">
-      <div class="slide-card__right-card" v-for="(item, index) in data" :key="index">
+      <div class="slide-card__right-card" v-for="file in slideInfo.files" :key="file.id">
         <div class="slide-card__right-card-img">
           <img src="../../assets/indexPage/doc-example.png">
           <icon name="download-icon"></icon>
         </div>
-        <span class="slide-card__right-card-text">{{item.title}}</span>
+        <span class="slide-card__right-card-text">{{ setFileLength() }} </span>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 
 @Component({
@@ -40,23 +42,33 @@ import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   }
 })
 export default class SlideCard extends Vue {
-  data = [
-    {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
+  @Prop({ required: true }) slideInfo: {};
+
+  get orderedService() {
+    return this.$store.state.orders.orderedService;
+  }
+
+  unlinkDocument(docId: number) {
+    try {
+      const { id, document_ids } = this.orderedService;
+      const docIds = document_ids.filter(id => id !== docId);
+      this.$store.dispatch('orders/changeOrderedService', { id, documentIds: docIds });
+    } catch(error) {
+      console.log('Error: ', error);
     }
-  ]
+  }
+
+  setFileLength(): string {
+    const len = this.slideInfo.files.length;
+    const analyzes = {
+      '0': 'анализов',
+      '1': 'анализ',
+      '2': 'анализа',
+      '3': 'анализа',
+      '4': 'анализа',
+    }
+    return `${len} ${analyzes[len] || `анализов`}`;
+  }
 }
 </script>
 

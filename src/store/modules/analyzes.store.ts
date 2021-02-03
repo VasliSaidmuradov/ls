@@ -116,7 +116,6 @@ export default {
     async init({ dispatch }: AnalyzesStore) {
       await dispatch('getBiomarkers');
       await dispatch('getLaboratories');
-      // await dispatch('getUnits');
     },
 
     async getBiomarkers({ dispatch, commit }: AnalyzesStore) {

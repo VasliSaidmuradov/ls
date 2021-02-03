@@ -21,16 +21,16 @@
 
       <!--main-wrapper-->
       <div class="document__main-wrapper">
-        <div class="document__wrapper">
-          <div class="document-item" v-for="(document, index) in documentList" :key="index">
+        <div v-if="documentsList" class="document__wrapper">
+          <div class="document-item" v-for="(document) in documentsList" :key="document.id">
             <div class="document-item__header-date-wrapper">
               <icon name="calendar-icon" class="document-item__header-calendar-icon"/>
-              <span class="document-item__header-date">11.03.2020</span>
+              <span class="document-item__header-date">{{ $date(new Date(document.date), 'dd.MM.yyyy') }}</span>
             </div>
 
-            <p class="document-item__name">{{document.name}}</p>
+            <p class="document-item__name">{{ document.name }}</p>
 
-            <p class="document-item__loaded-at">Загружено 22.05.2020</p>
+            <p class="document-item__loaded-at">Загружено {{ document.created_at ? $date(new Date(document.created_at), 'dd.MM.yyyy') : '-' }}</p>
 
             <div class="document-item__footer">
               <div class="document-item__footer-left">
@@ -38,19 +38,20 @@
                   <img src="@/assets/Doc.jpg" alt="">
                 </div>
                 <div class="document-item__footer-text-wrapper">
-                  <span class="document-item__footer-event-name">Анализ</span>
-                  <span class="document-item__footer-list-count">4 страницы</span>
+                  <span class="document-item__footer-event-name">{{ setDocType(document.type_doc) }}</span>
+                  <span class="document-item__footer-list-count">{{ document.files.length }} страницы</span>
                 </div>
               </div>
 
               <checkbox-input
                   class="document-item__footer-checkbox"
-                  :value="document.checked"
-                  @change-value="changeCheckboxValue($event, index)"
+                  :value="selectedDocuments.includes(document.id)"
+                  @change-value="changeCheckboxValue(document.id)"
               />
             </div>
           </div>
         </div>
+        <p v-else>У Вас нет документов!</p>
       </div>
       <!--/main-wrapper-->
 
@@ -62,13 +63,14 @@
             :height="56"
             :border-color="'#7C74E9'"
             :text="'Добавить документы'"
+            :disabled="!documentsList.length || !selectedDocuments.length"
+            @click-btn="sendDocuments()"
         >
           <template v-slot:icon>
             <icon name="next-icon" class="modal__footer-btn-icon"/>
           </template>
         </main-btn>
-
-        <span class="modal__count">Выбрано:{{countSelected}} документа</span>
+        <span class="modal__count">Выбрано: {{countSelected}} документа</span>
       </div>
     </div>
   </q-dialog>
@@ -84,72 +86,15 @@
   })
   export default class SelectDocumentsModal extends Vue {
     @Prop({ required: true }) isSelectDocumentModalOpen: boolean;
+    @Prop(Array) readonly documentsList: [];
+    @Prop() readonly orderedService: {};
+    selectedDocuments: number[] = [];
 
-    documentList = [
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        id: '1',
-        checked: false,
-      },
-      {
-        name: 'УЗИ живота',
-        id: '2',
-        checked: false,
-      },
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        id: '3',
-        checked: false,
-      },
-      {
-        name: 'УЗИ живота',
-        id: '4',
-        checked: false,
-      },
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        id: '5',
-        checked: false,
-      },
-      {
-        name: 'УЗИ живота',
-        id: '6',
-        checked: false,
-      },
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        id: '1',
-        checked: false,
-      },
-      {
-        name: 'УЗИ живота',
-        id: '2',
-        checked: false,
-      },
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        id: '3',
-        checked: false,
-      },
-      {
-        name: 'УЗИ живота',
-        id: '4',
-        checked: false,
-      },
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        id: '5',
-        checked: false,
-      },
-      {
-        name: 'УЗИ живота',
-        id: '6',
-        checked: false,
-      },
-    ];
-
+    get documentTypes() {
+      return this.$store.state.staticVariables.documentTypes;
+    }
     get countSelected() {
-      return this.documentList.filter(item => item.checked).length;
+      return this.selectedDocuments.length
     }
 
     @Emit('close-modal')
@@ -157,8 +102,22 @@
       return false;
     }
 
-    changeCheckboxValue(val: boolean, index: number) {
-      this.documentList[index].checked = val;
+    changeCheckboxValue(id: number): void {
+      if(this.selectedDocuments.includes(id)) this.selectedDocuments = this.selectedDocuments.filter(el => el !== id);
+      else this.selectedDocuments.push(id);
+    }
+    sendDocuments(): void {
+      try {
+        const { id, document_ids } = this.orderedService;
+        const docIds = [...new Set([...this.selectedDocuments, ...document_ids])];
+        this.$store.dispatch('orders/changeOrderedService', { id, documentIds: docIds });
+        this.closeModal()
+      } catch(error) {
+        console.log('Error: ', error);
+      }
+    }
+    setDocType(id: number): string {
+      return this.documentTypes.find(el => el.value === id).description;
     }
   }
 </script>
