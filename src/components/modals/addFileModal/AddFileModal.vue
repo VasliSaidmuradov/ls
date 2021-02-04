@@ -41,8 +41,9 @@
         <main-select
             class="modal__select"
             :value="selectValue"
-            :options="selectOptionList"
-            :label-title="'Тип исследования'"
+            :options="documentTypes"
+            :option-label="'description'"
+            :select-label="'Тип исследования'"
             :border-color="'#E9E8FF'"
             :bcg-color="'#F9F9FC'"
             :max-width="310"
@@ -50,7 +51,7 @@
         />
 
         <q-checkbox
-            v-if="decipherAnalyzes"
+            v-if="decipherAnalyzes && selectValue === 'Анализ'"
             class="form-checkbox form-checkbox--with-label"
             label="Расшифровать анализы"
             v-model="isCheckboxValue"
@@ -59,8 +60,8 @@
         <div class="modal__input-wrapper">
           <div class="modal__input form-input form-input--empty">
             <q-input
-                :value="''"
                 placeholder="Введите название документа"
+                v-model="documentName"
             />
             <span class="modal__input-postscript">Необязательно для заполнения</span>
           </div>
@@ -113,6 +114,8 @@
             :border-color="'#7C74E9'"
             :width="214"
             :height="56"
+            :disabled="isBtnDisabled"
+            @click-btn="loadDocument"
         >
           <template v-slot:icon>
             <icon name="cloud-icon" class="modal__load-btn-icon"/>
@@ -184,6 +187,10 @@
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import BackBtn from '@/components/UI/buttons/BackBtn.vue';
   import MainSelect from '@/components/UI/MainSelect.vue';
+  import { format } from 'date-fns';
+  import { serverDateFormat } from '@/interfaces/api.interface';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import IDocumentType = IStorage.IDocumentType;
 
   @Component({
     components: { MainSelect, BackBtn, MainBtn, PreviewImg, FileForm, InputDate, DialogModal },
@@ -196,11 +203,16 @@
     isDeleteFileModalOpen = false;
     deletedFileIndex: number;
     modalVisibleType = 1;
-    date = '';
-    selectValue = 'Узи';
+    date = new Date();
     isCheckboxValue = false;
-    selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса'];
+    selectValue: IDocumentType | '' = '';
     fileList: File[] = [];
+    documentName = '';
+    isBtnDisabled = false;
+
+    get documentTypes() {
+      return this.$store.state.storage.documentTypes;
+    }
 
     @Watch('fileList')
     fileListChanged() {
@@ -213,7 +225,7 @@
       files.forEach((file: File) => {
         this.validateFile(file)
           ? this.fileList.push(file)
-          : alert('Неверный формат файла');
+          : this.$store.dispatch('error/showErrorNotice', { message: 'Неферный формат файла' }, { root: true });
       });
     }
 
@@ -233,7 +245,7 @@
       this.toggleDeleteFileModal(false);
     }
 
-    changeDate(value: string) {
+    changeDate(value: Date) {
       this.date = value;
     }
 
@@ -250,8 +262,37 @@
       this.fileList = [];
     }
 
-    inputSelect(val: string) {
-      this.selectValue = val;
+    inputSelect(value: IDocumentType) {
+      this.selectValue = value;
+    }
+
+    clearData() {
+      this.selectValue = '';
+      this.isCheckboxValue = false;
+      this.fileList = [];
+      this.date = new Date();
+      this.documentName = '';
+    }
+
+    async loadDocument() {
+      if (!this.selectValue) {
+        await this.$store.dispatch('error/showErrorNotice', { message: 'Выберите тип исследования' }, { root: true });
+        return;
+      }
+
+      this.isBtnDisabled = true;
+      const payload = {
+        name: this.documentName,
+        date: format(new Date(this.date), serverDateFormat),
+        type_doc: this.selectValue.value,
+        allow_processing: this.selectValue.value === 1 ? this.isCheckboxValue : false,
+        fileList: this.fileList,
+      };
+
+      const isResult = await this.$store.dispatch('storage/createDocument', payload);
+      this.isBtnDisabled = false;
+      isResult && this.closeModal();
+      isResult && this.clearData();
     }
 
     @Emit('close-modal')

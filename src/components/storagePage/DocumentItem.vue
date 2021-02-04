@@ -1,11 +1,11 @@
 <template>
-  <div class="document-item" :class="{'cursor-pointer': document.type === 1}" @click="goToSingleDocumentPage">
+  <div class="document-item" :class="{'cursor-pointer': document.type_doc === 1}" @click="goToSingleDocumentPage">
     <div class="document-item__header">
       <div class="document-item__header-date-wrapper">
         <icon name="calendar-icon" class="document-item__header-calendar-icon"/>
-        <span class="document-item__header-date">11.03.2020</span>
+        <span class="document-item__header-date">{{document.date}}</span>
       </div>
-      <div v-if="document.type === 1">
+      <div v-if="document.type_doc === 1">
         <!-- class tooltip you can find in styles/quasar.scss-->
         <q-tooltip
             content-class="tooltip"
@@ -26,27 +26,28 @@
       <icon
           name="edit-icon"
           class="document-item__edit-icon"
-          v-if="document.type === 2"
+          v-if="document.type_doc !== 1"
           @click="toggleEditDocumentModal(true)"
       />
     </div>
 
-    <p class="document-item__loaded-at">Загружено 22.05.2020</p>
+    <p class="document-item__loaded-at">Загружено {{$date(new Date(document.created_at), 'dd.MM.yyyy')}}</p>
 
     <div class="document-item__footer">
       <div class="document-item__footer-left">
-        <div class="document-item__footer-img-wrapper" @click.stop="toggleFileListSliderModal(true)">
+        <div class="document-item__footer-img-wrapper"
+             @click.stop="document.files.length && toggleFileListSliderModal(true)">
           <img src="@/assets/Doc.jpg" alt="">
         </div>
         <div class="document-item__footer-text-wrapper">
-          <span class="document-item__footer-event-name">Анализ</span>
-          <span class="document-item__footer-list-count">4 страницы</span>
+          <span class="document-item__footer-event-name">{{textDocumentType}}</span>
+          <span class="document-item__footer-list-count">{{document.files.length}} страницы</span>
         </div>
       </div>
 
       <main-btn
           class="document-item__footer-btn"
-          v-if="document.type === 1"
+          v-if="document.type_doc === 1"
           :type="'only-icon'"
           :width="32"
           :height="32"
@@ -58,7 +59,7 @@
         </template>
       </main-btn>
 
-      <icon name="download-icon" class="document-item__footer-download-icon" v-else/>
+      <icon name="download-icon" class="document-item__footer-download-icon" v-else @click="downloadFiles"/>
     </div>
 
     <dialog-modal
@@ -75,6 +76,7 @@
             :width="105"
             :height="42"
             :bcg-color="'#FF7C7C'"
+            @click-btn="deleteDocument"
         >
           <template v-slot:icon>
             <icon
@@ -88,11 +90,15 @@
 
     <edit-document-modal
         :is-edit-document-modal-open="isEditDocumentModalOpen"
+        :document="document"
         @close-modal="toggleEditDocumentModal"
+        @edit-document="editDocument"
     />
 
     <file-list-slider-modal
         :is-file-list-slider-modal-open="isFileListSliderModalOpen"
+        :file-list="document.files"
+        :document-id="document.id"
         @close-modal="toggleFileListSliderModal"
     />
   </div>
@@ -106,7 +112,12 @@
   import { IRouter } from '@/interfaces/router.interface';
   import FileListSliderModal from '@/components/modals/FileListSliderModal.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import { format } from 'date-fns';
+  import { serverDateFormat } from '@/interfaces/api.interface';
   import ROUTE_NAME = IRouter.ROUTE_NAME;
+  import IDocumentType = IStorage.IDocumentType;
+  import Axios from 'axios';
+  import IFile = IStorage.IFile;
 
   @Component({
     components: { MainBtn, FileListSliderModal, EditDocumentModal, DialogModal },
@@ -117,6 +128,15 @@
     isDialogModalOpen = false;
     isEditDocumentModalOpen = false;
     isFileListSliderModalOpen = false;
+
+    get documentTypes(): IDocumentType[] {
+      return this.$store.state.storage.documentTypes;
+    }
+
+    get textDocumentType() {
+      const findItem = this.documentTypes.find((documentType: IDocumentType) => documentType.value === this.document.type_doc);
+      return findItem ? findItem.description : '';
+    }
 
     toggleDialogModal(val: boolean) {
       this.isDialogModalOpen = val;
@@ -130,10 +150,48 @@
       this.isFileListSliderModalOpen = val;
     }
 
+    deleteDocument() {
+      const isResult = this.$store.dispatch('storage/deleteDocument', this.document.id);
+
+      isResult && this.toggleDialogModal(false);
+    }
+
+    editDocument(obj: { name: string; date: Date; type_doc: number }) {
+      const { name, date, type_doc } = obj;
+      const payload = {
+        name,
+        date: format(new Date(date), serverDateFormat),
+        id: this.document.id,
+        type_doc,
+      };
+
+      const isResult = this.$store.dispatch('storage/editDocument', payload);
+      isResult && this.toggleEditDocumentModal(false);
+    }
+
     goToSingleDocumentPage() {
-      if (this.document.type === 1) {
-        this.$router.push({ name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: { id: this.document.id } });
+      if (this.document.type_doc === 1) {
+        this.$router.push({ name: ROUTE_NAME.STORAGE_SINGLE_DOCUMENT_PAGE, params: { id: `${this.document.id}` } });
       }
+    }
+
+    downloadFiles() {
+      this.document.files.forEach((file: IFile) => {
+        Axios({
+          url: `${file.file_link}`,
+          method: 'GET',
+          responseType: 'blob',
+        }).then((response: any) => {
+          const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+          const fileLink = document.createElement('a');
+
+          fileLink.href = fileURL;
+          fileLink.setAttribute('download', `${file.file_link}`);
+          document.body.appendChild(fileLink);
+
+          fileLink.click();
+        });
+      })
     }
   }
 </script>

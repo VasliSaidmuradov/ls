@@ -12,7 +12,7 @@
       <div class="modal__input form-input form-input--empty">
         <label class="form-label" for="documentName">Название документа</label>
         <q-input
-            :value="'ss'"
+            v-model="documentData.name"
             :placeholder="'Введите название документа'"
             id="documentName"
         />
@@ -22,7 +22,7 @@
         <input-date
             class="modal__date modal__input form-input form-input--empty"
             :label="'Дата исследования'"
-            :value="date"
+            :value="documentData.date"
             :placeholder="'Дата исследования'"
             @change-value="changeDate"
         />
@@ -30,10 +30,12 @@
         <main-select
             class="modal__select"
             :value="selectValue"
-            :options="selectOptionList"
+            :options="documentTypes"
+            :option-label="'description'"
             :label-title="'Тип исследования'"
             :border-color="'#E9E8FF'"
             :max-width="310"
+            @input-select="inputSelect"
         />
       </div>
 
@@ -43,6 +45,7 @@
             :height="42"
             :type="'small-bg'"
             :text="'Сохранить'"
+            @click-btn="editDocument"
         />
 
         <main-btn
@@ -62,25 +65,57 @@
   import InputDate from '@/components/InputDate.vue';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   import MainSelect from '@/components/UI/MainSelect.vue';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import IDocument = IStorage.IDocument;
+  import IDocumentType = IStorage.IDocumentType;
 
   @Component({
     components: { MainSelect, MainBtn, InputDate },
   })
   export default class DialogModal extends Vue {
     @Prop({ required: true }) isEditDocumentModalOpen: boolean;
+    @Prop({ required: true }) document: IDocument;
 
-    date: Date | string = new Date();
-    selectValue = 'Узи';
-    selectOptionList: Array<string> = ['Узи', 'Осмотр легких с помощью лазера из космоса'];
+    // selectValue = ;
+    documentData: IDocument = JSON.parse(JSON.stringify(this.document));
 
+    get documentTypes() {
+      return this.$store.state.storage.documentTypes;
+    }
+
+    get selectValue() {
+      const findItem = this.documentTypes.find((documentType: IDocumentType) => documentType.value === this.documentData.type_doc);
+      return findItem ? findItem.description : '';
+    }
 
     @Emit('close-modal')
     closeModal() {
       return false;
     }
 
+    @Emit('edit-document')
+    editDocument() {
+      const { date, name, type_doc } = this.documentData;
+      return {
+        date,
+        name,
+        type_doc,
+      };
+    }
+
+    inputSelect(value: IDocumentType) {
+      if (this.document.type_doc === 1) {
+        this.$store.dispatch('error/showErrorNotice',
+          { message: 'Расшифрованные анализы будут отвязаны от документа, но сохраняться в системе' },
+          { root: true },
+        );
+      }
+
+      this.documentData.type_doc = value.value;
+    }
+
     changeDate(value: string) {
-      this.date = value;
+      this.documentData.date = value;
     }
   }
 </script>

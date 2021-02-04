@@ -15,7 +15,7 @@
         </template>
       </main-btn>
 
-      <img src="@/assets/file.jpg" class="modal__file-img" alt="" v-if="currentPage === 1">
+      <img :src="fileList[currentPage - 1].file_link" class="modal__file-img" alt="" v-if="!countIsPdf">
 
       <div class="modal__pdf-block" v-else>
         <img src="@/assets/Pdf.png" alt="" class="modal__pdf-block-pdf-icon">
@@ -23,19 +23,21 @@
 
         <q-btn class="modal__pdf-block-btn">
           <icon name="next-icon" class="modal__pdf-block-btn-icon"/>
-          <span class="modal__pdf-block-btn-text">Открыть в новой вкладке</span>
+          <a :href="fileList[currentPage - 1].file_link" target="_blank" class="modal__pdf-block-btn-text">
+            Открыть в новой вкладке
+          </a>
         </q-btn>
       </div>
 
       <div class="modal__action-block-wrapper">
         <div class="modal__action-block">
           <main-btn
-            class="modal__action-block-btn"
-            :type="'only-icon'"
-            :disabled="currentPage === 1"
-            :width="32"
-            :height="32"
-            @click-btn="btnPrevClick"
+              class="modal__action-block-btn"
+              :type="'only-icon'"
+              :disabled="currentPage === 1"
+              :width="32"
+              :height="32"
+              @click-btn="btnPrevClick"
           >
             <template v-slot:icon>
               <icon name="next-icon" class="modal__action-block-btn-icon"/>
@@ -43,14 +45,14 @@
           </main-btn>
 
           <div class="modal__action-block-middle-wrapper">
-            <icon name="delete-icon" class="modal__action-block-delete-icon"/>
-            <icon name="download-icon" class="modal__action-block-download-icon"/>
+            <icon name="delete-icon" class="modal__action-block-delete-icon" @click="toggleDialogModal(true)"/>
+            <icon name="download-icon" class="modal__action-block-download-icon" @click="downloadFile"/>
           </div>
 
           <main-btn
               class="modal__action-block-btn"
               :type="'only-icon'"
-              :disabled="currentPage === countPages.length + 1"
+              :disabled="currentPage === countPages"
               :width="32"
               :height="32"
               @click-btn="btnNextClick"
@@ -62,33 +64,102 @@
         </div>
       </div>
     </div>
+
+    <dialog-modal
+        :is-dialog-modal-open="isDialogModalOpen"
+        :title="'Вы точно хотите удалить файл? '"
+        :btn2-text="'Отмена'"
+        @close-modal="toggleDialogModal"
+    >
+      <template v-slot:btn1>
+        <main-btn
+            class="modal__delete-file-btn"
+            :type="'small-bg'"
+            :text="'Удалить'"
+            :width="105"
+            :height="42"
+            :bcg-color="'#FF7C7C'"
+            @click-btn="deleteFile"
+        >
+          <template v-slot:icon>
+            <icon
+                name="delete-icon"
+                class="modal__delete-file-btn-icon"
+            />
+          </template>
+        </main-btn>
+      </template>
+    </dialog-modal>
   </q-dialog>
 </template>
 
 <script lang="ts">
-  import {Component, Emit, Prop, Vue} from 'vue-property-decorator'
+  import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
   import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import DialogModal from '@/components/modals/DialogModal.vue';
+  import Axios from 'axios';
 
   @Component({
-    components: { MainBtn }
+    components: { DialogModal, MainBtn },
   })
   export default class FileListSliderModal extends Vue {
-    @Prop({required: true}) isFileListSliderModalOpen: boolean
+    @Prop({ required: true }) isFileListSliderModalOpen: boolean;
+    @Prop({ required: true }) fileList: IStorage.IFile[];
+    @Prop({ required: true }) documentId: number;
 
-    countPages = "2"
-    currentPage = 1
+    isDialogModalOpen = false;
+    countPages = this.fileList.length;
+    currentPage = 1;
 
     @Emit('close-modal')
     closeModal() {
-      return false
+      return false;
+    }
+
+    get countIsPdf() {
+      const link = this.fileList[this.currentPage - 1].file_link;
+      return link.indexOf('.pdf') !== -1;
+    }
+
+    toggleDialogModal(val: boolean) {
+      this.isDialogModalOpen = val;
     }
 
     btnPrevClick() {
-      this.currentPage--
+      this.currentPage--;
     }
 
     btnNextClick() {
-      this.currentPage++
+      this.currentPage++;
+    }
+
+    deleteFile() {
+      const payload = {
+        documentId: this.documentId,
+        fileId: this.fileList[this.currentPage - 1].id,
+      };
+
+      const isResult = this.$store.dispatch('storage/deleteFile', payload);
+      isResult && this.closeModal();
+      this.isDialogModalOpen = false
+    }
+
+    downloadFile() {
+      Axios({
+        url: `${this.fileList[this.currentPage - 1].file_link}`,
+        method: 'GET',
+        responseType: 'blob',
+      }).then((response: any) => {
+        const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+        const fileLink = document.createElement('a');
+
+        fileLink.href = fileURL;
+        fileLink.setAttribute('download', `${this.fileList[this.currentPage - 1].file_link}`);
+        document.body.appendChild(fileLink);
+
+        fileLink.click();
+      });
     }
   }
 </script>
@@ -124,6 +195,8 @@
     }
 
     &__file-img {
+      max-width: 495px;
+
       @include media-breakpoint-up($breakpoint-sm) {
         max-width: 240px;
       }
@@ -165,6 +238,7 @@
       }
 
       &-btn-text {
+        text-decoration: none;
         margin-left: 14px;
         text-transform: none;
         color: $accent-color;
@@ -222,6 +296,15 @@
         cursor: pointer;
         width: 24px;
         height: 24px;
+        color: $black-05;
+      }
+    }
+
+    &__delete-file-btn {
+      &-icon {
+        width: 12px;
+        height: 14px;
+        color: $light-white;
       }
     }
   }

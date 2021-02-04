@@ -78,9 +78,9 @@
   export default class StoragePage extends Vue {
     isCheckboxValue = false;
     isFileModalOpen = false;
-    selectValue = 'Сортировать';
+    selectValue = 'Сортировка';
     selectOptionList: Array<string> = [
-      'Сортировать',
+      'Сортировка',
       'По дате загрузки по убыванию',
       'По дате загрузки по возрастанию',
       ' По дате исследования по убыванию',
@@ -89,38 +89,10 @@
       'Сначала расшифрованные',
       'Сначала нерасшифрованные',
     ];
-    documentList: IStorage.IDocument[] = [
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        type: 1,
-        id: '1',
-      },
-      {
-        name: 'УЗИ живота',
-        type: 2,
-        id: '2',
-      },
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        type: 1,
-        id: '3',
-      },
-      {
-        name: 'УЗИ живота',
-        type: 2,
-        id: '4',
-      },
-      {
-        name: 'Биохический анализ крови с подсчетом лейкцитарн. форм.',
-        type: 1,
-        id: '5',
-      },
-      {
-        name: 'УЗИ живота',
-        type: 2,
-        id: '6',
-      },
-    ];
+
+    get documentList(): IStorage.IDocument[] {
+      return this.$store.state.storage.documentList
+    };
 
     inputSelect(val: string) {
       this.selectValue = val;
@@ -136,6 +108,11 @@
 
     toggleCheckboxValue() {
       this.isCheckboxValue = !this.isCheckboxValue;
+    }
+
+    mounted() {
+      this.$store.dispatch('storage/loadDocuments');
+      this.$store.dispatch('storage/getDocumentTypes')
     }
   }
 </script>

@@ -3,8 +3,8 @@
     <div class="document-page__header">
       <div class="document-page__header-wrapper">
         <span class="document-page__header-event-text">Анализ</span>
-        <span class="document-page__header-file-text">PDF</span>
-        <span class="document-page__header-date-text">Загрузка 22.05.2020</span>
+        <span
+            class="document-page__header-date-text">Загрузка {{$date(new Date(document.created_at), 'dd.MM.yyyy')}}</span>
       </div>
 
       <div class="document-page__header-wrapper">
@@ -44,6 +44,9 @@
   import FileItem from '@/components/storageSingleDocumentPage/FileItem.vue';
   import { IAnalyzes } from '@/interfaces/analyzes.interface';
   import StorageAnalyzesCard from '@/components/storagePage/StorageAnalyzesCard.vue';
+  import { IRouter } from '@/interfaces/router.interface';
+  import { IStorage } from '@/interfaces/storage.interface';
+  import ROUTE_NAME = IRouter.ROUTE_NAME;
 
   @Component({
     components: { StorageAnalyzesCard, FileItem, InfoBlock },
@@ -99,6 +102,17 @@
         units: 'МЕ/л',
       },
     ];
+
+    get document(): IStorage.IDocument {
+      return this.$store.state.storage.document;
+    };
+
+    async mounted() {
+      const isResult = await this.$store.dispatch('storage/loadDocument', this.$route.params.id);
+      !isResult && await this.$router.push({ name: ROUTE_NAME.STORAGE_PAGE });
+
+      await this.$store.dispatch('storage/getDocumentTypes')
+    }
   }
 </script>
 
@@ -120,13 +134,6 @@
         font-size: 14px;
         line-height: 130%;
         color: $black-01;
-      }
-
-      &-file-text {
-        margin-left: 15px;
-        color: $black-04;
-        font-size: 14px;
-        line-height: 130%;
       }
 
       &-date-text {

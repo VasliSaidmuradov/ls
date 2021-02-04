@@ -12,7 +12,9 @@
         hide-dropdown-icon
         :option-label='optionsLabel'
         :label="selectLabel"
+        :option-label="optionLabel"
         :value="value"
+        :option-value="optionValue"
         :options="options"
         :multiple="multiple"
         :disable="disabled"
@@ -70,6 +72,8 @@
   export default class MainSelect extends Vue {
     @Prop({ required: true }) value: number | string | object;
     @Prop({ required: true }) options: Array<number> | Array<string> | Array<object>;
+    @Prop() optionValue: string;
+    @Prop() optionLabel: string;
     @Prop() multiple: boolean;
     @Prop() labelTitle: string;
     @Prop() selectLabel: string;
