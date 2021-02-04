@@ -124,50 +124,58 @@ export default class AnalyzesByCategoryActions extends Vue {
     const analyzes = [...this.analyzeResultsList];
     let result = [];
 
-    if (key === 'default') {
-      result = this.defaultAnalyzeResultsList;
-    } else if (key === 'desc') {
-      result = [...analyzes.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))];
-    } else if (key === 'asc') {
-      result = [...analyzes.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))];
-    } else if (key === 'labstory') {
-      result = [...analyzes
-        .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
-        .sort((a, b) => a.laboratory_id - b.laboratory_id)
-      ];
-    } else if (key === 'otherLabs') {
-      result = [...analyzes
-        .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
-        .sort((a, b) => b.laboratory_id - a.laboratory_id)
-      ];
-    } else if (key === 'positive') {
-      result = [...analyzes
-        .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
-        .sort((a, b) => a.laboratory_id - b.laboratory_id)
-        .sort((a, b) => {
-        const { min: aMin, max: aMax } = a.ranges;
-        const { min: bMin, max: bMax } = b.ranges;
 
-        const isPosA = aMin <= a.value && a.value <= aMax;
-        const isPosB = bMin <= b.value && b.value <= bMax;
+    switch(key) {
+      case 'default':
+        result = this.defaultAnalyzeResultsList;
+        break;
+      case 'desc':
+        result = [...analyzes.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))];
+        break;
+      case 'asc':
+        result = [...analyzes.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))];  
+        break;
+      case 'labstory':
+        result = [...analyzes
+          .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+          .sort((a, b) => a.laboratory_id - b.laboratory_id)
+        ];
+        break;
+      case 'otherLabs':
+        result = [...analyzes
+          .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+          .sort((a, b) => b.laboratory_id - a.laboratory_id)
+        ];
+        break;
+      case 'positive':
+        result = [...analyzes
+          .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+          .sort((a, b) => a.laboratory_id - b.laboratory_id)
+          .sort((a, b) => {
+          const { min: aMin, max: aMax } = a.ranges;
+          const { min: bMin, max: bMax } = b.ranges;
 
-        return +isPosB - +isPosA;
-      })]
-    } else if (key === 'negative') {
-      result = [...analyzes
-        .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
-        .sort((a, b) => a.laboratory_id - b.laboratory_id)
-        .sort((a, b) => {
-        const { min: aMin, max: aMax } = a.ranges;
-        const { min: bMin, max: bMax } = b.ranges;
+          const isPosA = aMin <= a.value && a.value <= aMax;
+          const isPosB = bMin <= b.value && b.value <= bMax;
 
-        const isPosA = aMin <= a.value && a.value <= aMax;
-        const isPosB = bMin <= b.value && b.value <= bMax;
+          return +isPosB - +isPosA;
+        })]
+        break;
+      case 'negative':
+        result = [...analyzes
+          .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+          .sort((a, b) => a.laboratory_id - b.laboratory_id)
+          .sort((a, b) => {
+          const { min: aMin, max: aMax } = a.ranges;
+          const { min: bMin, max: bMax } = b.ranges;
 
-        return +isPosA - +isPosB;
-      })]
+          const isPosA = aMin <= a.value && a.value <= aMax;
+          const isPosB = bMin <= b.value && b.value <= bMax;
+
+          return +isPosA - +isPosB;
+        })]
+        break;
     }
-
     this.$store.commit('analyzes/setPropertyInStore', { name: 'analyzeResultsList', value: result });
   }
   showFilters() {

@@ -59,7 +59,7 @@
           <template v-if="isGrouped">
             <div
               v-for="analyzeResult in Object.entries(groupedResults).filter((el) => el[1].length)"
-              :key="`${analyzeResult[0]}${Math.random()}`"
+              :key="`${analyzeResult[0]}`"
             >
               <div
                 v-if="analyzeRubrics.find((el) => analyzeResult[0].includes(el.name)).parent_rubric_name"
@@ -80,14 +80,14 @@
               <div class="analyzes-by-category__content-value-content">
                 <AnalyzesBaCategoryCard
                   v-for="analyze in analyzeResult[1]"
-                  :key="`${analyze.id}${Math.random()}`"
+                  :key="`${analyze.id}${analyzeResult[0]}`"
                   :data="analyze"
                 />
               </div>
             </div>
           </template>
           <template v-else>
-            <div v-for="analyze in analyzeResults" :key="`${analyze.id}${Math.random()}`">
+            <div v-for="analyze in []" :key="`${analyze.id}`">
               <AnalyzesBaCategoryCard :data="analyze" />
             </div>
           </template>

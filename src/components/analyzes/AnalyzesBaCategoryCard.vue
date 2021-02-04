@@ -40,9 +40,7 @@
           {{ data.laboratory }}
         </div>
         <div class="analyzes-by-category-card__left-date">
-          <!-- {{$date(data.date, 'dd MMMM yyyy')}} -->
           {{ data.date }}
-          {{ data.rubrics }}
         </div>
 
         <button class="analyzes-by-category-card__left-btn">
@@ -67,7 +65,7 @@ import { IAnalyzes } from '@/interfaces/analyzes.interface';
   },
 })
 export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
-  @Prop() data: IAnalyzes.IAnalyzeResult;
+  @Prop({ default: () => ({})}) data: IAnalyzes.IAnalyzeResult;
 
   get isCompareMode(): boolean {
     return this.$store.state.analyzes.compareMode;
