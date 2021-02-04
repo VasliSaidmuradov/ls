@@ -10,7 +10,7 @@
       <div class="analyzes-by-category-actions__sort">
         <main-select
             :value="sortedValue"
-            :options="selectOptionList"
+            :options="selectOptionList.map(el => el.text)"
             :border-color="'#E9E8FF'"
             @input-select="inputSelect"
         >
@@ -72,18 +72,18 @@ import AnalyzesSelect from '@/components/analyzes/AnalyzesSelect.vue';
 })
 export default class AnalyzesByCategoryActions extends Vue {
   sortedValue = 'Сортировать'
-  selectOptionList: Array<string> = [
-    'Сортировать',
-    'По дате загрузки по убыванию',
-    'По дате загрузки по возрастанию',
-    ' По дате исследования по убыванию',
-    'По дате исследования по возрастанию',
-    ' По типу исследования',
-    'Сначала расшифрованные',
-    'Сначала нерасшифрованные',
+  selectOptionList: Array<object> = [
+    { key: 'default', text: 'Сортировать'},
+    { key: 'desc', text: 'По дате загрузки по убыванию' },
+    { key: 'asc', text: 'По дате загрузки по возрастанию' },
+    { key: 'labstory', text: 'Сначала лабстори' },
+    { key: 'otherLabs', text: 'Сначала другие клиники' },
+    { key: 'positive', text: 'Сначала положительные результаты' },
+    { key: 'negative', text: 'Сначала отрицательные результаты' },
   ];
   checkboxState = {}
 
+  mounted() {}
   destoyed() {
     this.resetFilters();
   }
@@ -91,12 +91,16 @@ export default class AnalyzesByCategoryActions extends Vue {
   get isCompareMode(): boolean {
     return this.$store.state.analyzes.compareMode;
   }
-
   get checkBoxValues(): {} {
     this.checkboxState = {...this.$store.state.analyzes.checkBoxValues};
     return this.$store.state.analyzes.checkBoxValues;
   }
-
+  get analyzeResultsList() {
+    return this.$store.state.analyzes.analyzeResultsList;
+  }
+  get defaultAnalyzeResultsList() {
+    return this.$store.state.analyzes.defaultAnalyzeResultsList;
+  }
   get checkedArr(): number {
     return this.$store.getters['analyzes/checkedArr'];
   }
@@ -104,11 +108,66 @@ export default class AnalyzesByCategoryActions extends Vue {
   onCheckChange(key: number) {
     this.checkboxState[key] = !this.checkboxState[key];
   }
-
   inputSelect(value: string) {
-    this.sortedValue = value;
-  }
+    const selected = this.selectOptionList.find(el => el.text === value);
+    const { key, text } = selected;
 
+    this.sortedValue = text;
+    this.sort(key);
+  }
+  sort(key) {
+    const analyzes = [...this.analyzeResultsList];
+    const keyList = this.selectOptionList.map(el => el.key);
+    let result = [];
+
+    const isLabstory = analyzes.map(el => el.laboratory_id === 0);
+
+    if (key === 'default') {
+      result = this.defaultAnalyzeResultsList;
+    } else if (key === 'desc') {
+      result = [...analyzes.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))];
+    } else if (key === 'asc') {
+      result = [...analyzes.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))];
+    } else if (key === 'labstory') {
+      result = [...analyzes
+        .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+        .sort((a, b) => a.laboratory_id - b.laboratory_id)
+      ];
+    } else if (key === 'otherLabs') {
+      result = [...analyzes
+        .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+        .sort((a, b) => b.laboratory_id - a.laboratory_id)
+      ];
+    } else if (key === 'positive') {
+      result = [...analyzes
+        .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+        .sort((a, b) => a.laboratory_id - b.laboratory_id)
+        .sort((a, b) => {
+        const { min: aMin, max: aMax } = a.ranges;
+        const { min: bMin, max: bMax } = b.ranges;
+
+        const isPosA = aMin <= a.value && a.value <= aMax;
+        const isPosB = bMin <= b.value && b.value <= bMax;
+
+        return isPosB - isPosA;
+      })]
+    } else if (key === 'negative') {
+      result = [...analyzes
+        .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+        .sort((a, b) => a.laboratory_id - b.laboratory_id)
+        .sort((a, b) => {
+        const { min: aMin, max: aMax } = a.ranges;
+        const { min: bMin, max: bMax } = b.ranges;
+
+        const isPosA = aMin <= a.value && a.value <= aMax;
+        const isPosB = bMin <= b.value && b.value <= bMax;
+
+        return isPosA - isPosB;
+      })]
+    }
+
+    this.$store.commit('analyzes/setPropertyInStore', { name: 'analyzeResultsList', value: result });
+  }
   showFilters() {
     bus.$emit(IAnalyzes.BusEvents.SHOW_FILTER);
   }

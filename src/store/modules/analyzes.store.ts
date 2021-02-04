@@ -62,6 +62,7 @@ export default {
     analyzeBiomarkerList: null,
     analyzeResultsList: [],
     analyzeRubricsList: [],
+    defaultAnalyzeResultsList: [],
     analyzeRubric: {},
     selectedRubrics: [],
     selectedRubricIds: [],
@@ -188,7 +189,7 @@ export default {
 
       commit('setPropertyInStore', { name: 'addedAnalyzes', value: items });
     },
-    deleteAnalyzes({ state, commit }: AnalyzesStore, id: string) {
+    deleteAnalyzes({ state, commit }: AnalyzesStore, id: number) {
       const items = state.addedAnalyzes;
       commit('setPropertyInStore', { name: 'addedAnalyzes', value: items.filter(item => item.id !== id) });
     },
@@ -219,12 +220,16 @@ export default {
           last.biomarker = `Концентрация в сыворотке TEST #${i}`;
           last.id = 9999999 + i;
           last.rubrics = [8015 + i, 9613 + i];
-          last.value = '111' + i;
+          last.value = +'37' - i;
           last.biomarker_id = 9999900000 + i;
+          last.laboratory_id = 10;
+          last.laboratory = 'Other Lab' + (i + 1);
+          last.date = `2020-12-${20 - i + 1}`;
           data.results.push(last);
         }
         console.log('analyzes results LAST: ', data.results);
         commit('setPropertyInStore', { name: 'analyzeResultsList', value: data?.results });
+        commit('setPropertyInStore', { name: 'defaultAnalyzeResultsList', value: data?.results });
       } catch (error) {
         console.log(error);
         dispatch('error/showErrorNotice', { message: error.errorData?.phone[0] }, { root: true });
@@ -263,6 +268,9 @@ export default {
       const { data } = await analyzesResource.getAnalyzeRubric(id);
       commit('setPropertyInStore', { name: '', value: data });
     },
+
+    //
+    sortAnalyzeResults({ commit }: AnalyzesStore, key: string) {},
   },
 
   getters: {
