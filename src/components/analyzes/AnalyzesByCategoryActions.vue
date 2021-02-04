@@ -10,7 +10,7 @@
       <div class="analyzes-by-category-actions__sort">
         <main-select
             :value="sortedValue"
-            :options="selectOptionList"
+            :options="selectOptionList.map(el => el.text)"
             :border-color="'#E9E8FF'"
             @input-select="inputSelect"
         >
@@ -26,7 +26,7 @@
         </template>
       </MainBtn>
 
-      <div class="analyzes-by-category-actions__sort-compare">
+      <div v-if="!isCompareMode" class="analyzes-by-category-actions__sort-compare">
         <MainBtn text="Сравнить анализы"
                  @click-btn="setCompareMode"
                  border-color="transparent"
@@ -39,9 +39,8 @@
     </div>
 
     <div class="fake-select__checkbox">
-      <CheckboxInput :value="isGrouping" label="Включить группировку" @change-value="groupingChange"/>
       <MainBtn type="small"
-               v-if="checkedArr.length"
+               v-if="checkedArr"
                @click-btn="resetFilters"
                text="Сбросить группировку"
                bcg-color="transparent"
@@ -55,13 +54,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue, Emit } from 'vue-property-decorator';
 import MainSelect from '@/components/UI/MainSelect.vue';
 import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 import {IAnalyzes} from '@/interfaces/analyzes.interface';
 import {bus} from '@/plugins/bus';
 import AnalyzesSelect from '@/components/analyzes/AnalyzesSelect.vue';
+
+type SelectOption = {
+  key: string;
+  text: string;
+}
 
 @Component({
   components: {
@@ -72,76 +76,129 @@ import AnalyzesSelect from '@/components/analyzes/AnalyzesSelect.vue';
   }
 })
 export default class AnalyzesByCategoryActions extends Vue {
-  isGrouping = false;
   sortedValue = 'Сортировать'
-  selectOptionList: Array<string> = [
-    'Сортировать',
-    'По дате загрузки по убыванию',
-    'По дате загрузки по возрастанию',
-    ' По дате исследования по убыванию',
-    'По дате исследования по возрастанию',
-    ' По типу исследования',
-    'Сначала расшифрованные',
-    'Сначала нерасшифрованные',
+  selectOptionList: SelectOption[] = [
+    { key: 'default', text: 'Сортировать'},
+    { key: 'desc', text: 'По дате загрузки по убыванию' },
+    { key: 'asc', text: 'По дате загрузки по возрастанию' },
+    { key: 'labstory', text: 'Сначала лабстори' },
+    { key: 'otherLabs', text: 'Сначала другие клиники' },
+    { key: 'positive', text: 'Сначала положительные результаты' },
+    { key: 'negative', text: 'Сначала отрицательные результаты' },
   ];
+  checkboxState: { [key: string]: boolean } = {}
 
-  checkedArr: boolean[] = [];
+  mounted() {}
+  destoyed() {
+    this.resetFilters();
+  }
 
-  get compareMode(): boolean {
+  get isCompareMode(): boolean {
     return this.$store.state.analyzes.compareMode;
   }
-
-  get checkBoxValues(): IAnalyzes.ICheckArr {
+  get checkBoxValues(): { [key: string]: boolean } {
+    this.checkboxState = {...this.$store.state.analyzes.checkBoxValues};
     return this.$store.state.analyzes.checkBoxValues;
   }
-
-  onCheckChange(key: keyof IAnalyzes.ICheckArr) {
-    this.checkBoxValues[key] = !this.checkBoxValues[key];
+  get analyzeResultsList() {
+    return this.$store.state.analyzes.analyzeResultsList;
+  }
+  get defaultAnalyzeResultsList() {
+    return this.$store.state.analyzes.defaultAnalyzeResultsList;
+  }
+  get checkedArr(): number {
+    return this.$store.getters['analyzes/checkedArr'];
   }
 
+  onCheckChange(key: number) {
+    this.checkboxState[key] = !this.checkboxState[key];
+  }
   inputSelect(value: string) {
-    this.sortedValue = value;
-  }
+    const selected = this.selectOptionList.find(el => el.text === value);
+    const { key, text } = selected as SelectOption;
 
-  resetFilters() {
-    const items: IAnalyzes.ICheckArr = this.checkBoxValues;
-    for (const key in this.checkBoxValues) {
-      items[key as keyof IAnalyzes.ICheckArr] = false;
+    this.sortedValue = text;
+    this.sort(key);
+  }
+  sort(key: string) {
+    const analyzes = [...this.analyzeResultsList];
+    let result = [];
+
+
+    switch(key) {
+      case 'default':
+        result = this.defaultAnalyzeResultsList;
+        break;
+      case 'desc':
+        result = [...analyzes.sort((a, b) => Date.parse(b.date) - Date.parse(a.date))];
+        break;
+      case 'asc':
+        result = [...analyzes.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))];  
+        break;
+      case 'labstory':
+        result = [...analyzes
+          .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+          .sort((a, b) => a.laboratory_id - b.laboratory_id)
+        ];
+        break;
+      case 'otherLabs':
+        result = [...analyzes
+          .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+          .sort((a, b) => b.laboratory_id - a.laboratory_id)
+        ];
+        break;
+      case 'positive':
+        result = [...analyzes
+          .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+          .sort((a, b) => a.laboratory_id - b.laboratory_id)
+          .sort((a, b) => {
+          const { min: aMin, max: aMax } = a.ranges;
+          const { min: bMin, max: bMax } = b.ranges;
+
+          const isPosA = aMin <= a.value && a.value <= aMax;
+          const isPosB = bMin <= b.value && b.value <= bMax;
+
+          return +isPosB - +isPosA;
+        })]
+        break;
+      case 'negative':
+        result = [...analyzes
+          .sort((c, d) => Date.parse(d.date) - Date.parse(c.date))
+          .sort((a, b) => a.laboratory_id - b.laboratory_id)
+          .sort((a, b) => {
+          const { min: aMin, max: aMax } = a.ranges;
+          const { min: bMin, max: bMax } = b.ranges;
+
+          const isPosA = aMin <= a.value && a.value <= aMax;
+          const isPosB = bMin <= b.value && b.value <= bMax;
+
+          return +isPosA - +isPosB;
+        })]
+        break;
     }
-
-    this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: items});
-
-    this.onSelect();
+    this.$store.commit('analyzes/setPropertyInStore', { name: 'analyzeResultsList', value: result });
   }
-
   showFilters() {
     bus.$emit(IAnalyzes.BusEvents.SHOW_FILTER);
   }
 
+  @Emit('setFilter')
   onSelect() {
-    this.checkedArr = Object.values(this.checkBoxValues).filter(item => item);
-    this.isGrouping = Boolean(this.checkedArr.length);
-
-    bus.$emit(IAnalyzes.BusEvents.SET_CATEGORY, Boolean(this.checkedArr.length));
+    bus.$emit(IAnalyzes.BusEvents.SET_CATEGORY, Boolean(this.checkedArr));
   }
 
   setCompareMode() {
-    this.$store.commit('analyzes/setPropertyInStore', {name: 'compareMode', value: !this.compareMode})
+    this.$store.commit('analyzes/setPropertyInStore', {name: 'compareMode', value: !this.isCompareMode});
   }
 
-  groupingChange() {
-    this.isGrouping = !this.isGrouping;
-    const items: IAnalyzes.ICheckArr = this.checkBoxValues;
-
-    if (!this.checkedArr.length) {
-      for (const key in this.checkBoxValues) {
-        items[key as keyof IAnalyzes.ICheckArr] = true;
-      }
-
-      this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: items});
-
-      this.onSelect();
+  resetFilters() {
+    const items = this.checkboxState;
+    for (const key in items) {
+      items[key] = false;
     }
+    this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: items});
+    this.$store.commit('analyzes/setPropertyInStore', {name: 'selectedRubricIds', value: []});
+    this.onSelect();
   }
 }
 </script>
@@ -184,6 +241,7 @@ export default class AnalyzesByCategoryActions extends Vue {
       align-items: center;
 
       @include media-breakpoint-up($breakpoint-xs) {
+        // display: none;
         flex-direction: column;
         align-items: flex-start;
       }
@@ -191,8 +249,6 @@ export default class AnalyzesByCategoryActions extends Vue {
   }
 
   .reset-category {
-    margin-left: 54px;
-
     ::v-deep.main-btn__icon-wrapper {
       color: $status-red;
       margin-right: 13px;

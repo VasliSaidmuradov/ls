@@ -1,19 +1,27 @@
-import {IDashBoard} from '@/interfaces/dashboard.interface';
+import { IDashBoard } from '@/interfaces/dashboard.interface';
 import IRanges = IDashBoard.IRanges;
 
 export namespace IAnalyzesStore {
   export interface IState {
     addedAnalyzes: IAnalyzes.IBiomarker[];
+    addedAnalyzeItems: any[];
     compareMode: boolean;
-    checkBoxValues: IAnalyzes.ICheckArr;
     laboratoriesList: IAnalyzes.ILaboratories[];
     biomarkersList: IAnalyzes.IBiomarker[];
     commentAnalyzesId: null | string | number;
+    comparingItems: number[];
+    checkBoxValues: { [key: string]: boolean };
+    checkedArr: number;
+    analyzeBiomarkerList: IAnalyzesApi.IAnalyzeBiomarkerList | null;
+    analyzeResultsList: IAnalyzes.IAnalyzeResult[];
+    analyzeRubricsList: IAnalyzes.IAnalyzeRubric[];
+    analyzeRubric: IAnalyzes.IAnalyzeRubric;
+    selectedRubrics: IAnalyzes.IAnalyzeRubric[];
+    selectedRubricIds: number[];
   }
 }
 
 export namespace IAnalyzes {
-
   export enum BusEvents {
     OPEN_ADD_ANALYZES_MODAL = 'addAnalyzesModal:open',
     OPEN_ADD_ANALYZES_COMMENT = 'addAnalyzesComment:open',
@@ -44,23 +52,39 @@ export namespace IAnalyzes {
     biomarker_id: number;
   }
 
+  export interface IAnalyzeResult {
+    biomarker: string;
+    biomarker_id: number;
+    categories: number[];
+    comment: string | null;
+    date: Date | string;
+    id: number;
+    is_predicted: boolean;
+    laboratory: string;
+    laboratory_id: number | null;
+    predicted_biomarker: string | null;
+    prev_result: number;
+    ranges: IRanges;
+    rubrics: number[];
+    status: number;
+    unit: string | null;
+    unit_id: number | null;
+    value: number;
+  }
+
+  export interface IAnalyzeRubric {
+    id: number;
+    name: string;
+    parent_rubric_name: string;
+    subrubrics: IAnalyzeRubric[];
+  }
+
   export interface IAddedAnalyzes extends IAnalyzesForAddItem {
     id?: string;
     date?: Date | string;
     result?: null | number;
     lab?: string;
     range?: string;
-  }
-
-  export interface ICheckArr {
-    check1: boolean;
-    check2: boolean;
-    check3: boolean;
-    check4: boolean;
-    check5: boolean;
-    check6: boolean;
-    check7: boolean;
-    check8: boolean;
   }
 
   export interface ILaboratories {
@@ -79,7 +103,20 @@ export namespace IAnalyzesApi {
     biomarkers: IAnalyzes.IBiomarker;
     count: number;
   }
+  export interface IAnalyzeBiomarkerList {
+    count: number;
+    biomarkers: any[];
+  }
+
+  export interface IAnalyzesResultsList {
+    results: any[];
+  }
+
+  export interface IAnalyzeRubrics {
+    rubrics: any[];
+  }
+
+  export interface IAnalyzeCategories {
+    categories: any[];
+  }
 }
-
-
-

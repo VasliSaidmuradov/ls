@@ -1,5 +1,6 @@
 <template>
   <div class="all-analyzes layout">
+    <!-- <button @click="createAnalyze">ADD ANALYZE</button> -->
     <h4 class="all-analyzes__title">Все анализы</h4>
 
     <div class="all-analyzes__tabs">
@@ -42,8 +43,7 @@ import {bus} from '@/plugins/bus';
 })
 export default class AllAnalyzesPage extends Vue {
 
-
-  activeTab = IAnalyzes.TabsName.BY_CATEGORY
+  activeTab = IAnalyzes.TabsName.ALL_ANALYZES
 
   tabsData = [
     {
@@ -60,8 +60,13 @@ export default class AllAnalyzesPage extends Vue {
 
   showFilter = false;
 
-  mounted() {
-    bus.$on(IAnalyzes.BusEvents.SHOW_FILTER, () => this.showFilter = true)
+  async mounted() {
+    // this.$store.dispatch('analyzes/analyzeBiomarkers');
+    await this.$store.dispatch('analyzes/analyzeRubrics');
+    await this.$store.dispatch('analyzes/setCheckBoxValues');
+    await this.$store.dispatch('analyzes/analyzeResultsList');
+
+    bus.$on(IAnalyzes.BusEvents.SHOW_FILTER, () => this.showFilter = true);
   }
 
   showFilterClose() {
@@ -78,6 +83,10 @@ export default class AllAnalyzesPage extends Vue {
 
   destroyed() {
     bus.$off(IAnalyzes.BusEvents.SHOW_FILTER);
+  }
+
+  createAnalyze() {
+    this.$store.dispatch('analyzes/createAnalyze', null, { root: true });
   }
 }
 </script>
