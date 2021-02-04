@@ -1,34 +1,43 @@
 <template>
   <div class="analyzes-by-category-card">
     <div class="analyzes-by-category-card__compare" v-if="isCompareMode">
-      <CheckboxInput :value="comparingItems.includes(data.id)" @change-value="compareChange(data.id)" label="Добавить в сравнение"/>
+      <CheckboxInput
+        :value="comparingItems.includes(data.id)"
+        @change-value="compareChange(data.id)"
+        label="Добавить в сравнение"
+      />
     </div>
-    <div class="analyzes-by-category-card__wrap" @click="go(data.id)" :class="{'analyzes-by-category-card--compare':isCompareMode}">
+    <div
+      class="analyzes-by-category-card__wrap"
+      @click="go(data.id)"
+      :class="{ 'analyzes-by-category-card--compare': isCompareMode }"
+    >
       <div class="analyzes-by-category-card__right">
         <div class="analyzes-by-category-card__right-name">
           <div class="analyzes-by-category-card__right-name-value">
-            {{data.biomarker}}
+            {{ data.biomarker }}
           </div>
           <div class="analyzes-by-category-card__right-result">
-          <span class="analyzes-by-category-card__right-result-current">
-            <span class="value">{{data.value}}</span><span class="unit"> / {{data.unit}}</span>
-          </span>
-          <span v-if="data.prev_result" class="analyzes-by-category-card__right-result-prev">
-            <span class="value">{{data.prev_result}}</span>
-            <span class="unit"> / {{data.unit}}</span>
-          </span>
+            <span class="analyzes-by-category-card__right-result-current">
+              <span class="value">{{ data.value }}</span
+              ><span class="unit"> / {{ data.unit }}</span>
+            </span>
+            <span v-if="data.prev_result" class="analyzes-by-category-card__right-result-prev">
+              <span class="value">{{ data.prev_result }}</span>
+              <span class="unit"> / {{ data.unit }}</span>
+            </span>
           </div>
         </div>
         <div class="analyzes-by-category-card__right-values">
           <div class="analyzes-by-category-card__right-values-ranges">
-            <span class="value">{{getRanges(data.ranges)}}</span>
-            <span class="unit">{{data.unit}}</span>
+            <span class="value">{{ getRanges(data.ranges) }}</span>
+            <span class="unit">{{ data.unit }}</span>
           </div>
         </div>
       </div>
       <div class="analyzes-by-category-card__left">
         <div class="analyzes-by-category-card__right-values-lab">
-          {{data.laboratory}}
+          {{ data.laboratory }}
         </div>
         <div class="analyzes-by-category-card__left-date">
           <!-- {{$date(data.date, 'dd MMMM yyyy')}} -->
@@ -37,9 +46,9 @@
         </div>
 
         <button class="analyzes-by-category-card__left-btn">
-        <span class="analyzes-by-category-card__left-btn-icon">
-          <icon name="next-icon"></icon>
-        </span>
+          <span class="analyzes-by-category-card__left-btn-icon">
+            <icon name="next-icon"></icon>
+          </span>
         </button>
       </div>
     </div>
@@ -50,14 +59,15 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import AnalyzesMixin from '@/mixins/analyzes-mixin';
 import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
 
 @Component({
   components: {
-    CheckboxInput
-  }
+    CheckboxInput,
+  },
 })
 export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
-  @Prop() data: any
+  @Prop() data: IAnalyzes.IAnalyzeResult;
 
   get isCompareMode(): boolean {
     return this.$store.state.analyzes.compareMode;
@@ -66,11 +76,11 @@ export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
     return this.$store.state.analyzes.comparingItems;
   }
 
-  compareChange(id) {
+  compareChange(id: number) {
     this.$store.commit('analyzes/setComparingItems', id);
   }
-  go(id) {
-    this.$router.push({path: `/analyzes/${id}`});
+  go(id: number) {
+    this.$router.push({ path: `/analyzes/${id}` });
   }
 }
 </script>
@@ -123,7 +133,6 @@ export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
       margin-bottom: 10px;
     }
   }
-
 
   &__right-name-value {
     min-width: 280px;
@@ -265,7 +274,6 @@ export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
     margin-right: 100px;
     margin-left: auto;
 
-
     @include media-breakpoint-up($breakpoint-md) {
       margin-right: 20px;
       font-size: 12px;
@@ -282,7 +290,7 @@ export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
     right: -10px;
     outline: none;
     opacity: 0;
-    transition: .5s;
+    transition: 0.5s;
 
     @include media-breakpoint-up($breakpoint-md) {
       opacity: 1;
@@ -318,7 +326,7 @@ export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
   }
 
   &--compare {
-    opacity: .6;
+    opacity: 0.6;
   }
 
   @include media-breakpoint-up($breakpoint-md) {
@@ -327,5 +335,4 @@ export default class AnalyzesBaCategoryCard extends AnalyzesMixin {
     margin-bottom: 10px;
   }
 }
-
 </style>

@@ -1,8 +1,7 @@
 import { IAppState } from '@/interfaces/app-state.interface';
 import { ActionContext } from 'vuex';
 import { IAnalyzes, IAnalyzesApi, IAnalyzesStore } from '@/interfaces/analyzes.interface';
-import { IAuthStore } from '@/interfaces/auth.interface';
-// import { createObjectFormArrayWithGivenPropAndValue } from '@/plugins/helpers';
+// import { IAuthStore } from '@/interfaces/auth.interface';
 import Vue from 'vue';
 import { analyzesResource } from '@/resources/analyzes.resources';
 import { AxiosResponse, Method } from 'axios';
@@ -49,14 +48,10 @@ export default {
     ],
     addedAnalyzes: [],
     addedAnalyzeItems: [],
-
     checkBoxValues: {},
-    // checkedArr: 0,
-
     compareMode: false,
     laboratoriesList: [],
     biomarkersList: [],
-
     commentAnalyzesId: null,
     comparingItems: [],
     analyzeBiomarkerList: null,
@@ -197,41 +192,33 @@ export default {
     async analyzeBiomarkers({ commit, dispatch }: AnalyzesStore, { count, offset }: { count: number; offset: number }) {
       try {
         const { data } = await analyzesResource.getAnalyzeBiomarkers({ count, offset });
-        // console.log('analyzeBiomarkers actions: ', data);
         commit('setPropertyInStore', { name: 'analyzeBiomarkerList', value: data });
       } catch (error) {
         dispatch('error/showErrorNotice', { message: error.errorData?.phone[0] }, { root: true });
       }
     },
     setCheckBoxValues({ state, commit }: AnalyzesStore) {
-      // const values = createObjectFormArrayWithGivenPropAndValue(
-      //   [...state.analyzeRubricsList],
-      //   {},
-      //   { prop: 'subrubrics', value: false }
-      // );
       commit('setPropertyInStore', { name: 'checkBoxValues', value: {} });
     },
 
     async analyzeResultsList({ commit, dispatch }: AnalyzesStore) {
       try {
         const { data } = await analyzesResource.getAnalyzeResults();
-        for (const i of [0, 1, 2]) {
-          const last = { ...data.results[0] };
-          last.biomarker = `Концентрация в сыворотке TEST #${i}`;
-          last.id = 9999999 + i;
-          last.rubrics = [8015 + i, 9613 + i];
-          last.value = +'37' - i;
-          last.biomarker_id = 9999900000 + i;
-          last.laboratory_id = 10;
-          last.laboratory = 'Other Lab' + (i + 1);
-          last.date = `2020-12-${20 - i + 1}`;
-          data.results.push(last);
-        }
-        console.log('analyzes results LAST: ', data.results);
+        // for (const i of [0, 1, 2]) {
+        //   const last = { ...data.results[0] };
+        //   last.biomarker = `Концентрация в сыворотке TEST #${i}`;
+        //   last.id = 9999999 + i;
+        //   last.rubrics = [8015 + i, 9613 + i];
+        //   last.value = +'37' - i;
+        //   last.biomarker_id = 9999900000 + i;
+        //   last.laboratory_id = 10;
+        //   last.laboratory = 'Other Lab' + (i + 1);
+        //   last.date = `2020-12-${20 - i + 1}`;
+        //   data.results.push(last);
+        // }
         commit('setPropertyInStore', { name: 'analyzeResultsList', value: data?.results });
         commit('setPropertyInStore', { name: 'defaultAnalyzeResultsList', value: data?.results });
       } catch (error) {
-        console.log(error);
         dispatch('error/showErrorNotice', { message: error.errorData?.phone[0] }, { root: true });
       }
     },
@@ -254,23 +241,28 @@ export default {
         dispatch('analyzeResultsList');
         return response;
       } catch (error) {
-        console.log(error);
+        dispatch('error/showErrorNotice', { message: error.errorData?.phone[0] }, { root: true });
       }
     },
 
-    async analyzeRubrics({ commit }: AnalyzesStore) {
-      const { data } = await analyzesResource.getAnalyzeRubrics();
-      console.log('analyze Rubrics: ', data);
-      commit('setPropertyInStore', { name: 'analyzeRubricsList', value: data?.rubrics });
+    async analyzeRubrics({ commit, dispatch }: AnalyzesStore) {
+      try {
+        const { data } = await analyzesResource.getAnalyzeRubrics();
+        commit('setPropertyInStore', { name: 'analyzeRubricsList', value: data?.rubrics });
+        
+      } catch (error) {
+        dispatch('error/showErrorNotice', { message: error.errorData?.phone[0] }, { root: true });
+      }
     },
 
-    async analyzeRubric({ commit }: AnalyzesStore, id: number) {
-      const { data } = await analyzesResource.getAnalyzeRubric(id);
-      commit('setPropertyInStore', { name: '', value: data });
+    async analyzeRubric({ commit, dispatch }: AnalyzesStore, id: number) {
+      try {
+        const { data } = await analyzesResource.getAnalyzeRubric(id);
+        commit('setPropertyInStore', { name: 'analyzeRubric', value: data });
+      } catch (error) {
+        dispatch('error/showErrorNotice', { message: error.errorData?.phone[0] }, { root: true });
+      }
     },
-
-    //
-    sortAnalyzeResults({ commit }: AnalyzesStore, key: string) {},
   },
 
   getters: {
@@ -282,14 +274,6 @@ export default {
     },
     checkedArr(state: IAnalyzesStore.IState): number {
       return Object.values(state.checkBoxValues).filter(el => el).length;
-    },
-    getSelectedRubrics(state: IAnalyzesStore.IState): any[] {
-      const result = []!;
-      const ids = [...state.selectedRubricIds];
-      const rubrics = [...state.analyzeRubricsList];
-      // const result: {} = createObjectFormArrayWithGivenPropAndValue(rubrics, {}, { prop: 'id', value: ids[0] });
-      // console.log('result:', result);
-      return result;
     },
     getSelectedRubricIds(state: IAnalyzesStore.IState): number[] {
       return state.selectedRubricIds;

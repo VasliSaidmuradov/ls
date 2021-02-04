@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Emit, Watch } from 'vue-property-decorator';
+import { Component, Vue, Emit } from 'vue-property-decorator';
 import MainSelect from '@/components/UI/MainSelect.vue';
 import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
@@ -55,19 +55,11 @@ import MainBtn from '@/components/UI/buttons/MainBtn.vue';
   }
 })
 export default class AnalyzesSelect extends Vue {
-  checkboxState = {};
+  checkboxState: {[key: string]: any} = {};
   isHide: boolean = false;
   filteredRubrics: [] = [];
 
-  async mounted() {
-    // await this.$store.dispatch('analyzes/analyzeRubrics');
-    // await this.$store.dispatch('analyzes/setCheckBoxValues');
-  }
-
-  // @Watch('getSelectedRubricIds')
-  // funсtion(value: number[], oldValue: number[]) {
-  //   console.log('rubric ids: ', value);
-  // }
+  async mounted() {}
 
   get checkboxValues() {
     this.checkboxState = {...this.$store.state.analyzes.checkBoxValues};
@@ -86,7 +78,7 @@ export default class AnalyzesSelect extends Vue {
     return this.$store.getters['analyzes/getSelectedRubricIds'];
   }
 
-  onCheckChange(key) {
+  onCheckChange(key: number) {
     this.checkboxState[key] = !this.checkboxState[key];
     this.$store.commit('analyzes/setSelectedRubricIds', key);
     this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: this.checkboxState});

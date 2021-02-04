@@ -54,13 +54,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch, Emit } from 'vue-property-decorator';
+import { Component, Vue, Emit } from 'vue-property-decorator';
 import MainSelect from '@/components/UI/MainSelect.vue';
 import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 import {IAnalyzes} from '@/interfaces/analyzes.interface';
 import {bus} from '@/plugins/bus';
 import AnalyzesSelect from '@/components/analyzes/AnalyzesSelect.vue';
+
+type SelectOption = {
+  key: string;
+  text: string;
+}
 
 @Component({
   components: {
@@ -72,7 +77,7 @@ import AnalyzesSelect from '@/components/analyzes/AnalyzesSelect.vue';
 })
 export default class AnalyzesByCategoryActions extends Vue {
   sortedValue = 'Сортировать'
-  selectOptionList: Array<object> = [
+  selectOptionList: SelectOption[] = [
     { key: 'default', text: 'Сортировать'},
     { key: 'desc', text: 'По дате загрузки по убыванию' },
     { key: 'asc', text: 'По дате загрузки по возрастанию' },
@@ -81,7 +86,7 @@ export default class AnalyzesByCategoryActions extends Vue {
     { key: 'positive', text: 'Сначала положительные результаты' },
     { key: 'negative', text: 'Сначала отрицательные результаты' },
   ];
-  checkboxState = {}
+  checkboxState: { [key: string]: boolean } = {}
 
   mounted() {}
   destoyed() {
@@ -91,7 +96,7 @@ export default class AnalyzesByCategoryActions extends Vue {
   get isCompareMode(): boolean {
     return this.$store.state.analyzes.compareMode;
   }
-  get checkBoxValues(): {} {
+  get checkBoxValues(): { [key: string]: boolean } {
     this.checkboxState = {...this.$store.state.analyzes.checkBoxValues};
     return this.$store.state.analyzes.checkBoxValues;
   }
@@ -110,17 +115,14 @@ export default class AnalyzesByCategoryActions extends Vue {
   }
   inputSelect(value: string) {
     const selected = this.selectOptionList.find(el => el.text === value);
-    const { key, text } = selected;
+    const { key, text } = selected as SelectOption;
 
     this.sortedValue = text;
     this.sort(key);
   }
-  sort(key) {
+  sort(key: string) {
     const analyzes = [...this.analyzeResultsList];
-    const keyList = this.selectOptionList.map(el => el.key);
     let result = [];
-
-    const isLabstory = analyzes.map(el => el.laboratory_id === 0);
 
     if (key === 'default') {
       result = this.defaultAnalyzeResultsList;
@@ -149,7 +151,7 @@ export default class AnalyzesByCategoryActions extends Vue {
         const isPosA = aMin <= a.value && a.value <= aMax;
         const isPosB = bMin <= b.value && b.value <= bMax;
 
-        return isPosB - isPosA;
+        return +isPosB - +isPosA;
       })]
     } else if (key === 'negative') {
       result = [...analyzes
@@ -162,7 +164,7 @@ export default class AnalyzesByCategoryActions extends Vue {
         const isPosA = aMin <= a.value && a.value <= aMax;
         const isPosB = bMin <= b.value && b.value <= bMax;
 
-        return isPosA - isPosB;
+        return +isPosA - +isPosB;
       })]
     }
 

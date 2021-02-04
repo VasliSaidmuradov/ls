@@ -1,26 +1,30 @@
 <template>
   <div class="analyzes-by-category">
     <div class="analyzes-by-category__header">
-      <AnalyzesByCategoryActions @setFilter="setFilters"/>
+      <AnalyzesByCategoryActions @setFilter="setFilters" />
     </div>
     <div v-if="isCompareMode" class="analyzes-by-category__compare-btns">
       <div class="analyzes-by-category__go-compare">
-        <MainBtn text="Перейти к сравнению"
-                 @click-btn="go('/')"
-                 border-color="transparent"
-                 bcg-color="transparent">
+        <MainBtn
+          text="Перейти к сравнению"
+          @click-btn="goToDynamicAnalyzesPage"
+          border-color="transparent"
+          bcg-color="transparent"
+        >
           <template v-slot:icon>
             <icon name="compare-icon"></icon>
           </template>
         </MainBtn>
       </div>
       <div class="analyzes-by-category__checkbox">
-        <MainBtn type="small"
-                 v-if="true"
-                 @click-btn="resetCompareMode"
-                 text="Отменить выбор"
-                 bcg-color="transparent"
-                 class="reset-category">
+        <MainBtn
+          type="small"
+          v-if="true"
+          @click-btn="resetCompareMode"
+          text="Отменить выбор"
+          bcg-color="transparent"
+          class="reset-category"
+        >
           <template v-slot:icon>
             <icon name="close-icon"></icon>
           </template>
@@ -28,51 +32,63 @@
       </div>
     </div>
     <div class="analyzes-by-category__content">
-      <div class="analyzes-by-category__content-header"
-           v-if="!isGrouped"
-           :class="{'analyzes-by-category__content-header--compare': compareMode}">
-        <span class="analyzes-by-category__content-header-item
-              analyzes-by-category__content-header-item--value">
+      <div
+        class="analyzes-by-category__content-header"
+        v-if="!isGrouped"
+        :class="{ 'analyzes-by-category__content-header--compare': compareMode }"
+      >
+        <span class="analyzes-by-category__content-header-item analyzes-by-category__content-header-item--value">
           Биомаркер
         </span>
-        <span class="analyzes-by-category__content-header-item
-               analyzes-by-category__content-header-item--results">
+        <span class="analyzes-by-category__content-header-item analyzes-by-category__content-header-item--results">
           Значение, ед.и.
         </span>
-        <span class="analyzes-by-category__content-header-item
-              analyzes-by-category__content-header-item--ranges">
+        <span class="analyzes-by-category__content-header-item analyzes-by-category__content-header-item--ranges">
           Реф. значения
         </span>
-        <span class="analyzes-by-category__content-header-item
-              analyzes-by-category__content-header-item-lab">
+        <span class="analyzes-by-category__content-header-item analyzes-by-category__content-header-item-lab">
           Лаборатория
         </span>
-        <span class="analyzes-by-category__content-header-item
-              analyzes-by-category__content-header-item--date">
+        <span class="analyzes-by-category__content-header-item analyzes-by-category__content-header-item--date">
           Дата сдачи
         </span>
       </div>
 
       <div class="analyzes-by-category__content-value">
-        <div class="" >
+        <div class="">
           <template v-if="isGrouped">
-            <div v-for="analyzeResult in Object.entries(groupedResults).filter(el => el[1].length)" :key="`${analyzeResult[0]}${Math.random()}`">
-              <div v-if="analyzeRubrics.find(el => analyzeResult[0].includes(el.name)).parent_rubric_name" class="analyzes-by-category__content-value-title">
-                <h4 class="analyzes-by-category__content-value-category">{{ analyzeRubrics.find(el => analyzeResult[0].includes(el.name)).parent_rubric_name }}</h4>
-                <h5 class="analyzes-by-category__content-value-subcategory">{{ analyzeRubrics.find(el => analyzeResult[0].includes(el.name)).name }}</h5>
+            <div
+              v-for="analyzeResult in Object.entries(groupedResults).filter((el) => el[1].length)"
+              :key="`${analyzeResult[0]}${Math.random()}`"
+            >
+              <div
+                v-if="analyzeRubrics.find((el) => analyzeResult[0].includes(el.name)).parent_rubric_name"
+                class="analyzes-by-category__content-value-title"
+              >
+                <h4 class="analyzes-by-category__content-value-category">
+                  {{ analyzeRubrics.find((el) => analyzeResult[0].includes(el.name)).parent_rubric_name }}
+                </h4>
+                <h5 class="analyzes-by-category__content-value-subcategory">
+                  {{ analyzeRubrics.find((el) => analyzeResult[0].includes(el.name)).name }}
+                </h5>
               </div>
               <div v-else class="analyzes-by-category__content-value-title">
-                <h4 class="analyzes-by-category__content-value-category">{{ analyzeRubrics.find(el => analyzeResult[0].includes(el.name)).name }}</h4>
+                <h4 class="analyzes-by-category__content-value-category">
+                  {{ analyzeRubrics.find((el) => analyzeResult[0].includes(el.name)).name }}
+                </h4>
               </div>
               <div class="analyzes-by-category__content-value-content">
-                <AnalyzesBaCategoryCard v-for="analyze in analyzeResult[1]" :key="`${analyze.id}${Math.random()}`" :data="analyze"/>
-                <!-- {{ analyze }} -->
+                <AnalyzesBaCategoryCard
+                  v-for="analyze in analyzeResult[1]"
+                  :key="`${analyze.id}${Math.random()}`"
+                  :data="analyze"
+                />
               </div>
             </div>
           </template>
           <template v-else>
             <div v-for="analyze in analyzeResults" :key="`${analyze.id}${Math.random()}`">
-              <AnalyzesBaCategoryCard :data="analyze"/>
+              <AnalyzesBaCategoryCard :data="analyze" />
             </div>
           </template>
         </div>
@@ -82,37 +98,31 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 import AnalyzesByCategoryActions from '@/components/analyzes/AnalyzesByCategoryActions.vue';
 import AnalyzesBaCategoryCard from '@/components/analyzes/AnalyzesBaCategoryCard.vue';
-import {bus} from '@/plugins/bus';
-import {IAnalyzes} from '@/interfaces/analyzes.interface';
+import { bus } from '@/plugins/bus';
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+import { IRouter } from '@/interfaces/router.interface';
 
 @Component({
   components: {
     AnalyzesByCategoryActions,
     AnalyzesBaCategoryCard,
     MainBtn,
-  }
+  },
 })
 export default class AnalyzesByCategory extends Vue {
   printableData: any = [];
   isGrouped: boolean = false;
-  filteredResults: [] = [...this.analyzeResults];
+  filteredResults: IAnalyzes.IAnalyzeResult[] = [...this.analyzeResults];
   groupedResults: {} = {};
 
   async mounted() {
     await this.$store.dispatch('analyzes/analyzeRubrics');
-    // this.filteredResults: [] = [...this.analyzeResults];
-    bus.$on(IAnalyzes.BusEvents.SET_CATEGORY, (status: boolean) => this.isGrouped = status);
-    console.log('RUBRICS: ', this.analyzeRubrics);
+    bus.$on(IAnalyzes.BusEvents.SET_CATEGORY, (status: boolean) => (this.isGrouped = status));
   }
-
-  // @Watch('isGrouped')
-  // function(val: boolean) {
-  //   console.log('isGrouped: ', val);
-  // }
 
   get compareMode(): boolean {
     return this.$store.state.analyzes.compareMode;
@@ -123,7 +133,7 @@ export default class AnalyzesByCategory extends Vue {
   get analyzeResults() {
     return this.$store.state.analyzes.analyzeResultsList;
   }
-  get analyzeRubrics() {
+  get analyzeRubrics(): IAnalyzes.IAnalyzeRubric[] {
     return this.$store.state.analyzes.analyzeRubricsList;
   }
   get getSelectedRubricIds() {
@@ -134,38 +144,50 @@ export default class AnalyzesByCategory extends Vue {
   }
 
   destroyed() {
-    this.$store.commit('analyzes/setPropertyInStore', {name: 'selectedRubricIds', value: []});
+    this.$store.commit('analyzes/setPropertyInStore', { name: 'selectedRubricIds', value: [] });
     bus.$off(IAnalyzes.BusEvents.SET_CATEGORY);
   }
   setFilters() {
     this.filteredResults = [];
     const results = [...this.analyzeResults];
-    const rubricIds = [...this.getSelectedRubricIds];
+    const rubricIds: number[] = [...this.getSelectedRubricIds];
     const rubrics = [...this.analyzeRubrics];
-    const result: {} = {};
-    const selectedRubrics: [] = [];
+    const result: { [key: string]: IAnalyzes.IAnalyzeResult[] } = {};
+    const selectedRubrics: IAnalyzes.IAnalyzeRubric[] = [];
+
     for (const id of rubricIds) {
-      results.forEach(result => {
+      results.forEach((result) => {
         if (result.rubrics.includes(id)) {
           this.filteredResults.push(result);
         }
-      })
-      rubrics.forEach(rubric => {
-        if(rubric.id === id) {
+      });
+      rubrics.forEach((rubric) => {
+        if (rubric.id === id) {
           selectedRubrics.push(rubric);
         }
-      })
-      result[selectedRubrics.find(el => el.id === id).name] = [];
-      for (const res of this.filteredResults) {
-        if (res.rubrics.includes(id)) {
-          result[selectedRubrics.find(el => el.id === id).name].push(res);
+        if (rubric.subrubrics.length) {
+          rubric.subrubrics.forEach((subrubric: IAnalyzes.IAnalyzeRubric) => {
+            if (subrubric.id === id) {
+              selectedRubrics.push(subrubric);
+            }
+          });
+        }
+      });
+
+      const prop = selectedRubrics.find((el) => el.id === id);
+      if (typeof prop !== 'undefined') {
+        result[prop.name] = [];
+        for (const res of this.filteredResults) {
+          if (res.rubrics.includes(id)) {
+            result[prop.name].push(res);
+          }
         }
       }
     }
-    this.groupedResults = {...result};
+    this.groupedResults = { ...result };
   }
-  go(name) {
-    this.$router.push({ name });
+  goToDynamicAnalyzesPage() {
+    this.$router.push({ name: IRouter.ROUTE_NAME.DYNAMICS_ANALYZES });
   }
   resetCompareMode() {
     this.$store.commit('analyzes/setPropertyInStore', { name: 'compareMode', value: false });
@@ -176,7 +198,6 @@ export default class AnalyzesByCategory extends Vue {
 
 <style lang="scss" scoped>
 .analyzes-by-category {
-
   &__compare-btns {
     display: flex;
     align-items: center;
@@ -256,7 +277,7 @@ export default class AnalyzesByCategory extends Vue {
     line-height: 130%;
     color: $black-02;
     display: block;
-    opacity: .7;
+    opacity: 0.7;
 
     &--value {
       min-width: 280px;
@@ -333,5 +354,4 @@ export default class AnalyzesByCategory extends Vue {
     margin-bottom: 40px;
   }
 }
-
 </style>

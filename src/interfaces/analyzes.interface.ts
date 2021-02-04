@@ -1,5 +1,4 @@
 import { IDashBoard } from '@/interfaces/dashboard.interface';
-import { namespace, namespaces } from 'd3';
 import IRanges = IDashBoard.IRanges;
 
 export namespace IAnalyzesStore {
@@ -7,20 +6,17 @@ export namespace IAnalyzesStore {
     addedAnalyzes: IAnalyzes.IBiomarker[];
     addedAnalyzeItems: any[];
     compareMode: boolean;
-
-    // checkBoxValues: IAnalyzes.ICheckArr;
     laboratoriesList: IAnalyzes.ILaboratories[];
     biomarkersList: IAnalyzes.IBiomarker[];
     commentAnalyzesId: null | string | number;
-
     comparingItems: number[];
-    checkBoxValues: {};
+    checkBoxValues: { [key: string]: boolean };
     checkedArr: number;
     analyzeBiomarkerList: IAnalyzesApi.IAnalyzeBiomarkerList | null;
-    analyzeResultsList: any[];
-    analyzeRubricsList: any[];
-    analyzeRubric: {};
-    selectedRubrics: any[];
+    analyzeResultsList: IAnalyzes.IAnalyzeResult[];
+    analyzeRubricsList: IAnalyzes.IAnalyzeRubric[];
+    analyzeRubric: IAnalyzes.IAnalyzeRubric;
+    selectedRubrics: IAnalyzes.IAnalyzeRubric[];
     selectedRubricIds: number[];
   }
 }
@@ -54,6 +50,33 @@ export namespace IAnalyzes {
     isEdit?: boolean;
     comment?: null | string;
     biomarker_id: number;
+  }
+
+  export interface IAnalyzeResult {
+    biomarker: string;
+    biomarker_id: number;
+    categories: number[];
+    comment: string | null;
+    date: Date | string;
+    id: number;
+    is_predicted: boolean;
+    laboratory: string;
+    laboratory_id: number | null;
+    predicted_biomarker: string | null;
+    prev_result: number;
+    ranges: IRanges;
+    rubrics: number[];
+    status: number;
+    unit: string | null;
+    unit_id: number | null;
+    value: number;
+  }
+
+  export interface IAnalyzeRubric {
+    id: number;
+    name: string;
+    parent_rubric_name: string;
+    subrubrics: IAnalyzeRubric[];
   }
 
   export interface IAddedAnalyzes extends IAnalyzesForAddItem {
