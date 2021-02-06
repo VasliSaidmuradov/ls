@@ -1,10 +1,9 @@
 <template>
   <div class="order-history layout">
-    <h4 class="order-history__title">
-      История заказов
-    </h4>
+    <h4 class="order-history__title">История заказов</h4>
     <div class="order-history__desk">
-      Здесь собраны только те анализы, которые вы сдавали в ЛабСтори. Как загруженные вручную, так и те, что пришли из нашей системы.
+      Здесь собраны только те анализы, которые вы сдавали в ЛабСтори. Как загруженные вручную, так и те, что пришли из
+      нашей системы.
     </div>
 
     <div class="order-history__content">
@@ -13,10 +12,10 @@
           <span class="order-history__content-row-date-icon">
             <icon name="calendar-icon"></icon>
           </span>
-          <span class="order-history__content-row-date-text">{{item.date}}</span>
+          <span class="order-history__content-row-date-text">{{ item.date }}</span>
         </div>
-        <div class="order-history__content-list" >
-          <LatestResultsCard :data="order" v-for="order in item.orders" :key="order.id"/>
+        <div class="order-history__content-list">
+          <LatestResultsCard :data="order" v-for="order in item.orders" :key="order.id" />
         </div>
       </div>
     </div>
@@ -26,37 +25,24 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import LatestResultsCard from '@/components/indexPage/LatestResultsCard.vue';
-import {IRouter} from '@/interfaces/router.interface';
-import {IDashBoard} from '@/interfaces/dashboard.interface';
-import { createNamespacedHelpers } from 'vuex';
-
-const { mapState, mapActions } = createNamespacedHelpers('orders');
 
 @Component({
   components: {
     LatestResultsCard,
   },
-  computed: {
-    ...mapState([
-      'orderedServices'
-    ]),
-  },
-  methods: {
-    ...mapActions({
-      getOrderedServices: 'getOrderedServices',
-    })
-  }
 })
 export default class OrderHistoryPage extends Vue {
   created() {
-    this.getOrderedServices();
+    this.$store.dispatch('orders/getOrderedServices');
+  }
+  get orderedServices() {
+    return this.$store.getters['orders/getOrderedServicesList'];
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .order-history {
-
   &__title {
     font-weight: 500;
     font-size: 36px;
@@ -124,5 +110,4 @@ export default class OrderHistoryPage extends Vue {
     grid-gap: 20px;
   }
 }
-
 </style>

@@ -13,6 +13,7 @@ export default {
     documentsList: [],
     allDocumentsList: [],
     document: {},
+    addDocumentToOrder: false,
   },
   mutations: {
     setPropertyInStore(state: IDocumentsStore.IState, { name, value }: { name: string; value: any }) {
@@ -24,28 +25,26 @@ export default {
       try {
         const { data }: AxiosResponse<Documents.IDocuments> = await documentsResources.documentsList(ids);
         if (ids.length) commit('setPropertyInStore', { name: 'documentsList', value: data });
-        else commit('setPropertyInStore', { name: 'allDocumentsList', value: data });
+        else if (ids === '') commit('setPropertyInStore', { name: 'allDocumentsList', value: data });
+        else commit('setPropertyInStore', { name: 'documentsList', value: [] });
       } catch (error) {
         dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
       }
     },
-    async createDocument({ commit, dispatch, rootState }: DocumentsStore, responseData: {}) {
-      try {
-        const orderedService = rootState.orders.orderedService;
-        const { document_ids } = orderedService;
+    // async createDocument({ commit, dispatch, rootState }: DocumentsStore, responseData: {}) {
+    //   try {
+    //     const orderedService = rootState.orders.orderedService;
+    //     const { document_ids } = orderedService;
 
-        const { data }: AxiosResponse<Documents.IDocument> = await documentsResources.createDocument(responseData);
+    //     const { data }: AxiosResponse<Documents.IDocument> = await documentsResources.createDocument(responseData);
 
-        console.log('createDocument: ', data);
-
-        commit('setPropertyInStore', { name: 'document', value: data });
-
-        dispatch('getDocumentsList', [...document_ids, data.id]);
-        dispatch('getDocumentsList', '');
-      } catch (error) {
-        dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
-      }
-    },
+    //     commit('setPropertyInStore', { name: 'document', value: data });
+    //     dispatch('getDocumentsList', [...document_ids, data.id]);
+    //     dispatch('getDocumentsList', '');
+    //   } catch (error) {
+    //     dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
+    //   }
+    // },
   },
   getters: {},
 };

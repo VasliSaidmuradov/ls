@@ -60,7 +60,7 @@ export default class DefaultLayout extends Vue {
   layoutPattern = LayoutPattern;
   drawer = false;
 
-  async mounted() {
+  mounted() {
     this.setPattern(window.screen.width)
 
     if (this.$cookies.get(cookeTokenKey) || this.$store.state.auth.token) {

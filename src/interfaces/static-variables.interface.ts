@@ -4,7 +4,7 @@ export namespace IStaticVariables {
     documentTypes: IDocumentTypes;
   }
 
-  type Items = {
+  export type Items = {
     value: number;
     description: string;
   };

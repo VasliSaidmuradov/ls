@@ -3,6 +3,7 @@ export namespace IDocumentsStore {
     documentsList: Documents.IDocuments;
     allDocumentsList: Documents.IDocuments;
     document: Documents.IDocument;
+    addDocumentToOrder: boolean;
   }
 }
 export namespace Documents {

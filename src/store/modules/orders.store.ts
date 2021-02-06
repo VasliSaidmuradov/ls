@@ -22,7 +22,6 @@ export default {
     async getOrderedServices({ commit, dispatch }: OrdersStore) {
       try {
         const { data }: AxiosResponse<IOrdersApi.IOrderedServices> = await ordersResources.orderedServices();
-        // console.log('getOrderedServices: ', data);
         commit('setPropertyInStore', { name: 'orderedServices', value: data });
       } catch (error) {
         dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
@@ -31,7 +30,6 @@ export default {
     async getOrderedService({ commit, dispatch }: OrdersStore, id: number) {
       try {
         const { data }: AxiosResponse<IOrdersApi.IOrderedService> = await ordersResources.orderedService(id);
-        // console.log('Ordered - Service: ', data);
         commit('setPropertyInStore', { name: 'orderedService', value: data });
         dispatch('documents/getDocumentsList', data.document_ids, { root: true });
         dispatch('documents/getDocumentsList', '', { root: true });
@@ -44,7 +42,6 @@ export default {
         const { data }: AxiosResponse<IOrdersApi.IOrderedService> = await ordersResources.changeOrderedService(
           requestBody
         );
-        // console.log('changeOrderedService: ', data);
         commit('setPropertyInStore', { name: 'orderedService', value: data });
         dispatch('documents/getDocumentsList', data.document_ids, { root: true });
         dispatch('documents/getDocumentsList', '', { root: true });

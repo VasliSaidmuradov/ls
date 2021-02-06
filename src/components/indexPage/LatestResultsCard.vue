@@ -24,29 +24,26 @@
     </div>
     <div class="latest-result-card__bottom">
       <div class="latest-result-card__bottom-left" v-if="data.results.length">
-        <span class="latest-result-card__bottom-left-desk">
-          Всего {{ data.results.length }} показателей:
-        </span>
+        <span class="latest-result-card__bottom-left-desk"> Всего {{ data.results.length }} показателей: </span>
         <div class="latest-result-card__bottom-left-branch">
-          <span v-for="(item, index) in bioMarkersStatus"
-                :key="index + Math.random()"
-                class="latest-result-card__bottom-left-branch-value" :class="`latest-result-card__bottom-left-branch-value--${+index}`">
+          <span
+            v-for="(item, index) in bioMarkersStatus"
+            :key="index + Math.random()"
+            class="latest-result-card__bottom-left-branch-value"
+            :class="`latest-result-card__bottom-left-branch-value--${+index}`"
+          >
             {{ item.length }}
           </span>
         </div>
       </div>
-      <div class="latest-result-card__bottom-right" v-if="isOrderNew(data.date)">
-        Новый!
-      </div>
+      <div class="latest-result-card__bottom-right" v-if="isOrderNew(data.date)">Новый!</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import {IDashBoard} from '@/interfaces/dashboard.interface';
-import {IRouter} from '@/interfaces/router.interface';
-import ROUTE_NAME = IRouter.ROUTE_NAME;
+import { IDashBoard } from '@/interfaces/dashboard.interface';
 
 @Component({})
 export default class LatestResultsCard extends Vue {
@@ -57,7 +54,7 @@ export default class LatestResultsCard extends Vue {
   }
 
   get bioMarkers(): string {
-    return this.data?.results?.map(item => item.name).join(',') || '-';
+    return this.data?.results?.map((item: { name: string }) => item.name).join(',') || '-';
   }
   get bioMarkersStatus() {
     return this.groupBy(this.data.results, 'status');
@@ -66,21 +63,21 @@ export default class LatestResultsCard extends Vue {
     return this.$store.state.staticVariables.orderStatuses;
   }
 
-  goToOrderPage(id) {
-    this.$router.push({ path: `/order-page/${id}` })
+  goToOrderPage(id: number) {
+    this.$router.push({ path: `/order-page/${id}` });
   }
   groupBy(items: any[], key: string) {
-    return items.reduce((result, item) => ({
-          ...result,
-          [item[key]]: [
-            ...(result[item[key]] || []),
-            item,
-          ],
-        }), {},);
+    return items.reduce(
+      (result, item) => ({
+        ...result,
+        [item[key]]: [...(result[item[key]] || []), item],
+      }),
+      {}
+    );
   }
   isOrderNew(date: Date): boolean {
     const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
-    return TWO_DAYS >= Date.parse(new Date()) - Date.parse(date);
+    return TWO_DAYS >= Date.parse(`${new Date()}`) - Date.parse(`${date}`);
   }
 }
 </script>
@@ -147,7 +144,7 @@ export default class LatestResultsCard extends Vue {
     margin-right: 7px;
 
     svg {
-      transform: scale(1.50);
+      transform: scale(1.5);
     }
   }
 
@@ -276,5 +273,4 @@ export default class LatestResultsCard extends Vue {
     }
   }
 }
-
 </style>
