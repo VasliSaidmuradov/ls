@@ -184,6 +184,7 @@ import SlideCard from '@/components/analyzes/SlideCard.vue';
 import SelectDocumentsModal from '@/components/modals/SelectDocumentsModal.vue';
 import AddFileModal from '@/components/modals/addFileModal/AddFileModal.vue';
 import { IDashBoard } from '@/interfaces/dashboard.interface';
+import { Documents } from '@/interfaces/documents.interface';
 
 export interface IRefs {
   slider: QCarousel;
@@ -251,10 +252,10 @@ export default class OrderPage extends AnalyzesMixin {
   get sliderList() {
     return this.orderedService;
   }
-  get documentsList() {
+  get documentsList(): Documents.IDocuments {
     return this.$store.state.documents.documentsList;
   }
-  get allDocumentsList() {
+  get allDocumentsList(): Documents.IDocuments {
     return this.$store.state.documents.allDocumentsList;
   }
 

@@ -6,13 +6,14 @@
       </div>
       <div class="slide-card__left-date-wrap">
         <span class="slide-card__left-date">
-        Загружено {{ $date(new Date(slideInfo.created_at), 'dd.MM.yyyy') || '-' }}
-      </span>
-        <MainBtn text="Отвязать документ"
-                 type="btn-small"
-                 class="slide-card__left-btn"
-                 bcg-color="transparent"
-                 @click-btn="unlinkDocument(slideInfo.id)"
+          Загружено {{ $date(new Date(slideInfo.created_at), 'dd.MM.yyyy') || '-' }}
+        </span>
+        <MainBtn
+          text="Отвязать документ"
+          type="btn-small"
+          class="slide-card__left-btn"
+          bcg-color="transparent"
+          @click-btn="unlinkDocument(slideInfo.id)"
         >
           <template v-slot:icon>
             <icon name="close-icon"></icon>
@@ -23,7 +24,7 @@
     <div class="slide-card__right scrollable">
       <div class="slide-card__right-card" v-for="file in slideInfo.files" :key="file.id">
         <div class="slide-card__right-card-img">
-          <img src="../../assets/indexPage/doc-example.png">
+          <img src="../../assets/indexPage/doc-example.png" />
           <icon name="download-icon"></icon>
         </div>
         <span class="slide-card__right-card-text">{{ setFileLength() }} </span>
@@ -35,14 +36,15 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+import { Documents } from '@/interfaces/documents.interface';
 
 @Component({
   components: {
-    MainBtn
-  }
+    MainBtn,
+  },
 })
 export default class SlideCard extends Vue {
-  @Prop({ required: true }) slideInfo: {};
+  @Prop({ required: true }) slideInfo: Documents.IDocument;
 
   get orderedService() {
     return this.$store.state.orders.orderedService;
@@ -51,29 +53,27 @@ export default class SlideCard extends Vue {
   unlinkDocument(docId: number) {
     try {
       const { id, document_ids } = this.orderedService;
-      const docIds = document_ids.filter(id => id !== docId);
+      const docIds = document_ids.filter((id: number) => id !== docId);
       this.$store.dispatch('orders/changeOrderedService', { id, documentIds: docIds });
-    } catch(error) {
+    } catch (error) {
       console.log('Error: ', error);
     }
   }
-
   setFileLength(): string {
     const len = this.slideInfo.files.length;
-    const analyzes = {
+    const analyzes: { [key: string]: string } = {
       '0': 'анализов',
       '1': 'анализ',
       '2': 'анализа',
       '3': 'анализа',
       '4': 'анализа',
-    }
+    };
     return `${len} ${analyzes[len] || `анализов`}`;
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .slide-card {
   display: flex;
   padding: 24px;
@@ -180,5 +180,4 @@ export default class SlideCard extends Vue {
     flex-direction: column;
   }
 }
-
 </style>

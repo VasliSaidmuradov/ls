@@ -15,7 +15,7 @@
           <span class="order-history__content-row-date-text">{{ item.date }}</span>
         </div>
         <div class="order-history__content-list">
-          <LatestResultsCard :data="order" v-for="order in item.orders" :key="order.id" />
+          <LatestResultsCard v-for="order in item.orders" :key="order.id" :data="order" />
         </div>
       </div>
     </div>
