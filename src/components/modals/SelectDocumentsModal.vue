@@ -41,7 +41,7 @@
                   <img src="@/assets/Doc.jpg" alt="" />
                 </div>
                 <div class="document-item__footer-text-wrapper">
-                  <span class="document-item__footer-event-name">{{ setDocType(document.type_doc) }}</span>
+                  <span class="document-item__footer-event-name">{{ getDocType(document.type_doc) }}</span>
                   <span class="document-item__footer-list-count">{{ document.files.length }} страницы</span>
                 </div>
               </div>
@@ -121,7 +121,7 @@ export default class SelectDocumentsModal extends Vue {
       this.$store.dispatch('error/showErrorNotice', { message: error.errorData.message });
     }
   }
-  setDocType(id: number): string {
+  getDocType(id: number): string {
     return this.documentTypes.find((el: IStaticVariables.Items) => el.value === id).description;
   }
 }

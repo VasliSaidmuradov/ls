@@ -24,10 +24,10 @@
     <div class="slide-card__right scrollable">
       <div class="slide-card__right-card" v-for="file in slideInfo.files" :key="file.id">
         <div class="slide-card__right-card-img">
-          <img src="../../assets/indexPage/doc-example.png" />
+          <img :src="file.file_link" />
           <icon name="download-icon"></icon>
         </div>
-        <span class="slide-card__right-card-text">{{ setFileLength() }} </span>
+        <span class="slide-card__right-card-text">{{ fileLength }} </span>
       </div>
     </div>
   </div>
@@ -49,17 +49,7 @@ export default class SlideCard extends Vue {
   get orderedService() {
     return this.$store.state.orders.orderedService;
   }
-
-  unlinkDocument(docId: number) {
-    try {
-      const { id, document_ids } = this.orderedService;
-      const docIds = document_ids.filter((id: number) => id !== docId);
-      this.$store.dispatch('orders/changeOrderedService', { id, documentIds: docIds });
-    } catch (error) {
-      console.log('Error: ', error);
-    }
-  }
-  setFileLength(): string {
+  get fileLength(): string {
     const len = this.slideInfo.files.length;
     const analyzes: { [key: string]: string } = {
       '0': 'анализов',
@@ -69,6 +59,16 @@ export default class SlideCard extends Vue {
       '4': 'анализа',
     };
     return `${len} ${analyzes[len] || `анализов`}`;
+  }
+
+  unlinkDocument(docId: number) {
+    try {
+      const { id, document_ids } = this.orderedService;
+      const docIds = document_ids.filter((id: number) => id !== docId);
+      this.$store.dispatch('orders/changeOrderedService', { id, documentIds: docIds });
+    } catch (error) {
+      console.log('Error: ', error);
+    }
   }
 }
 </script>
@@ -171,7 +171,12 @@ export default class SlideCard extends Vue {
   }
 
   &__right-card-img {
+    width: 60px;
+    height: 90px;
     img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       margin-right: 5px;
     }
   }
