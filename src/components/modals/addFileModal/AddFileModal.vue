@@ -20,7 +20,6 @@
           v-if="modalVisibleType === 2"
           @go-back="toggleGoBackModal(true)"
       />
-
       <span class="modal__title">
           При добавлении нескольких файлов, они будут считаться одним документом внутри приложения.
         </span>
@@ -65,17 +64,14 @@
             />
             <span class="modal__input-postscript">Необязательно для заполнения</span>
           </div>
-
           <div class="modal__input-block">
             <input-date
                 class="modal__date modal__input form-input form-input--empty"
-                :value="date"
                 :placeholder="'Дата исследования'"
                 @change-value="changeDate"
             />
             <span class="modal__input-postscript">Необязательно для заполнения</span>
           </div>
-
         </div>
       </div>
 
@@ -220,7 +216,6 @@
         ? this.modalVisibleType = 2
         : this.modalVisibleType = 1;
     }
-
     addFiles(files: File[]) {
       files.forEach((file: File) => {
         this.validateFile(file)

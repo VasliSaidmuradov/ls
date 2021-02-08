@@ -5,7 +5,7 @@
         @click="toggleDateModal(true)"
         :rules="propRules"
         ref="dateInput"
-        :value="value ? $date(new Date(value), format): ''"
+        :value="date ? $date(new Date(date), format): ''"
         :placeholder="placeholder"
     />
 
@@ -13,7 +13,7 @@
         @hide="toggleDateModal(false)"
         v-model="isDateModalOpen"
     >
-      <q-date :value="$date(new Date(value), 'yyyy/MM/dd')" @input="changeValue"></q-date>
+      <q-date :value="date ? $date(new Date(date), 'yyyy/MM/dd') : ''" @input="changeValue"></q-date>
     </q-dialog>
   </div>
 </template>
@@ -29,12 +29,14 @@
 
   @Component({})
   export default class InputDate extends BaseFormMixins {
-    @Prop({required: true}) value: Date | string
-    @Prop({default: 'dd.MM.yyyy' }) format: string
+    @Prop({required: false, default: ''}) value: Date | string
+    @Prop({default: 'dd.MM.yyyy'}) format: string
     @Prop() label: string
     @Prop({default: 'Введите значение'}) placeholder: string
     @Prop({default: 'input-date'}) customClass: string;
     @Prop({default: () => []}) propRules: Function[];
+
+    date: Date | string = '' || this.value;
 
     isDateModalOpen = false;
 
@@ -42,6 +44,7 @@
 
     @Emit('change-value')
     changeValue(value: string) {
+      this.date = value;
       return value
     }
 

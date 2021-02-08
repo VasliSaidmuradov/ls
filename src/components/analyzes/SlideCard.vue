@@ -2,16 +2,19 @@
   <div class="slide-card">
     <div class="slide-card__left">
       <div class="slide-card__left-desk">
-        Биохический анализ крови с подсчетом лейкоцитарн. форм.
+        {{ slideInfo.name }}
       </div>
       <div class="slide-card__left-date-wrap">
         <span class="slide-card__left-date">
-        Загружено 22.05.2020
-      </span>
-        <MainBtn text="Отвязать документ"
-                 type="btn-small"
-                 class="slide-card__left-btn"
-                 bcg-color="transparent">
+          Загружено {{ $date(new Date(slideInfo.created_at), 'dd.MM.yyyy') || '-' }}
+        </span>
+        <MainBtn
+          text="Отвязать документ"
+          type="btn-small"
+          class="slide-card__left-btn"
+          bcg-color="transparent"
+          @click-btn="unlinkDocument(slideInfo.id)"
+        >
           <template v-slot:icon>
             <icon name="close-icon"></icon>
           </template>
@@ -19,49 +22,58 @@
       </div>
     </div>
     <div class="slide-card__right scrollable">
-      <div class="slide-card__right-card" v-for="(item, index) in data" :key="index">
+      <div class="slide-card__right-card" v-for="file in slideInfo.files" :key="file.id">
         <div class="slide-card__right-card-img">
-          <img src="../../assets/indexPage/doc-example.png">
+          <img :src="file.file_link" />
           <icon name="download-icon"></icon>
         </div>
-        <span class="slide-card__right-card-text">{{item.title}}</span>
+        <span class="slide-card__right-card-text">{{ fileLength }} </span>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
+import { Documents } from '@/interfaces/documents.interface';
 
 @Component({
   components: {
-    MainBtn
-  }
+    MainBtn,
+  },
 })
 export default class SlideCard extends Vue {
-  data = [
-    {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
-    }, {
-      title: '6 анализов',
+  @Prop({ required: true }) slideInfo: Documents.IDocument;
+
+  get orderedService() {
+    return this.$store.state.orders.orderedService;
+  }
+  get fileLength(): string {
+    const len = this.slideInfo.files.length;
+    const analyzes: { [key: string]: string } = {
+      '0': 'анализов',
+      '1': 'анализ',
+      '2': 'анализа',
+      '3': 'анализа',
+      '4': 'анализа',
+    };
+    return `${len} ${analyzes[len] || `анализов`}`;
+  }
+
+  unlinkDocument(docId: number) {
+    try {
+      const { id, document_ids } = this.orderedService;
+      const docIds = document_ids.filter((id: number) => id !== docId);
+      this.$store.dispatch('orders/changeOrderedService', { id, documentIds: docIds });
+    } catch (error) {
+      console.log('Error: ', error);
     }
-  ]
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-
 .slide-card {
   display: flex;
   padding: 24px;
@@ -159,7 +171,12 @@ export default class SlideCard extends Vue {
   }
 
   &__right-card-img {
+    width: 60px;
+    height: 90px;
     img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       margin-right: 5px;
     }
   }
@@ -168,5 +185,4 @@ export default class SlideCard extends Vue {
     flex-direction: column;
   }
 }
-
 </style>

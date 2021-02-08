@@ -27,7 +27,7 @@ export default {
       state.documentList.splice(index, 1);
     },
     changeDocumentDocumentList(state: IStorageStore.IState, { data, index }: { data: IDocument; index: number }) {
-      (Object.keys(data) as Array<keyofIStorageType>).forEach((key) => {
+      (Object.keys(data) as Array<keyofIStorageType>).forEach(key => {
         state.documentList[index][key] = data[key] as never;
       });
     },
@@ -52,7 +52,6 @@ export default {
         commit('changeDocumentList', data);
 
         return true;
-
       } catch (error) {
         if (error.errorData.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
@@ -67,14 +66,16 @@ export default {
         commit('changeDocument', data);
 
         return true;
-
       } catch (error) {
         if (error.errorData.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }
     },
-    async createDocument({ commit, dispatch }: StorageStore, payload: { name: string; date: Date; type_doc: number; allow_processing: boolean; fileList: File[] }) {
+    async createDocument(
+      { commit, dispatch, rootState }: StorageStore,
+      payload: { name: string; date: Date; type_doc: number; allow_processing: boolean; fileList?: File[] }
+    ) {
       try {
         const fileList = payload.fileList;
         delete payload.fileList;
@@ -86,6 +87,14 @@ export default {
         const documentData = documentResponse.data;
 
         commit('addItemDocumentList', documentData);
+
+        const addToOrder = rootState.documents.addDocumentToOrder;
+        const { id, document_ids } = rootState.orders.orderedService;
+        const docIds = [...new Set([...document_ids, data.id])];
+
+        if (addToOrder) {
+          dispatch('orders/changeOrderedService', { id, documentIds: docIds }, { root: true });
+        }
 
         return true;
 
@@ -104,7 +113,6 @@ export default {
         commit('deleteItemDocumentList', deletedDocumentIndex);
 
         return true;
-
       } catch (error) {
         if (error.errorData.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
@@ -123,7 +131,6 @@ export default {
         payload.type_doc === 1 && commit('changeDocument', data);
 
         return true;
-
       } catch (error) {
         if (error.errorData.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
@@ -135,7 +142,6 @@ export default {
         await storageResource.createFiles(payload);
 
         return true;
-
       } catch (error) {
         if (error.errorData.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
@@ -148,11 +154,10 @@ export default {
 
         const documentIndex = state.documentList.findIndex(document => document.id === payload.documentId);
         const fileIndex = state.documentList[documentIndex].files.findIndex(file => file.id === payload.fileId);
-        
+
         commit('deleteFileDocumentList', { documentIndex, fileIndex });
 
         return true;
-
       } catch (error) {
         if (error.errorData.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
@@ -167,7 +172,6 @@ export default {
         commit('changeDocumentTypes', data);
 
         return true;
-
       } catch (error) {
         if (error.errorData.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });

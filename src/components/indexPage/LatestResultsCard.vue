@@ -1,17 +1,17 @@
 <template>
-  <div class="latest-result-card" @click="goToOrderPage">
+  <div class="latest-result-card" @click="goToOrderPage(data.id)">
     <div class="latest-result-card__top">
       <div class="latest-result-card__top-left">
-        <span class="latest-result-card__category">{{data.category}}</span>
-        <h4 class="latest-result-card__title">{{data.name}}</h4>
+        <span class="latest-result-card__category">{{ data.rubric_name }}</span>
+        <h4 class="latest-result-card__title">{{ data.name }} {{ data.id }}</h4>
         <div class="latest-result-card__desk">
-          {{bioMarkers}}
+          {{ bioMarkers }}
         </div>
         <div class="latest-result-card__date">
           <span class="latest-result-card__date-icon">
             <icon name="calendar-icon"></icon>
           </span>
-          {{$date(new Date(data.date), 'dd.MM.yyyy')}}
+          {{ $date(new Date(data.date), 'dd.MM.yyyy') }}
         </div>
       </div>
       <div class="latest-result-card__top-right">
@@ -23,56 +23,61 @@
       </div>
     </div>
     <div class="latest-result-card__bottom">
-      <div class="latest-result-card__bottom-left" v-if="data.biomarkers.length">
-        <span class="latest-result-card__bottom-left-desk">
-          Всего 12 показателей:
-        </span>
+      <div class="latest-result-card__bottom-left" v-if="data.results.length">
+        <span class="latest-result-card__bottom-left-desk"> Всего {{ data.results.length }} показателей: </span>
         <div class="latest-result-card__bottom-left-branch">
-          <span v-for="(item, index) in bioMarkersStatus"
-                :key="index"
-                class="latest-result-card__bottom-left-branch-value" :class="index">
-            {{item.length}}
+          <span
+            v-for="(item, index) in bioMarkersStatus"
+            :key="index + Math.random()"
+            class="latest-result-card__bottom-left-branch-value"
+            :class="`latest-result-card__bottom-left-branch-value--${+index}`"
+          >
+            {{ item.length }}
           </span>
         </div>
       </div>
-      <div class="latest-result-card__bottom-right" v-if="data.is_new">
-        Новый!
-      </div>
+      <div class="latest-result-card__bottom-right" v-if="isOrderNew(data.date)">Новый!</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import {IDashBoard} from '@/interfaces/dashboard.interface';
-import {IRouter} from '@/interfaces/router.interface';
-import ROUTE_NAME = IRouter.ROUTE_NAME;
+import { IDashBoard } from '@/interfaces/dashboard.interface';
 
 @Component({})
 export default class LatestResultsCard extends Vue {
   @Prop() data: IDashBoard.ILatestResult;
 
-  goToOrderPage() {
-    this.$router.push({name: ROUTE_NAME.ORDER_PAGE})
+  created() {
+    this.$store.dispatch('staticVariables/getOrderStatuses');
   }
 
   get bioMarkers(): string {
-    return this.data?.biomarkers?.map(item => item.name).join(',') || '-';
+    return this.data?.results?.map((item: { name: string }) => item.name).join(',') || '-';
   }
-
   get bioMarkersStatus() {
-    return this.groupBy(this.data.biomarkers, 'status');
+    return this.groupBy(this.data.results, 'status');
+  }
+  get orderStatuses() {
+    return this.$store.state.staticVariables.orderStatuses;
   }
 
-
+  goToOrderPage(id: number) {
+    this.$router.push({ path: `/order-page/${id}` });
+  }
   groupBy(items: any[], key: string) {
-    return items.reduce((result, item) => ({
-          ...result,
-          [item[key]]: [
-            ...(result[item[key]] || []),
-            item,
-          ],
-        }), {},);
+    return items.reduce(
+      (result, item) => ({
+        ...result,
+        [item[key]]: [...(result[item[key]] || []), item],
+      }),
+      {}
+    );
+  }
+  isOrderNew(date: Date): boolean {
+    const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
+    return TWO_DAYS >= Date.parse(`${new Date()}`) - Date.parse(`${date}`);
   }
 }
 </script>
@@ -83,6 +88,7 @@ export default class LatestResultsCard extends Vue {
   box-shadow: 0px 4px 15px $shadow-color;
   border-radius: 20px;
   padding: 20px;
+  cursor: pointer;
 
   &__top {
     display: flex;
@@ -138,7 +144,7 @@ export default class LatestResultsCard extends Vue {
     margin-right: 7px;
 
     svg {
-      transform: scale(1.50);
+      transform: scale(1.5);
     }
   }
 
@@ -236,26 +242,35 @@ export default class LatestResultsCard extends Vue {
       line-height: 15px;
       color: $light-white;
       position: relative;
-
-
-      &:nth-child(1) {
-        background-color: $status-green;
-        z-index: 3;
-      }
-
-      &:nth-child(2) {
-        background-color: $status-red;
-        margin-left: -8px;
-        z-index: 2;
-      }
-
-      &:nth-child(3) {
-        background-color: $black-04;
-        margin-left: -8px;
-        z-index: 1;
-      }
+    }
+    &-value--5 {
+      background-color: $status-green;
+      z-index: 3;
+    }
+    &-value--4 {
+      background-color: $black-04;
+      z-index: 1;
+      margin-left: 32px;
+    }
+    &-value--3 {
+      background-color: $status-yellow;
+      margin-left: 8px;
+      z-index: 2;
+    }
+    &-value--2 {
+      background-color: $status-red;
+      margin-left: 16px;
+      z-index: 2;
+    }
+    &-value--1 {
+      background-color: $status-red;
+      margin-left: 24px;
+      z-index: 2;
+    }
+    &-value--0 {
+      display: none;
+      color: $black-04;
     }
   }
 }
-
 </style>

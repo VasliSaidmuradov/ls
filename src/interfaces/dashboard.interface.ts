@@ -6,18 +6,24 @@ export namespace IDashBoard {
 
   export interface ILatestResult {
     id: number;
-    category: string;
     name: string;
+    rubric_id: number;
+    rubric_name: string;
     date: Date | string;
+    price: number;
+    status: string;
+    document: number;
+    results: [];
     is_new?: boolean;
-    biomarkers: IBioMarkers[];
+    document_ids: number[];
+    // category: string;
+    // biomarkers: IBioMarkers[];
   }
 
   export interface IOrdersByDate {
     date: string;
     orders: ILatestResult[];
   }
-
 
   export interface IBioMarkers {
     name: string;

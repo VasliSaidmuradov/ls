@@ -1,93 +1,33 @@
 <template>
   <div class="latest-result">
-    <LatestResultsCard v-for="(item, index) in data" :key="index" :data="item"/>
+    <div v-for="orders in orderedServices" :key="orders.date">
+      <LatestResultsCard v-for="order in orders.orders" :key="order.id" :data="order" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {IDashBoard} from '@/interfaces/dashboard.interface';
+import { IDashBoard } from '@/interfaces/dashboard.interface';
 import LatestResultsCard from '@/components/indexPage/LatestResultsCard.vue';
 
 @Component({
   components: {
-    LatestResultsCard
-  }
+    LatestResultsCard,
+  },
 })
 export default class LatestResults extends Vue {
-  data: IDashBoard.ILatestResult[] = [{
-      id: 1,
-      category: 'Гормональные исследования',
-      name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm, PSA, GFR< BDS',
-      biomarkers: [
-        {
-          name: 'Определение мочевины в сыворотке крови',
-          status: 'Исследуется'
-        }, {
-          name: 'Определение общего белка',
-          status: 'Исследуется'
-        }, {
-          name: 'Определение мочевины в сыворотке крови',
-          status: 'Готово'
-        }
-      ],
-      date: new Date(),
-      is_new: true,
-    }, {
-      id: 2,
-      category: 'Гормональные исследования',
-      name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm, PSA, GFR< BDS',
-      biomarkers: [
-        {
-          name: 'Определение мочевины в сыворотке крови',
-          status: 'Исследуется'
-        }, {
-          name: 'Определение общего белка',
-          status: 'Исследуется'
-        }, {
-          name: 'Определение мочевины в сыворотке крови',
-          status: 'Готово'
-        }
-      ],
-      date: new Date(),
-      is_new: true,
-    }, {
-      id: 3,
-      category: 'Гормональные исследования',
-      name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm, PSA, GFR< BDS',
-      biomarkers: [
-        {
-          name: 'Определение мочевины в сыворотке крови',
-          status: 'Исследуется'
-        }, {
-          name: 'Определение общего белка',
-          status: 'Исследуется'
-        }, {
-          name: 'Определение мочевины в сыворотке крови',
-          status: 'Готово'
-        }
-      ],
-      date: new Date(),
-      is_new: true,
-    }, {
-      id: 4,
-      category: 'Гормональные исследования',
-      name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm, PSA, GFR< BDS',
-      biomarkers: [
-        {
-          name: 'Определение мочевины в сыворотке крови',
-          status: 'Исследуется'
-        }, {
-          name: 'Определение общего белка',
-          status: 'Исследуется'
-        }, {
-          name: 'Определение мочевины в сыворотке крови',
-          status: 'Готово'
-        }
-      ],
-      date: new Date(),
-      is_new: true,
-    },]
+  data: IDashBoard.ILatestResult[] = [];
+
+  async created() {
+    await this.$store.dispatch('orders/getOrderedServices');
+    console.log('this.orderedServices: ', this.orderedServices);
+    
+  }
+
+  get orderedServices() {
+    return this.$store.getters['orders/getOrderedServicesList'];
+  }
 }
 </script>
 
@@ -104,5 +44,4 @@ export default class LatestResults extends Vue {
     grid-template-columns: 1fr;
   }
 }
-
 </style>

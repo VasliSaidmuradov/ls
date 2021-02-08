@@ -38,7 +38,7 @@ export namespace IRouter {
     [ROUTE_NAME.AUTH_PAGE]: '/auth',
     [ROUTE_NAME.CHANGE_CABINETS]: '/change-cabinets',
     [ROUTE_NAME.ORDER_HISTORY]: '/order-history',
-    [ROUTE_NAME.ORDER_PAGE]: '/order-page',
+    [ROUTE_NAME.ORDER_PAGE]: '/order-page/:id',
   };
 
   export interface IAppRoute<T> extends Omit<Route, 'query'> {

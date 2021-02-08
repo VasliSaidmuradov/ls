@@ -10,7 +10,7 @@ export namespace IAnalyzesStore {
     biomarkersList: IAnalyzes.IBiomarker[];
     commentAnalyzesId: null | string | number;
     comparingItems: number[];
-    checkBoxValues: { [key: string]: boolean };
+    checkBoxValues: IAnalyzes.ICheckboxValue;
     checkedArr: number;
     analyzeBiomarkerList: IAnalyzesApi.IAnalyzeBiomarkerList | null;
     analyzeResultsList: IAnalyzes.IAnalyzeResult[];
@@ -95,6 +95,10 @@ export namespace IAnalyzes {
   export enum TabsName {
     ALL_ANALYZES = 'allAnalyzes',
     BY_CATEGORY = 'byCategory',
+  }
+
+  export interface ICheckboxValue {
+    [key: string]: boolean;
   }
 }
 

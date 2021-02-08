@@ -101,7 +101,7 @@ import AnalyzesSelect from '@/components/analyzes/AnalyzesSelect.vue';
 import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
 import {QCarousel} from 'quasar';
 import {IAnalyzes} from '@/interfaces/analyzes.interface';
-import ICheckArr = IAnalyzes.ICheckArr;
+import ICheckArr = IAnalyzes.ICheckboxValue;
 import BackBtn from '@/components/UI/buttons/BackBtn.vue';
 
 export interface IRefs {
@@ -148,10 +148,6 @@ export default class AnalyzesFilter extends Vue {
   }
   get getSelectedRubricIds() {
     return this.$store.getters['analyzes/getSelectedRubricIds'];
-  }
-  get checkboxValues() {
-    this.checkboxState = {...this.$store.state.analyzes.checkBoxValues};
-    return this.$store.state.analyzes.checkBoxValues;
   }
 
   onCheckChange(key: keyof ICheckArr) {

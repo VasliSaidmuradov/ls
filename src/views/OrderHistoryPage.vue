@@ -1,23 +1,21 @@
 <template>
   <div class="order-history layout">
-    <h4 class="order-history__title">
-      История заказов
-    </h4>
+    <h4 class="order-history__title">История заказов</h4>
     <div class="order-history__desk">
-      Здесь собраны только те анализы, которые вы сдавали в ЛабСтори. Как загруженные вручную, так и те, что пришли из нашей системы.
+      Здесь собраны только те анализы, которые вы сдавали в ЛабСтори. Как загруженные вручную, так и те, что пришли из
+      нашей системы.
     </div>
 
     <div class="order-history__content">
-      <div class="order-history__content-row" v-for="(item, index) in data" :key="index">
+      <div class="order-history__content-row" v-for="item in orderedServices" :key="item.date">
         <div class="order-history__content-row-date">
           <span class="order-history__content-row-date-icon">
             <icon name="calendar-icon"></icon>
           </span>
-          <span class="order-history__content-row-date-text">{{item.date}}</span>
+          <span class="order-history__content-row-date-text">{{ item.date }}</span>
         </div>
-
-        <div class="order-history__content-list" >
-          <LatestResultsCard :data="card" v-for="(card, index) in item.orders" :key="index"/>
+        <div class="order-history__content-list">
+          <LatestResultsCard v-for="order in item.orders" :key="order.id" :data="order" />
         </div>
       </div>
     </div>
@@ -27,139 +25,24 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import LatestResultsCard from '@/components/indexPage/LatestResultsCard.vue';
-import {IRouter} from '@/interfaces/router.interface';
-import {IDashBoard} from '@/interfaces/dashboard.interface';
-
 
 @Component({
   components: {
     LatestResultsCard,
-
-  }
+  },
 })
 export default class OrderHistoryPage extends Vue {
-  data: IDashBoard.IOrdersByDate[] = [
-    {
-      date: '2020-03-11',
-      orders: [
-        {
-          id: 1,
-          category: 'Гормональные исследования',
-          name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm',
-          date: '2020-03-11',
-          biomarkers: [
-            {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение общего белка',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Готово'
-            }
-          ]
-        }, {
-          id: 1,
-          category: 'Гормональные исследования',
-          name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm',
-          date: '2020-03-11',
-          biomarkers: [
-            {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение общего белка',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Готово'
-            }
-          ]
-        }, {
-          id: 1,
-          category: 'Гормональные исследования',
-          name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm',
-          date: '2020-03-11',
-          biomarkers: [
-            {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение общего белка',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Готово'
-            }
-          ]
-        },
-      ]
-    },
-    {
-      date: '2020-04-11',
-      orders: [
-        {
-          id: 1,
-          category: 'Гормональные исследования',
-          name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm',
-          date: '2020-03-11',
-          biomarkers: [
-            {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение общего белка',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Готово'
-            }
-          ]
-        }, {
-          id: 1,
-          category: 'Гормональные исследования',
-          name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm',
-          date: '2020-03-11',
-          biomarkers: [
-            {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение общего белка',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Готово'
-            }
-          ]
-        }, {
-          id: 1,
-          category: 'Гормональные исследования',
-          name: 'Иммуноблот антинуклеарных антител с комментарием, (антитела против антигенов Sm, RNP/Sm',
-          date: '2020-03-11',
-          biomarkers: [
-            {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение общего белка',
-              status: 'Исследуется'
-            }, {
-              name: 'Определение мочевины в сыворотке крови',
-              status: 'Готово'
-            }
-          ]
-        },
-      ]
-    }
-  ]
+  created() {
+    this.$store.dispatch('orders/getOrderedServices');
+  }
+  get orderedServices() {
+    return this.$store.getters['orders/getOrderedServicesList'];
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .order-history {
-
   &__title {
     font-weight: 500;
     font-size: 36px;
@@ -227,5 +110,4 @@ export default class OrderHistoryPage extends Vue {
     grid-gap: 20px;
   }
 }
-
 </style>

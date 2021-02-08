@@ -87,7 +87,7 @@
             </div>
           </template>
           <template v-else>
-            <div v-for="analyze in []" :key="`${analyze.id}`">
+            <div v-for="analyze in analyzeResults" :key="`${analyze.id}`">
               <AnalyzesBaCategoryCard :data="analyze" />
             </div>
           </template>
