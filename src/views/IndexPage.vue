@@ -8,7 +8,7 @@
         </div>
 
         <div class="index-page__content-top-research">
-          <AddResearch class="add-research"/>
+          <AddResearch class="add-research" />
           <div class="index-page__content-top-research-add-doc">
             <AddedDocuments />
           </div>
@@ -16,14 +16,14 @@
       </div>
       <div class="index-page__content-bottom">
         <div class="index-page__content-bottom-tabs">
-          <Tabs :data="tabsData" :onTabChange="onTabChange" :activeTab="activeTab"/>
+          <Tabs :data="tabsData" :onTabChange="onTabChange" :activeTab="activeTab" />
         </div>
       </div>
     </div>
 
-    <AddAnalyzesModal :isShow="addAnalyzesModalState" @close="addAnalyzesModalClose"/>
-    <AddComment :isShow="addCommentModalState" @close="addCommentClose"/>
-    <EditAnalyzes :isShow="editAnalyzesModalState" :editData="editData" @close="editModalClose"/>
+    <AddAnalyzesModal :isShow="addAnalyzesModalState" @close="addAnalyzesModalClose" />
+    <AddComment :isShow="addCommentModalState" @close="addCommentClose" />
+    <EditAnalyzes :isShow="editAnalyzesModalState" :editData="editData" @close="editModalClose" />
   </div>
 </template>
 
@@ -33,17 +33,15 @@ import AnalyzesCard from '@/components/indexPage/AnalyzesCard.vue';
 import AddResearch from '@/components/indexPage/AddResearch.vue';
 import AddedDocuments from '@/components/indexPage/AddedDocuments.vue';
 import Tabs from '@/components/Tabs.vue';
-import {IDashBoard} from '@/interfaces/dashboard.interface';
-import {ITabs} from '@/interfaces/tabs.interface';
+import { IDashBoard } from '@/interfaces/dashboard.interface';
+import { ITabs } from '@/interfaces/tabs.interface';
 import LatestResults from '@/components/indexPage/LatestResults.vue';
 import Benchmarks from '@/components/indexPage/Benchmarks.vue';
 import AddAnalyzesModal from '@/components/modals/AddAnalyzes.vue';
-import {bus} from '@/plugins/bus';
-import {IAnalyzes} from '@/interfaces/analyzes.interface';
+import { bus } from '@/plugins/bus';
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
 import AddComment from '@/components/modals/AddComment.vue';
 import EditAnalyzes from '@/components/modals/EditAnalyzes.vue';
-
-
 
 @Component({
   components: {
@@ -53,17 +51,17 @@ import EditAnalyzes from '@/components/modals/EditAnalyzes.vue';
     Tabs,
     AddAnalyzesModal,
     AddComment,
-    EditAnalyzes
-  }
+    EditAnalyzes,
+  },
 })
 export default class IndexPage extends Vue {
-
   tabsData: ITabs.ITabItem[] = [
     {
       label: 'Последние результаты',
       name: IDashBoard.TabsName.LATEST_RESULTS,
       componentName: LatestResults,
-    }, {
+    },
+    {
       label: 'Показатели',
       name: IDashBoard.TabsName.BENCHMARKS,
       componentName: Benchmarks,
@@ -77,11 +75,23 @@ export default class IndexPage extends Vue {
 
   activeTab = IDashBoard.TabsName.BENCHMARKS;
 
+  created() {
+    this.$store.dispatch('dashboard/getDocuments');
+    this.$store.dispatch('dashboard/getOrderedServices');
+    this.$store.dispatch('dashboard/getOverview');
+    this.$store.dispatch('dashboard/getResults');
+    this.$store.dispatch('staticVariables/getDocumentTypes');
+    this.$store.dispatch('staticVariables/getOrderStatuses');
+  }
+
   mounted() {
-    bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL, () => this.addAnalyzesModalState = !this.addAnalyzesModalState);
+    bus.$on(
+      IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL,
+      () => (this.addAnalyzesModalState = !this.addAnalyzesModalState)
+    );
     bus.$on(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT, (id: string | number) => {
       this.addCommentModalState = !this.addCommentModalState;
-      this.$store.commit('analyzes/setPropertyInStore', {name: 'commentAnalyzesId', value: id});
+      this.$store.commit('analyzes/setPropertyInStore', { name: 'commentAnalyzesId', value: id });
     });
     bus.$on(IAnalyzes.BusEvents.EDIT_ANALYZES, (data: IAnalyzes.IAddedAnalyzes) => {
       this.editData = data;
@@ -89,26 +99,34 @@ export default class IndexPage extends Vue {
     });
   }
 
+  get dashboardDocuments() {
+    return this.$store.state.dashboard.documents;
+  }
+  get dashboardOrderedServices() {
+    return this.$store.state.dashboard.orderedServices;
+  }
+  get dashboardOverview() {
+    return this.$store.state.dashboard.overview;
+  }
+  get dashboardResults() {
+    return this.$store.state.dashboard.results;
+  }
+
   changeAddModalState() {
     this.addAnalyzesModalState = !this.addAnalyzesModalState;
   }
-
   addAnalyzesModalClose(value: boolean) {
     this.addAnalyzesModalState = value;
   }
-
   onTabChange(value: IDashBoard.TabsName) {
     this.activeTab = value;
   }
-
   editModalClose(value: boolean) {
-    this.editAnalyzesModalState = value
+    this.editAnalyzesModalState = value;
   }
-
   addCommentClose(value: boolean) {
     this.addCommentModalState = value;
   }
-
   destroy() {
     bus.$off(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL);
     bus.$off(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT);
@@ -119,7 +137,6 @@ export default class IndexPage extends Vue {
 
 <style lang="scss" scoped>
 .index-page {
-
   &__content {
     display: flex;
     flex-direction: column;
@@ -200,7 +217,5 @@ export default class IndexPage extends Vue {
       }
     }
   }
-
 }
-
 </style>

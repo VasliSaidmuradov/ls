@@ -2,7 +2,7 @@ import { IDashBoard } from '@/interfaces/dashboard.interface';
 
 export namespace IOrdersStore {
   export interface IState {
-    orderedServices: IOrdersApi.IOrderedServices;
+    orderedServices: IOrdersApi.IOrderedServices[];
     orderedService: IOrdersApi.IOrderedService;
   }
 }

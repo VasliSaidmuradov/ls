@@ -1,7 +1,6 @@
 import { IAppState } from '@/interfaces/app-state.interface';
 import { ActionContext } from 'vuex';
 import { IAnalyzes, IAnalyzesApi, IAnalyzesStore } from '@/interfaces/analyzes.interface';
-// import { IAuthStore } from '@/interfaces/auth.interface';
 import Vue from 'vue';
 import { analyzesResource } from '@/resources/analyzes.resources';
 import { AxiosResponse, Method } from 'axios';

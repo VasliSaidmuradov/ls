@@ -48,7 +48,7 @@ export default {
         commit('setPropertyInStore', { name: 'userAccountInfo', value: data });
         return true;
       } catch (error) {
-        if (error.errorData.phone) {
+        if (error.errorData?.phone) {
           dispatch('error/showErrorNotice', { message: error.errorData.phone[0] }, { root: true });
         }
         return false;
@@ -63,7 +63,7 @@ export default {
         const { data }: AxiosResponse<IAuthApi.ISendCodeResponse> = await authResource.sendCheckCode(value, type);
         return data;
       } catch (error) {
-        if (error.errorData.phone) {
+        if (error.errorData?.phone) {
           dispatch('error/showErrorNotice', { message: error.errorData.phone[0] }, { root: true });
         }
         return false;
@@ -75,7 +75,7 @@ export default {
         const response = await authResource.confirmCode(data);
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
         return false;
@@ -127,7 +127,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
         return false;
@@ -164,7 +164,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }

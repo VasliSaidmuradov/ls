@@ -1,8 +1,6 @@
 <template>
   <div class="latest-result">
-    <div v-for="orders in orderedServices" :key="orders.date">
-      <LatestResultsCard v-for="order in orders.orders" :key="order.id" :data="order" />
-    </div>
+    <LatestResultsCard v-for="order in orderedServices" :key="order.id" :data="order" />
   </div>
 </template>
 
@@ -19,14 +17,9 @@ import LatestResultsCard from '@/components/indexPage/LatestResultsCard.vue';
 export default class LatestResults extends Vue {
   data: IDashBoard.ILatestResult[] = [];
 
-  async created() {
-    await this.$store.dispatch('orders/getOrderedServices');
-    console.log('this.orderedServices: ', this.orderedServices);
-    
-  }
 
   get orderedServices() {
-    return this.$store.getters['orders/getOrderedServicesList'];
+    return this.$store.state.dashboard.orderedServices;
   }
 }
 </script>

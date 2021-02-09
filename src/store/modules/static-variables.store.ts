@@ -24,7 +24,7 @@ export default {
         const { data }: AxiosResponse<IStaticVariables.IOrderStatuses> = await staticVariables.orderStatuses();
         commit('setPropertyInStore', { name: 'orderStatuses', value: data?.list });
       } catch (error) {
-        dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
+        error.errorData?.message && dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
       }
     },
     async getDocumentTypes({ commit, dispatch }: Store) {
@@ -32,7 +32,7 @@ export default {
         const { data }: AxiosResponse<IStaticVariables.IOrderStatuses> = await staticVariables.documentTypes();
         commit('setPropertyInStore', { name: 'documentTypes', value: data?.list });
       } catch (error) {
-        dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
+        error.errorData?.message && dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
       }
     },
   },

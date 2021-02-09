@@ -1,23 +1,23 @@
 <template>
   <div class="added-doc">
     <q-expansion-item
-        icon="explore"
-        ref="dock"
-        class="added-doc__exp"
-        style="border-radius: 15px"
-        @before-show="beforeShow"
+      icon="explore"
+      ref="dock"
+      class="added-doc__exp"
+      style="border-radius: 15px"
+      @before-show="beforeShow"
     >
       <template v-slot:header>
         <div class="added-doc__exp-header">
           <span class="added-doc__exp-header-icon">
             <icon name="paper-icon"></icon>
             <span class="added-doc__exp-header-icon-count">
-              +2
+              {{ `+${dashboardDocuments.length}` }}
             </span>
           </span>
           <span class="added-doc__exp-header-text">
             <span class="added-doc__exp-header-text-count">
-              +2
+              {{ `+${dashboardDocuments.length}` }}
             </span>
             Недавно добавленные документы
           </span>
@@ -25,21 +25,25 @@
       </template>
 
       <div class="added-doc__exp-body">
-        <div v-for="(doc, index) in docsData"
-             :key="index" class="added-doc__exp-item"
-             :class="`added-doc__exp-item--${doc.type}`">
-          <div class="added-doc__exp-item-img">
+        <div
+          v-for="doc in dashboardDocuments"
+          :key="doc.id"
+          class="added-doc__exp-item"
+          :class="`added-doc__exp-item--${doc.type}`"
+          @click="goToDocumentPage(doc.id)"
+        >
+          <div v-if="doc.files" class="added-doc__exp-item-img">
             <span class="added-doc__exp-item-icon">
-              <icon :name="doc.icon"></icon>
+              <icon :name="getStatus(doc.files[0].status)"></icon>
             </span>
             <div class="img-wrap">
-              <img src="../../assets/indexPage/doc-example.png">
+              <img :src="doc.files[0].file_link" />
             </div>
           </div>
 
           <div class="added-doc__exp-item-text">
-            <span class="added-doc__exp-item-text-title">{{doc.text}}</span>
-            <span class="added-doc__exp-item-text-date">{{$date(doc.date, 'dd.MM.yyyy')}}</span>
+            <span class="added-doc__exp-item-text-title">{{ getDocType(doc.type_doc) }}</span>
+            <span class="added-doc__exp-item-text-date">{{ $date(doc.date, 'dd.MM.yyyy') }}</span>
           </div>
         </div>
       </div>
@@ -49,18 +53,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {ILayout} from '@/interfaces/layout.interface';
+import { ILayout } from '@/interfaces/layout.interface';
 import Breakpoint = ILayout.Breakpoint;
-import {IRouter} from '@/interfaces/router.interface';
+import { IRouter } from '@/interfaces/router.interface';
 import ROUTE_NAME = IRouter.ROUTE_NAME;
-import {QExpansionItem} from 'quasar';
+import { QExpansionItem } from 'quasar';
+import { IStaticVariables } from '@/interfaces/static-variables.interface';
 
-enum DocsType {
-  PROGRESS = 'progress',
-  SUCCESS = 'success',
-  ERROR = 'error',
-  QUESTION = 'question'
-}
 
 interface IRefs {
   dock: QExpansionItem;
@@ -68,7 +67,6 @@ interface IRefs {
 
 @Component({})
 export default class AddedDocuments extends Vue {
-
   breakPoint = ILayout.Breakpoint;
 
   $refs: IRefs & Vue['$refs'];
@@ -76,44 +74,47 @@ export default class AddedDocuments extends Vue {
   beforeShow() {
     if (this.isMobile) {
       this.$refs.dock.hide();
-      this.$router.push({name: ROUTE_NAME.STORAGE_PAGE})
+      this.$router.push({ name: ROUTE_NAME.STORAGE_PAGE });
     }
   }
 
-  docsData = [{
-      icon: 'doc-progress-icon',
-      text: 'Анализ',
-      date: new Date(),
-      type: DocsType.PROGRESS
-    }, {
-      icon: 'doc-error-icon',
-      img: 'doc-example.png',
-      text: 'Прием',
-      date: new Date(),
-      type: DocsType.ERROR
-    }, {
-      icon: 'doc-success-icon',
-      text: 'УЗИ',
-      date: new Date(),
-      type: DocsType.SUCCESS
-    }, {
-      icon: 'doc-question-icon',
-      text: 'УЗИ',
-      date: new Date(),
-      type: DocsType.QUESTION
-    },];
+  statusIcons: { [key: string]: string } = {
+    1: 'doc-error-icon',
+    2: 'doc-error-icon',
+    3: 'doc-progress-icon',
+    4: 'doc-success-icon', //'doc-question-icon',
+    5: 'doc-success-icon',
+  };
 
   get isMobile(): boolean {
     return window.screen.width <= Breakpoint.MOBILE_SMALL;
+  }
+  get dashboardDocuments() {
+    return this.$store.state.dashboard.documents;
+  }
+  get documentTypes() {
+    return this.$store.state.staticVariables.documentTypes;
+  }
+  get orderStatuse() {
+    return this.$store.state.staticVariables.orderStatuses;
+  }
+
+  getDocType(docType: number): string {
+    return this.documentTypes.find((el: IStaticVariables.Items) => el.value === docType)?.description;
+  }
+  getStatus(status: number): string {
+    return this.statusIcons[`${status}`];
+  }
+  goToDocumentPage(id: number) {
+    this.$router.push({ path: `/analyzes/${id}`})
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .added-doc {
-
   &__exp {
-    background: #FFFFFF;
+    background: #ffffff;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.03);
     border-radius: 15px;
 
@@ -171,6 +172,7 @@ export default class AddedDocuments extends Vue {
     width: calc(66px + 33px);
     margin: 0 16px;
     box-sizing: border-box;
+    cursor: pointer;
 
     &--error {
       .img-wrap {
@@ -184,9 +186,9 @@ export default class AddedDocuments extends Vue {
           width: 100%;
           height: 100%;
           display: block;
-          background: linear-gradient(0deg, rgba(15, 15, 15, 0.6), rgba(15, 15, 15, 0.6)), #C4C4C4;
+          background: linear-gradient(0deg, rgba(15, 15, 15, 0.6), rgba(15, 15, 15, 0.6)), #c4c4c4;
           border-radius: 8px;
-          opacity: .6;
+          opacity: 0.6;
         }
       }
     }
@@ -220,7 +222,14 @@ export default class AddedDocuments extends Vue {
 
     .img-wrap {
       width: 60px;
+      height: 88px;
       border-radius: 8px;
+      overflow: hidden;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
   }
 
@@ -246,5 +255,4 @@ export default class AddedDocuments extends Vue {
     }
   }
 }
-
 </style>

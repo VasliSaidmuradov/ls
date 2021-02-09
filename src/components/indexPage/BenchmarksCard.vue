@@ -2,13 +2,13 @@
   <div class="benchmarks-card">
     <div class="benchmarks-card__content">
       <div class="benchmarks-card__content-name">
-        <span class="benchmarks-card__content-name-value">{{benchmark.name}}</span>
+        <span class="benchmarks-card__content-name-value">{{benchmark.biomarker}}</span>
         <span class="benchmarks-card__content-name-value-unit">{{benchmark.unit}}</span>
       </div>
       <div class="benchmarks-card__content-value">
         <div class="benchmarks-card__content-value-left">
           <span class="benchmarks-card__content-value-left-value">
-            {{benchmark.value}}
+            {{benchmark.value && benchmark.value.toFixed(2)}}
           </span>
           <span class="benchmarks-card__content-value-left-unit">
             {{benchmark.unit}}
@@ -23,7 +23,7 @@
     </div>
     <div class="benchmarks-card__date">
       <span class="benchmarks-card__date-value">
-        {{$date(benchmark.date, 'dd MMMM yyyy')}}
+        {{$date(new Date(benchmark.date), 'dd.MM.yyyy')}}
       </span>
       <button class="benchmarks-card__date-btn">
         <span class="benchmarks-card__date-btn-icon">
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Prop } from 'vue-property-decorator';
 import {IDashBoard} from '@/interfaces/dashboard.interface';
 import AnalyzesMixin from '@/mixins/analyzes-mixin';
 

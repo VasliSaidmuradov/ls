@@ -9,6 +9,7 @@ import storage from './modules/storage.store'
 import orders from './modules/orders.store';
 import staticVariables from './modules/static-variables.store';
 import documents from './modules/documents.store';
+import dashboard from './modules/dashboard.store';
 
 Vue.use(Vuex);
 
@@ -23,5 +24,6 @@ export default new Vuex.Store({
     orders,
     staticVariables,
     documents,
+    dashboard,
   }
 })

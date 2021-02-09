@@ -2,80 +2,141 @@
   <div class="analyze-card">
     <div class="analyze-card__img">
       <div class="img-wrap">
-        <img src="../../assets/indexPage/analyz-card-man.svg">
+        <img :src="require(`@/assets/indexPage/${recomendation[recomendationType].image}`)" />
       </div>
     </div>
     <div class="analyze-card__content">
-      <h4 class="analyze-card__content-title">Ваше здоровье немного под угрозой</h4>
+      <h4 class="analyze-card__content-title">{{ recomendation[recomendationType].title }}</h4>
       <div class="analyze-card__content-desk">
-        Стоит обратиться к специалистам, поскольку некоторые ваши анализы находится за пределами референсной зоны!
+        {{ recomendation[recomendationType].text }}
       </div>
       <div class="analyze-card__stat">
-        <p class="analyze-card__stat-score">Всего анализов: 25</p>
+        <p v-if="analyzeQuantity" class="analyze-card__stat-score">Всего анализов: {{ analyzeQuantity }}</p>
 
         <div class="analyze-card__stat-content">
-          <div class="analyze-card__stat-item" v-for="(item, index) in statItems" :key="index" :style="`color:${item.color}`">
+          <div
+            class="analyze-card__stat-item"
+            v-for="(item, index) in statItems"
+            :key="index"
+            :style="`color:${item.color}`"
+          >
             <div class="analyze-card__stat-item-progress analyze-card__stat-item-progress--mobile">
-              <q-linear-progress rounded size="4" :value="(item.value / 100) * 5"/>
+              <q-linear-progress rounded size="4" :value="(item.value / 100) * 5" />
             </div>
             <div class="analyze-card__stat-item-wrap">
-              <span class="analyze-card__stat-item-value">{{item.value}}</span>
+              <span class="analyze-card__stat-item-value">{{ item.value }}</span>
               <div class="analyze-card__stat-item-progress">
-                <q-linear-progress rounded size="4" :value="(item.value / 100) * 5"/>
+                <q-linear-progress rounded size="4" :value="(item.value / 100) * 5" />
               </div>
-              <span class="analyze-card__stat-item-text">{{item.text}}</span>
+              <span class="analyze-card__stat-item-text">{{ item.text }}</span>
               <button class="analyze-card__stat-item-btn" v-if="item.status === 'danger'" @click="showFullStatistic">
-              <span class="analyze-card__stat-item-btn-icon">
-                <icon name="next-icon"></icon>
-              </span>
+                <span class="analyze-card__stat-item-btn-icon">
+                  <icon name="next-icon"></icon>
+                </span>
               </button>
             </div>
           </div>
         </div>
       </div>
-
-      <div v-if="fullStatistic" class="analyze-card__full-stat">
-        <span class="analyze-card__full-stat-icon">
-          <icon name="next-icon"></icon>
-        </span>
-        <span class="analyze-card__full-stat-text">Соотношение своб. ПСА к общему</span>
-        <span class="analyze-card__full-stat-rate">21,42, %</span>
-      </div>
+      <template v-if="fullStatistic">
+        <div v-for="item in overview.out_of_norm_results" :key="item.id" class="analyze-card__full-stat">
+          <span class="analyze-card__full-stat-icon">
+            <icon name="next-icon"></icon>
+          </span>
+          <span class="analyze-card__full-stat-text">{{ item.biomarker }}</span>
+          <span class="analyze-card__full-stat-rate">{{ item.value }} {{ item.unit }}</span>
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
+import { IDashBoard } from '@/interfaces/dashboard.interface';
+
+interface IStatItem {
+  value: number;
+  text: string;
+  color: string;
+  status: string;
+}
+interface IrecomendationItem {
+  title: string;
+  text: string;
+  image: string;
+}
+interface IRecomendation {
+  good: IrecomendationItem;
+  norm: IrecomendationItem;
+  bad: IrecomendationItem;
+}
 
 @Component({})
 export default class AnalyzesCard extends Vue {
-
-  statItems = [
-    {
-      value: 19,
-      text: 'В норме',
-      color: '#63C58A',
-      status: 'ok'
-    }, {
-      value: 5,
-      text: 'Пограничные зоны',
-      color: '#FFDE79',
-      status: 'ok'
-    }, {
-      value: 1,
-      text: 'Не в норме',
-      color: '#FF7C7C',
-      status: 'danger'
-    },
-  ]
-
+  statItems: IStatItem[] = [];
   fullStatistic = false;
+  recomendation: IRecomendation = {
+    good: {
+      title: 'Ваше здоровье в хорошем сотоянии',
+      text: 'Ваши анализы находятся в референсной зоне!',
+      image: 'analyz-card-man.svg',
+    },
+    norm: {
+      title: 'Ваше здоровье немного под угрозой',
+      text:
+        'Стоит обратиться к специалистам, поскольку некоторые ваши анализы находится за пределами референсной зоны!',
+      image: 'doctor-woman.svg',
+    },
+    bad: {
+      title: 'Ваше здоровье под угрозой',
+      text:
+        'Сочно нужно обратиться к специалистам, поскольку ваши анализы находится за пределами референсной зоны!',
+      image: 'doctor-man.svg',
+    },
+  };
 
-  showFullStatistic() {
-    this.fullStatistic = !this.fullStatistic
+  @Watch('overview')
+  function(val: IDashBoard.IOverview) {
+    this.statItems = [
+      {
+        value: val.in_norm,
+        text: 'В норме',
+        color: '#63C58A',
+        status: 'ok',
+      },
+      {
+        value: val.border_zone,
+        text: 'Пограничные зоны',
+        color: '#FFDE79',
+        status: 'ok',
+      },
+      {
+        value: val.out_of_norm,
+        text: 'Не в норме',
+        color: '#FF7C7C',
+        status: 'danger',
+      },
+    ];
+  }
+  get recomendationType(): string {
+    const { out_of_norm } = this.overview;
+    const analyzeQuantity = this.analyzeQuantity;
+    const result = (out_of_norm / analyzeQuantity) * 100;
+
+    return result === 0 ? 'good' : result <= 20 ? 'norm' : 'bad';
+  }
+  get overview(): IDashBoard.IOverview {
+    return this.$store.state.dashboard.overview;
   }
 
+  get analyzeQuantity(): number {
+    return this.overview.in_norm + this.overview.border_zone + this.overview.out_of_norm;
+  }
+
+  showFullStatistic() {
+    this.fullStatistic = !this.fullStatistic;
+  }
 }
 </script>
 
@@ -86,6 +147,15 @@ export default class AnalyzesCard extends Vue {
   background: $light-white;
   box-shadow: 0px 4px 15px $shadow-color;
   border-radius: 25px;
+  .img-wrap {
+    width: 150px;
+    height: 280px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 
   &__img {
     margin-right: 45px;
@@ -218,11 +288,11 @@ export default class AnalyzesCard extends Vue {
     }
 
     @include media-breakpoint-up($breakpoint-pre-md) {
-      width: 55%
+      width: 55%;
     }
 
     @include media-breakpoint-up($breakpoint-sm) {
-      width: 65%
+      width: 65%;
     }
 
     @include media-breakpoint-up($breakpoint-xs) {
@@ -337,5 +407,4 @@ export default class AnalyzesCard extends Vue {
     padding: 0;
   }
 }
-
 </style>

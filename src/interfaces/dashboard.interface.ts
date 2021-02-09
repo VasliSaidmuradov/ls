@@ -1,3 +1,7 @@
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
+import { IOrdersApi } from '@/interfaces/orders.interface';
+import { Documents } from '@/interfaces/documents.interface';
+
 export namespace IDashBoard {
   export enum TabsName {
     BENCHMARKS = 'benchmarks',
@@ -47,5 +51,33 @@ export namespace IDashBoard {
   export interface IRanges {
     min: null | number;
     max: null | number;
+  }
+
+  export interface IOverview {
+    in_norm: number;
+    border_zone: number;
+    out_of_norm: number;
+    out_of_norm_results: IAnalyzes.IAnalyzeResult[];
+  }
+}
+
+export namespace IDashBoardStore {
+  export interface IState {
+    documents: Documents.IDocuments;
+    orderedServices: IOrdersApi.IOrderedServices[];
+    overview: IDashBoard.IOverview;
+    results: IAnalyzes.IAnalyzeResult[];
+  }
+}
+
+export namespace IDashBoardApi {
+  export interface IDocuments {
+    documents: Documents.IDocuments;
+  }
+  export interface IOrderedServices {
+    orders: IOrdersApi.IOrderedServices[];
+  }
+  export interface IResults {
+    results: IAnalyzes.IAnalyzeResult[];
   }
 }

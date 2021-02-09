@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="latest-result-card__bottom">
-      <div class="latest-result-card__bottom-left" v-if="data.results.length">
+      <div class="latest-result-card__bottom-left" v-if="data.results && data.results.length">
         <span class="latest-result-card__bottom-left-desk"> Всего {{ data.results.length }} показателей: </span>
         <div class="latest-result-card__bottom-left-branch">
           <span

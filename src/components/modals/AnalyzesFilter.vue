@@ -73,7 +73,6 @@
               </div>
             </div>
           </div>
-
           <div class="modal__actions">
             <MainBtn text="Применить" type="small" class="modal__actions-accept">
               <template v-slot:icon>
@@ -93,7 +92,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
 import InputDate from '@/components/InputDate.vue';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 import MainSelect from '@/components/UI/MainSelect.vue';
