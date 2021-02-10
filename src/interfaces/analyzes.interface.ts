@@ -37,6 +37,7 @@ export namespace IAnalyzes {
   }
 
   export interface IBiomarker {
+    biomarker: string;
     name: string;
     available_units: string[];
     categories: [];
@@ -44,6 +45,7 @@ export namespace IAnalyzes {
     ranges: IRanges;
     rubrics: number[];
     unit: string;
+    unit_id: number;
     value?: string;
     laboratory?: string;
     date?: string | Date;

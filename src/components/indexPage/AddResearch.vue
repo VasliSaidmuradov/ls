@@ -5,11 +5,7 @@
       Вы можете добавлять разные документы, а также сканировать анализы и результаты приемов.
     </div>
     <div class="add-research__actions">
-      <q-expansion-item
-          class="add-research__actions-exp"
-          style="border-radius: 22px"
-          icon="explore"
-      >
+      <q-expansion-item class="add-research__actions-exp" style="border-radius: 22px" icon="explore">
         <template v-slot:header>
           <div class="add-research__actions-exp-header">
             <span class="add-research__actions-exp-header-left">
@@ -20,12 +16,12 @@
         </template>
 
         <ul class="add-research__actions-exp-list">
-          <li class="add-research__actions-exp-item">Документ</li>
+          <li class="add-research__actions-exp-item" @click="openAddAnalyzeFileModal">Документ</li>
           <li class="add-research__actions-exp-item" @click="openAddAnalyzesModal">Вручную</li>
         </ul>
       </q-expansion-item>
 
-      <q-btn class="add-research__actions-btn button1--bordered-with-icon">
+      <q-btn @click="openAddFileModal" class="add-research__actions-btn button1--bordered-with-icon">
         <span class="icon add-research__actions-btn-icon">
           <icon name="paper-icon"></icon>
         </span>
@@ -36,19 +32,28 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Emit } from 'vue-property-decorator';
 import AnalyzesCard from '@/components/indexPage/AnalyzesCard.vue';
-import {bus} from '@/plugins/bus';
-import {IAnalyzes} from '@/interfaces/analyzes.interface';
+import { bus } from '@/plugins/bus';
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
 
 @Component({
   components: {
-    AnalyzesCard
-  }
+    AnalyzesCard,
+  },
 })
 export default class AddResearch extends Vue {
   openAddAnalyzesModal() {
     bus.$emit(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL);
+  }
+
+  @Emit('open-file-modal')
+  openAddFileModal() {
+    return true;
+  }
+  @Emit('open-analyze-file-modal')
+  openAddAnalyzeFileModal() {
+    return true;
   }
 }
 </script>
@@ -113,7 +118,6 @@ export default class AddResearch extends Vue {
     box-shadow: 0px 4px 15px $shadow-color;
     border-radius: 22px;
 
-
     ::v-deep.q-focus-helper {
       display: none;
     }
@@ -131,7 +135,6 @@ export default class AddResearch extends Vue {
     ::v-deep.q-item {
       padding: 8px;
     }
-
 
     ::v-deep.q-expansion-item__content {
       position: absolute;
@@ -188,5 +191,4 @@ export default class AddResearch extends Vue {
     }
   }
 }
-
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="add-analyzes" :class="{'add-analyzes--popup': isPopup}">
+  <div class="add-analyzes" :class="{ 'add-analyzes--popup': isPopup }">
     <h4 class="add-analyzes__title">Добавить анализ</h4>
     <div class="add-analyzes__content">
       <div class="add-analyzes__content-input form-input form-input--bordered">
@@ -12,29 +12,28 @@
           <div class="add-analyzes__content-input-list-content">
             <template v-if="searchedList.length">
               <div class="add-analyzes__content-input-list-item" v-for="(item, index) in searchedList" :key="index">
-                <span class="add-analyzes__content-input-list-item-title">{{item.name}}</span>
+                <span class="add-analyzes__content-input-list-item-title">{{ item.name }}</span>
                 <MainBtn
-                    type="main-btn-small"
-                    bcg-color="transparent"
-                    text="Добавить анализ"
-                    @click-btn="addAnalyzes(item)">
+                  type="main-btn-small"
+                  bcg-color="transparent"
+                  text="Добавить анализ"
+                  @click-btn="addAnalyzes(item)"
+                >
                   <template v-slot:icon>
                     <icon name="add-icon"></icon>
                   </template>
                 </MainBtn>
               </div>
             </template>
-            <div v-else>
-              empty
-            </div>
+            <div v-else>empty</div>
           </div>
         </div>
       </div>
       <div class="add-analyzes__content-added" v-if="addedAnalyzes.length">
-        <h5 class="add-analyzes__content-added-title">Выбрано {{addedAnalyzes.length}} анализов:</h5>
+        <h5 class="add-analyzes__content-added-title">Выбрано {{ addedAnalyzes.length }} анализов:</h5>
         <ul class="add-analyzes__content-added-list">
           <li class="add-analyzes__content-added-item">
-            <AnalyzesCard v-for="item in addedAnalyzes" :data="item" :key="item.id"/>
+            <AnalyzesCard v-for="item in addedAnalyzes" :data="item" :key="item.id" />
           </li>
         </ul>
       </div>
@@ -43,23 +42,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Emit} from 'vue-property-decorator';
-import {IAnalyzes} from '@/interfaces/analyzes.interface';
+import { Component, Vue, Prop, Emit } from 'vue-property-decorator';
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 import AnalyzesCard from '@/components/analyzes/AnalyzesCard.vue';
-import {mapGetters} from "vuex";
+import { mapGetters } from 'vuex';
 
 @Component({
   components: {
     MainBtn,
-    AnalyzesCard
+    AnalyzesCard,
   },
   computed: mapGetters({
     addedAnalyzes: 'analyzes/getAddedAnalyzes',
-  })
+  }),
 })
 export default class AddAnalyzes extends Vue {
-  @Prop({default: false, type: Boolean}) isPopup: boolean;
+  @Prop({ default: false, type: Boolean }) isPopup: boolean;
 
   searchedValue = '';
   searchedList: IAnalyzes.IAnalyzesForAddItem[] = [];
@@ -94,16 +93,17 @@ export default class AddAnalyzes extends Vue {
       date: new Date(),
       comment: null,
       unit: item.unit,
+      unit_id: item.unit_id,
       ranges: item.ranges,
-    }
+    };
   }
 
   searchAnalyzes() {
     this.searchedList = this.biomarkersList.filter((item: IAnalyzes.IAnalyzesForAddItem) => {
       if (item?.name) {
-        return item.name.toLowerCase().search(this.searchedValue.toLowerCase()) !== -1
+        return item.name.toLowerCase().search(this.searchedValue.toLowerCase()) !== -1;
       }
-    })
+    });
   }
 
   @Emit('close')
@@ -129,7 +129,6 @@ export default class AddAnalyzes extends Vue {
     margin-top: 0;
     margin-bottom: 40px;
   }
-
 
   &__content-input {
     position: relative;
@@ -183,7 +182,7 @@ export default class AddAnalyzes extends Vue {
     border-radius: 24px;
     justify-content: space-between;
     margin-bottom: 10px;
-    transition: .5s;
+    transition: 0.5s;
 
     ::v-deep.main-btn__icon-wrapper {
       color: $accent-color;
@@ -204,7 +203,6 @@ export default class AddAnalyzes extends Vue {
     &:hover {
       background-color: $light-white;
     }
-
 
     @include media-breakpoint-up($breakpoint-sm) {
       flex-direction: column;
@@ -252,5 +250,4 @@ export default class AddAnalyzes extends Vue {
     padding: 60px;
   }
 }
-
 </style>

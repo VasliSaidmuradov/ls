@@ -19,10 +19,10 @@ class AnalyzesResources {
     >;
   }
 
-  saveBiomarker(data: IAnalyzes.IBiomarker, id: string | number, method: Method) {
+  saveBiomarker(response: IAnalyzes.IBiomarker, id: string | number, method: Method) {
     return Axios(`${AppConfig.apiUrl}${this.endPoint}/results/${method === 'PATCH' ? `${id}/` : ''}`, {
       method: method,
-      data: { ...data },
+      data: { ...response },
     });
   }
 

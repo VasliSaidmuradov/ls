@@ -53,7 +53,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }
@@ -67,7 +67,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }
@@ -89,17 +89,17 @@ export default {
         commit('addItemDocumentList', documentData);
 
         const addToOrder = rootState.documents.addDocumentToOrder;
-        const { id, document_ids } = rootState.orders.orderedService;
-        const docIds = [...new Set([...document_ids, data.id])];
 
         if (addToOrder) {
+          const { id, document_ids } = rootState.orders.orderedService;
+          const docIds = [...new Set([...document_ids, data.id])];
           dispatch('orders/changeOrderedService', { id, documentIds: docIds }, { root: true });
         }
 
         return true;
 
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }
@@ -114,7 +114,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }
@@ -132,7 +132,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }
@@ -143,7 +143,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }
@@ -159,7 +159,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }
@@ -173,7 +173,7 @@ export default {
 
         return true;
       } catch (error) {
-        if (error.errorData.message) {
+        if (error.errorData?.message) {
           await dispatch('error/showErrorNotice', { message: error.errorData.message }, { root: true });
         }
       }

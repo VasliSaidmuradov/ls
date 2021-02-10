@@ -18,13 +18,13 @@
 
           <div class="modal__sort">
             <main-select
-                :value="sortedValue"
-                :options="selectOptionList"
-                :border-color="'#E9E8FF'"
-                @input-select="inputSelect"
+              :value="sortedValue"
+              :options="selectOptionList"
+              :border-color="'#E9E8FF'"
+              @input-select="inputSelect"
             >
               <template v-slot:prepend>
-                <icon name="sort-icon"/>
+                <icon name="sort-icon" />
               </template>
             </main-select>
 
@@ -47,7 +47,7 @@
 
         <q-carousel-slide name="second">
           <div class="second__back">
-            <BackBtn @go-back="goBack"/>
+            <BackBtn @go-back="goBack" />
           </div>
           <h6 class="second__title">Выберите группу</h6>
           <div class="second__options scrollable">
@@ -55,7 +55,7 @@
               <div v-if="!rubric.subrubrics.length" class="second__options-list second__options-list-first">
                 <CheckboxInput
                   :id="rubric"
-                  :value="checkboxValues[rubric.id]"
+                  :value="checkBoxValues[rubric.id]"
                   :label="`${rubric.id}-${rubric.name}`"
                   @change-value="onCheckChange(rubric.id)"
                 />
@@ -66,7 +66,7 @@
                   v-for="subrubric in rubric.subrubrics"
                   :key="subrubric.id"
                   :id="subrubric.id"
-                  :value="checkboxValues[subrubric.id]"
+                  :value="checkBoxValues[subrubric.id]"
                   :label="`${subrubric.id}-${subrubric.name}`"
                   @change-value="onCheckChange(subrubric.id)"
                 />
@@ -92,14 +92,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 import InputDate from '@/components/InputDate.vue';
 import MainBtn from '@/components/UI/buttons/MainBtn.vue';
 import MainSelect from '@/components/UI/MainSelect.vue';
 import AnalyzesSelect from '@/components/analyzes/AnalyzesSelect.vue';
 import CheckboxInput from '@/components/UI/inputs/CheckboxInput.vue';
-import {QCarousel} from 'quasar';
-import {IAnalyzes} from '@/interfaces/analyzes.interface';
+import { QCarousel } from 'quasar';
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
 import ICheckArr = IAnalyzes.ICheckboxValue;
 import BackBtn from '@/components/UI/buttons/BackBtn.vue';
 
@@ -114,12 +114,12 @@ export interface IRefs {
     InputDate,
     AnalyzesSelect,
     CheckboxInput,
-    BackBtn
+    BackBtn,
   },
 })
 export default class AnalyzesFilter extends Vue {
   @Prop({ required: true }) isShow: boolean;
-  sortedValue = 'Сортировать'
+  sortedValue = 'Сортировать';
   selectOptionList: Array<string> = [
     'Сортировать',
     'По дате загрузки по убыванию',
@@ -141,8 +141,8 @@ export default class AnalyzesFilter extends Vue {
   }
   get analyzeRubrics() {
     const rubrics = [...this.$store.state.analyzes.analyzeRubricsList];
-    const withSubrubrics = rubrics.filter(el => el.subrubrics.length);
-    const withoutSubrubrics = rubrics.filter(el => !el.subrubrics.length);
+    const withSubrubrics = rubrics.filter((el) => el.subrubrics.length);
+    const withoutSubrubrics = rubrics.filter((el) => !el.subrubrics.length);
     return [...withoutSubrubrics, ...withSubrubrics];
   }
   get getSelectedRubricIds() {
@@ -152,7 +152,7 @@ export default class AnalyzesFilter extends Vue {
   onCheckChange(key: keyof ICheckArr) {
     const items = this.checkBoxValues;
     items[key] = !items[key];
-    this.$store.commit('analyzes/setPropertyInStore', {name: 'checkBoxValues', value: items});
+    this.$store.commit('analyzes/setPropertyInStore', { name: 'checkBoxValues', value: items });
   }
 
   inputSelect(value: string) {
@@ -281,7 +281,7 @@ export default class AnalyzesFilter extends Vue {
     ::v-deep.main-btn__text {
       font-size: 12px;
       line-height: 150%;
-      color: $black-02
+      color: $black-02;
     }
   }
 }

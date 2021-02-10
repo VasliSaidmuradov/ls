@@ -8,7 +8,7 @@
         </div>
 
         <div class="index-page__content-top-research">
-          <AddResearch class="add-research" />
+          <AddResearch class="add-research" @open-file-modal="toggleFileModal" @open-analyze-file-modal="toggleAnalyzeFileModal" />
           <div class="index-page__content-top-research-add-doc">
             <AddedDocuments />
           </div>
@@ -24,6 +24,8 @@
     <AddAnalyzesModal :isShow="addAnalyzesModalState" @close="addAnalyzesModalClose" />
     <AddComment :isShow="addCommentModalState" @close="addCommentClose" />
     <EditAnalyzes :isShow="editAnalyzesModalState" :editData="editData" @close="editModalClose" />
+    <AddFileModal :isFileModalOpen="isFileModalOpen" @close-modal="toggleFileModal(false)" />
+    <AddFileModal :isFileModalOpen="isAnalyzeFileModalOpen" :isAnalyzeDownload="true" @close-modal="toggleAnalyzeFileModal(false)" />
   </div>
 </template>
 
@@ -42,6 +44,7 @@ import { bus } from '@/plugins/bus';
 import { IAnalyzes } from '@/interfaces/analyzes.interface';
 import AddComment from '@/components/modals/AddComment.vue';
 import EditAnalyzes from '@/components/modals/EditAnalyzes.vue';
+import AddFileModal from '@/components/modals/addFileModal/AddFileModal.vue';
 
 @Component({
   components: {
@@ -52,6 +55,7 @@ import EditAnalyzes from '@/components/modals/EditAnalyzes.vue';
     AddAnalyzesModal,
     AddComment,
     EditAnalyzes,
+    AddFileModal,
   },
 })
 export default class IndexPage extends Vue {
@@ -74,6 +78,8 @@ export default class IndexPage extends Vue {
   editData = {};
 
   activeTab = IDashBoard.TabsName.BENCHMARKS;
+  isFileModalOpen: boolean = false;
+  isAnalyzeFileModalOpen: boolean = false;
 
   created() {
     this.$store.dispatch('dashboard/getDocuments');
@@ -82,6 +88,7 @@ export default class IndexPage extends Vue {
     this.$store.dispatch('dashboard/getResults');
     this.$store.dispatch('staticVariables/getDocumentTypes');
     this.$store.dispatch('staticVariables/getOrderStatuses');
+    this.$store.dispatch('storage/getDocumentTypes');
   }
 
   mounted() {
@@ -131,6 +138,14 @@ export default class IndexPage extends Vue {
     bus.$off(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_MODAL);
     bus.$off(IAnalyzes.BusEvents.OPEN_ADD_ANALYZES_COMMENT);
     bus.$off(IAnalyzes.BusEvents.EDIT_ANALYZES);
+  }
+  toggleFileModal(state: boolean) {
+    this.$store.commit('documents/setPropertyInStore', { name: 'addDocumentToOrder', value: false });
+    this.isFileModalOpen = state;
+  }
+  toggleAnalyzeFileModal(state: boolean) {
+    this.$store.commit('documents/setPropertyInStore', { name: 'addDocumentToOrder', value: false });
+    this.isAnalyzeFileModalOpen = state;
   }
 }
 </script>

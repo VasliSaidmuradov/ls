@@ -26,7 +26,6 @@ export default {
     async getDocuments({ commit, dispatch }: DashboardStore, count: number) {
       try {
         const { data }: AxiosResponse<IDashBoardApi.IDocuments> = await dashboardResources.getDocuments(count);
-        console.log('get dash docs: ', data.documents);
         commit('setPropertyInStore', { name: 'documents', value: data.documents });
       } catch (error) {
         if (error?.errorData?.message) {
@@ -39,7 +38,6 @@ export default {
         const { data }: AxiosResponse<IDashBoardApi.IOrderedServices> = await dashboardResources.getOrderedServices(
           count
         );
-        console.log('get dash ordered services: ', data.orders);
         commit('setPropertyInStore', { name: 'orderedServices', value: data.orders });
       } catch (error) {
         if (error?.errorData?.message) {
@@ -50,7 +48,6 @@ export default {
     async getOverview({ commit, dispatch }: DashboardStore) {
       try {
         const { data }: AxiosResponse<IDashBoard.IOverview> = await dashboardResources.getOverview();
-        console.log('get dash overview: ', data);
         commit('setPropertyInStore', { name: 'overview', value: data });
       } catch (error) {
         if (error?.errorData?.message) {
@@ -61,7 +58,6 @@ export default {
     async getResults({ commit, dispatch }: DashboardStore, count: number) {
       try {
         const { data }: AxiosResponse<IDashBoardApi.IResults> = await dashboardResources.getResults(count);
-        console.log('get dash results: ', data.results);
         commit('setPropertyInStore', { name: 'results', value: data.results });
       } catch (error) {
         if (error?.errorData?.message) {

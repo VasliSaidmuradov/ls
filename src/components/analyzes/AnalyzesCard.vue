@@ -1,91 +1,95 @@
 <template>
-  <div class="analyzes-card" :class="{'analyzes-card--edit': localDate.isEdit}">
-   <div class="analyzes-card__left">
-     <div class="analyzes-card__title">
-       <span>{{data.biomarker}}</span>
-     </div>
-     <div class="analyzes-card__values">
-       <div class="analyzes-card__values-results">
-         <div class="default">
-           {{localDate.value ? localDate.value : '-'}}
-         </div>
-         <div class="edit">
-           <div class="form-input">
-             <q-input v-model="localDate.value" type="number" ref="result" :rules="rules"/>
-           </div>
-         </div>
-       </div>
-       <div class="analyzes-card__values-units">
-         <div class="default">
-           {{localDate.unit}}
-         </div>
-         <div class="edit">
-           <MainSelect :value="localDate.unit"
-                       :options="data.available_units"
-                       @input-select="update('unit', $event)">
-           </MainSelect>
-         </div>
-       </div>
-       <div class="analyzes-card__values-ranges">
-         <div class="default">
-           {{localDate.range}}
-         </div>
-         <div class="edit">
-           <div class="form-input">
-             <q-input v-model="localDate.range" ref="range" :rules="rules">
-               <template v-slot:append>
-                 <div class="comment" @click.stop.prevent="addComment">
-                   <span class="comment__count" v-if='data.comment'>
-                     1
-                   </span>
+  <div class="analyzes-card" :class="{ 'analyzes-card--edit': localDate.isEdit }">
+    <div class="analyzes-card__left">
+      <div class="analyzes-card__title">
+        <span>{{ data.biomarker }}</span>
+      </div>
+      <div class="analyzes-card__values">
+        <div class="analyzes-card__values-results">
+          <div class="default">
+            {{ localDate.value ? localDate.value : '-' }}
+          </div>
+          <div class="edit">
+            <div class="form-input">
+              <q-input v-model="localDate.value" type="number" ref="result" :rules="rules" />
+            </div>
+          </div>
+        </div>
+        <div class="analyzes-card__values-units">
+          <div class="default">
+            {{ localDate.unit }}
+          </div>
+          <div class="edit">
+            <MainSelect
+              :value="localDate.unit"
+              :options="data.available_units.map((el) => el.name)"
+              @input-select="update('unit', $event)"
+            >
+            </MainSelect>
+          </div>
+        </div>
+        <div class="analyzes-card__values-ranges">
+          <div class="default">
+            {{ localDate.range }}
+          </div>
+          <div class="edit">
+            <div class="form-input">
+              <q-input v-model="localDate.range" ref="range" :rules="rules">
+                <template v-slot:append>
+                  <div class="comment" @click.stop.prevent="addComment">
+                    <span class="comment__count" v-if="data.comment"> 1 </span>
                     <span class="comment-icon">
                       <icon name="comment-icon"></icon>
                     </span>
 
-
-                   <q-tooltip :content-style="{backgroundColor: '#7C74E9', color: '#fff'}">
-                     Добавить комментарий
-                   </q-tooltip>
-                 </div>
-               </template>
-             </q-input>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
+                    <q-tooltip :content-style="{ backgroundColor: '#7C74E9', color: '#fff' }">
+                      Добавить комментарий
+                    </q-tooltip>
+                  </div>
+                </template>
+              </q-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="analyzes-card__right">
       <div class="analyzes-card__date">
         <div class="analyzes-card__date-lab">
           <div class="default">
-            {{localDate.laboratory.name}}
+            {{ localDate.laboratory.name }}
           </div>
           <div class="edit">
-            <MainSelect :value="localDate.laboratory"
-                        :options="laboratoriesList"
-                        optionsLabel="name"
-                        :option-value="convertSelectValue"
-                        @input-select="update('laboratory', $event)">
-
+            <MainSelect
+              :value="localDate.laboratory.name"
+              :options="laboratoriesList.map((el) => el.name)"
+              optionsLabel="name"
+              :option-value="convertSelectValue"
+              @input-select="update('laboratory', $event)"
+            >
             </MainSelect>
           </div>
         </div>
 
         <div class="analyzes-card__date-value">
           <div class="default">
-            {{$date(new Date(localDate.date), 'yyyy MMMM dd')}}
+            {{ $date(new Date(localDate.date), 'yyyy MMMM dd') }}
           </div>
           <div class="edit">
-            <InputDate :value="new Date(localDate.date)"
-                       :propRules="rules"
-                       ref="date"
-                       @change-value="update('date', new Date($event))"/>
+            <InputDate
+              :value="new Date(localDate.date)"
+              :propRules="rules"
+              ref="date"
+              @change-value="update('date', new Date($event))"
+            />
           </div>
         </div>
       </div>
-
       <div class="analyzes-card__actions">
-        <button class="analyzes-card__actions-btn analyzes-card__actions-btn--edit" @click="localDate.isEdit ? saveChanges() : editAnalyzes()">
+        <button
+          class="analyzes-card__actions-btn analyzes-card__actions-btn--edit"
+          @click="localDate.isEdit ? saveChanges() : editAnalyzes()"
+        >
           <icon :name="localDate.isEdit ? 'check-icon' : 'edit-icon'"></icon>
         </button>
         <button class="analyzes-card__actions-btn analyzes-card__actions--delete" @click="deleteAnalyze">
@@ -98,25 +102,19 @@
               <span class="mobile-actions__list-item-icon">
                 <icon name="edit-icon"></icon>
               </span>
-              <span class="mobile-actions__list-item-text">
-                Редактировать
-              </span>
+              <span class="mobile-actions__list-item-text"> Редактировать </span>
             </li>
             <li class="mobile-actions__list-item" @click="addComment">
               <span class="mobile-actions__list-item-icon">
                 <icon name="comment-icon"></icon>
               </span>
-              <span class="mobile-actions__list-item-text">
-                Комментарий
-              </span>
+              <span class="mobile-actions__list-item-text"> Комментарий </span>
             </li>
             <li class="mobile-actions__list-item" @click="deleteAnalyze">
               <span class="mobile-actions__list-item-icon">
                 <icon name="delete-icon"></icon>
               </span>
-              <span class="mobile-actions__list-item-text">
-                Удалить
-              </span>
+              <span class="mobile-actions__list-item-text"> Удалить </span>
             </li>
           </ul>
           <span @click="toggleMobileActionsMenu" class="mobile-actions-btn">
@@ -129,15 +127,15 @@
 </template>
 
 <script lang="ts">
-import {Component, Vue, Prop, Mixins, Watch} from 'vue-property-decorator';
-import {IAnalyzes} from '@/interfaces/analyzes.interface';
+import { Component, Vue, Prop, Mixins } from 'vue-property-decorator';
+import { IAnalyzes } from '@/interfaces/analyzes.interface';
 import AnalyzesMixin from '@/mixins/analyzes-mixin';
 import MainSelect from '@/components/UI/MainSelect.vue';
 import InputDate from '@/components/InputDate.vue';
-import {bus} from '@/plugins/bus';
-import {ILayout} from '@/interfaces/layout.interface';
+import { bus } from '@/plugins/bus';
+import { ILayout } from '@/interfaces/layout.interface';
 import BaseFormMixins from '@/mixins/base-form-mixins';
-import { QInput, QSelect } from 'quasar';
+import { QInput } from 'quasar';
 import { format } from 'date-fns';
 import { serverDateFormat } from '@/interfaces/api.interface';
 import { Method } from 'axios';
@@ -152,23 +150,23 @@ export interface ILocalData {
   value: string;
   date: string | Date;
   unit: string;
+  unit_id: number;
   isEdit: boolean;
   range: string;
   laboratory: IAnalyzes.ILaboratories;
-  idAfterUpdate: null | string | number;
+  idAfterUpdate?: null | string | number;
 }
 
 @Component({
   components: {
     MainSelect,
-    InputDate
+    InputDate,
   },
 })
 export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) {
+  @Prop({ required: true }) data: IAnalyzes.IBiomarker;
 
-  @Prop({required: true}) data: IAnalyzes.IBiomarker;
-
-  rules: Function[] = []
+  rules: Function[] = [];
 
   showMobileActionsMenu = false;
 
@@ -177,22 +175,25 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
   localDate: ILocalData = {
     value: '',
     date: new Date(),
-    unit: this.data.unit || '',
+    unit: this.unit || '',
+    unit_id: this.unitId,
     isEdit: true,
     range: '',
-    laboratory: {
-      name: '',
-      id: 0,
-    },
+    laboratory: this.laboratoriesList[0],
     idAfterUpdate: null,
   };
 
   get laboratoriesList(): IAnalyzes.ILaboratories[] {
     return this.$store.state.analyzes.laboratoriesList;
   }
-
   get id(): number | string {
     return this.localDate.idAfterUpdate ? this.localDate.idAfterUpdate : this.data.id;
+  }
+  get unit() {
+    return this.data.unit;
+  }
+  get unitId() {
+    return this.data.unit_id;
   }
 
   created() {
@@ -202,7 +203,7 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
 
   deleteAnalyze() {
     this.$store.dispatch('confirm/open', {
-      text: 'Определение концентрации Витамина B9 (фолиевая кислота) в сыворотке крови',
+      text: this.data.biomarker,
       title: 'Вы точно хотите удалить добавленный анализ?',
       class: 'delete-analyzes',
       confirm: {
@@ -215,8 +216,8 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
       cancel: {
         text: 'Не удалять',
         type: 'main-btn-primary',
-      }
-    })
+      },
+    });
   }
 
   toggleMobileActionsMenu() {
@@ -233,19 +234,14 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
       return;
     }
 
-
     this.localDate.isEdit = true;
   }
 
   validate() {
-    return [
-        this.$refs.date.validate(),
-        this.$refs.result.validate(),
-        this.$refs.range.validate(),
-    ].includes(false)
+    return [this.$refs.date.validate(), this.$refs.result.validate(), this.$refs.range.validate()].includes(false);
   }
 
-   saveChanges() {
+  async saveChanges() {
     if (this.validate()) return;
 
     let method: Method = 'POST';
@@ -254,30 +250,36 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
       method = 'PATCH';
     }
 
+    const response = await this.createDateForSave();
 
-    this.$store.dispatch('analyzes/saveBiomarkers', {...this.createDateForSave(), method})
-     .then(({status, data}: {status: boolean; data: IAnalyzes.IBiomarker}) => {
-       if (status) {
-         this.localDate.idAfterUpdate = data.id;
-         this.localDate.isEdit = false;
-       }
-     })
+    const {
+      status,
+      data,
+    }: { status: boolean; data: IAnalyzes.IBiomarker } = await this.$store.dispatch('analyzes/saveBiomarkers', {
+      ...response,
+      method,
+    });
+    if (status) {
+      this.localDate.idAfterUpdate = data.id;
+      this.localDate.isEdit = false;
+    }
   }
 
   createDateForSave() {
     return {
-      data: {
+      response: {
         biomarker_id: this.data.biomarker_id,
         date: format(new Date(this.localDate.date as string), serverDateFormat),
         value: this.localDate.value,
-        ranges: this.localDate.range,
+        ranges: this.data.ranges,
         unit: this.localDate.unit,
+        unit_id: this.localDate.unit_id,
         laboratory: this.localDate?.laboratory?.name,
         laboratory_id: this.localDate?.laboratory?.id,
         comment: this.data.comment ? this.data.comment : null,
       },
-      id: this.id
-    }
+      id: this.id,
+    };
   }
 
   update(key: string, value: string | any) {
@@ -395,7 +397,8 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
   }
 
   &__values-results {
-    .default, .edit {
+    .default,
+    .edit {
       font-size: 14px;
       line-height: 130%;
       color: $status-green;
@@ -416,7 +419,8 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
     }
 
     @include media-breakpoint-up($breakpoint-lg) {
-      .default, .edit {
+      .default,
+      .edit {
         max-width: 80px;
         min-width: 80px;
         font-size: 12px;
@@ -441,7 +445,8 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
   }
 
   &__values-units {
-    .default, .edit {
+    .default,
+    .edit {
       font-size: 14px;
       line-height: 130%;
       color: $black-02;
@@ -481,7 +486,8 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
   }
 
   &__values-ranges {
-    .default, .edit {
+    .default,
+    .edit {
       font-size: 14px;
       line-height: 130%;
       color: $black-03;
@@ -536,7 +542,8 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
   }
 
   &__date-lab {
-    .default, .edit {
+    .default,
+    .edit {
       margin-right: 90px;
       font-size: 14px;
       line-height: 130%;
@@ -549,6 +556,7 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
       margin-right: 12px;
       min-width: 165px;
       max-width: 165px;
+      border-radius: 8px;
 
       ::v-deep.q-field__append {
         margin-left: 0;
@@ -579,7 +587,8 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
   }
 
   &__date-value {
-    .default, .edit {
+    .default,
+    .edit {
       font-size: 14px;
       line-height: 130%;
       color: $black-04;
@@ -592,7 +601,6 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
     @include media-breakpoint-up($breakpoint-lg) {
       .default {
         font-size: 12px;
-
       }
     }
 
@@ -626,7 +634,7 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
 
       svg {
         color: $black-07;
-        opacity: .5;
+        opacity: 0.5;
         width: 10px;
         height: 10px;
       }
@@ -675,7 +683,7 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
           }
         }
 
-        &__list-item-icon  {
+        &__list-item-icon {
           color: $accent-color;
           margin-right: 13px;
 
@@ -711,6 +719,7 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
       padding: 15px;
       max-width: 250px;
       min-width: 250px;
+      border-radius: 8px;
 
       span {
         @include trim-text(2);
@@ -723,7 +732,6 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
     }
 
     .analyzes-card__actions-btn--edit {
-
       svg {
         color: $status-green;
       }
@@ -743,10 +751,6 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
 
       svg {
         color: #fff;
-
-        path {
-          //fill: #000;
-        }
       }
 
       &__count {
@@ -757,7 +761,7 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
 
   @include media-breakpoint-up($breakpoint-md) {
     flex-direction: column;
-    align-items:flex-start;
+    align-items: flex-start;
   }
 }
 </style>
@@ -765,7 +769,6 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
 //style for modal
 <style lang="scss">
 .delete-analyzes {
-
   .modal__btn1 {
     padding: 8px 12px;
     border-radius: 16px;

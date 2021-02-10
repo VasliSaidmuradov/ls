@@ -143,11 +143,11 @@ export default {
 
     async saveBiomarkers(
       { dispatch, commit }: AnalyzesStore,
-      { data, id, method }: { data: IAnalyzes.IBiomarker; id: string | number; method: Method }
+      { response, id, method }: { response: IAnalyzes.IBiomarker; id: string | number; method: Method }
     ) {
       try {
         const { data: biomarker }: AxiosResponse<IAnalyzes.IBiomarker> = await analyzesResource.saveBiomarker(
-          data,
+          response,
           id,
           method
         );
@@ -182,6 +182,7 @@ export default {
 
       commit('setPropertyInStore', { name: 'addedAnalyzes', value: items });
     },
+
     deleteAnalyzes({ state, commit }: AnalyzesStore, id: number) {
       const items = state.addedAnalyzes;
       commit('setPropertyInStore', { name: 'addedAnalyzes', value: items.filter(item => item.id !== id) });
@@ -195,8 +196,23 @@ export default {
         dispatch('error/showErrorNotice', { message: error.errorData?.phone[0] }, { root: true });
       }
     },
+
     setCheckBoxValues({ state, commit }: AnalyzesStore) {
-      commit('setPropertyInStore', { name: 'checkBoxValues', value: {} });
+      const rubrics = [...state.analyzeRubricsList];
+      const values: { [key: string]: any } = {};
+
+      const addValue = (arr: IAnalyzes.IAnalyzeRubric[]) => {
+        arr.forEach(el => {
+          values[el.id] = false;
+          if (el.subrubrics.length) {
+            addValue(el.subrubrics);
+          }
+        });
+      };
+
+      addValue(rubrics);
+
+      commit('setPropertyInStore', { name: 'checkBoxValues', value: values });
     },
 
     async analyzeResultsList({ commit, dispatch }: AnalyzesStore) {
@@ -247,7 +263,6 @@ export default {
       try {
         const { data } = await analyzesResource.getAnalyzeRubrics();
         commit('setPropertyInStore', { name: 'analyzeRubricsList', value: data?.rubrics });
-        
       } catch (error) {
         dispatch('error/showErrorNotice', { message: error.errorData?.phone[0] }, { root: true });
       }
