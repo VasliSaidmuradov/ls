@@ -54,6 +54,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { IDashBoard } from '@/interfaces/dashboard.interface';
+import { recomendationTypes } from '@/utils/utils';
 
 interface IStatItem {
   value: number;
@@ -76,25 +77,6 @@ interface IRecomendation {
 export default class AnalyzesCard extends Vue {
   statItems: IStatItem[] = [];
   fullStatistic = false;
-  recomendation: IRecomendation = {
-    good: {
-      title: 'Ваше здоровье в хорошем сотоянии',
-      text: 'Ваши анализы находятся в референсной зоне!',
-      image: 'analyz-card-man.svg',
-    },
-    norm: {
-      title: 'Ваше здоровье немного под угрозой',
-      text:
-        'Стоит обратиться к специалистам, поскольку некоторые ваши анализы находится за пределами референсной зоны!',
-      image: 'doctor-woman.svg',
-    },
-    bad: {
-      title: 'Ваше здоровье под угрозой',
-      text:
-        'Сочно нужно обратиться к специалистам, поскольку ваши анализы находится за пределами референсной зоны!',
-      image: 'doctor-man.svg',
-    },
-  };
 
   @Watch('overview')
   function(val: IDashBoard.IOverview) {
@@ -119,17 +101,20 @@ export default class AnalyzesCard extends Vue {
       },
     ];
   }
+
+  get recomendation(): IRecomendation {
+    return recomendationTypes;
+  }
   get recomendationType(): string {
-    const { out_of_norm } = this.overview;
+    const { out_of_norm, border_zone } = this.overview;
     const analyzeQuantity = this.analyzeQuantity;
-    const result = (out_of_norm / analyzeQuantity) * 100;
+    const result = ((out_of_norm + border_zone) / analyzeQuantity) * 100;
 
     return result === 0 ? 'good' : result <= 20 ? 'norm' : 'bad';
   }
   get overview(): IDashBoard.IOverview {
     return this.$store.state.dashboard.overview;
   }
-
   get analyzeQuantity(): number {
     return this.overview.in_norm + this.overview.border_zone + this.overview.out_of_norm;
   }

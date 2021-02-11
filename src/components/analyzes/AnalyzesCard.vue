@@ -244,24 +244,29 @@ export default class AnalyzesCard extends Mixins(AnalyzesMixin, BaseFormMixins) 
   async saveChanges() {
     if (this.validate()) return;
 
-    let method: Method = 'POST';
+    try {
+      let method: Method = 'POST';
 
-    if (typeof this.id === 'number') {
-      method = 'PATCH';
-    }
+      if (typeof this.id === 'number') {
+        method = 'PATCH';
+      }
 
-    const response = await this.createDateForSave();
-
-    const {
-      status,
-      data,
-    }: { status: boolean; data: IAnalyzes.IBiomarker } = await this.$store.dispatch('analyzes/saveBiomarkers', {
-      ...response,
-      method,
-    });
-    if (status) {
-      this.localDate.idAfterUpdate = data.id;
-      this.localDate.isEdit = false;
+      const response = await this.createDateForSave();
+      const { status, data }: { status: boolean; data: IAnalyzes.IBiomarker } = await this.$store.dispatch(
+        'analyzes/saveBiomarkers',
+        {
+          ...response,
+          method,
+        }
+      );
+      if (status) {
+        this.localDate.idAfterUpdate = data.id;
+        this.localDate.isEdit = false;
+      }
+    } catch (error) {
+      if (error.errorData?.message) {
+        await this.$store.dispatch('error/showErrorNotice', { message: error.errorData.message });
+      }
     }
   }
 
